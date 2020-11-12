@@ -17,11 +17,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,18 +40,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-        SharedPreferences apikey = this.getSharedPreferences("apikey", MODE_PRIVATE);
+        SharedPreferences apikey = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         if (apikey != null){
-            Map<String,?> s = apikey.getAll();
-            for (String a :s.keySet()) {
-                Log.d("test", a);
-            }
-            Log.d("test", "if schleife!");
+            String s = apikey.getString("apikey", null);
+
+            Log.d("test", s);
         }else
             Log.d("test", "apikey is null");
 
-        
+
+
     }
 
     @Override
