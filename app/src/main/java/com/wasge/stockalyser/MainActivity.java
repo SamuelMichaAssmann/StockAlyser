@@ -1,9 +1,6 @@
 package com.wasge.stockalyser;
 
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
@@ -12,7 +9,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.preference.PreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,17 +28,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-        SharedPreferences apikey = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if (apikey != null){
-            String s = apikey.getString("apikey", null);
-
-            Log.d("test", s);
-        }else
-            Log.d("test", "apikey is null");
-
-
-
     }
 
     @Override

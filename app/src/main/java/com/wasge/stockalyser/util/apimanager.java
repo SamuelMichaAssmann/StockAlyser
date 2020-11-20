@@ -2,13 +2,7 @@ package com.wasge.stockalyser.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.util.Log;
-
 import androidx.preference.PreferenceManager;
-
-import com.wasge.stockalyser.MainActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +70,4 @@ public class apimanager {
             e.printStackTrace();
         }
     }
-
-
 }
