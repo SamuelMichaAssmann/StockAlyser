@@ -1,5 +1,14 @@
 package com.wasge.stockalyser.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import com.wasge.stockalyser.MainActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,12 +21,20 @@ import java.nio.charset.StandardCharsets;
 
 public class apimanager {
 
-    public static String buildUrl(){
-        return "https://api.twelvedata.com/time_series?symbol=AAPL&interval=5min&apikey=2d9d8679a270405da1f46095b5b1ae27";
+    private Context context;
+
+    public apimanager(Context context) {
+        this.context = context;
     }
 
+    public String buildUrl(String kind, String symbol, String interval){
+        SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
+        String apikey = PreferenceKey.getString("apikey", null);
 
-    public static String getUrlInformation(String rowUrl) throws MalformedURLException {
+        return "https://api.twelvedata.com/" + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
+    }
+
+    public String getUrlInformation(String rowUrl) throws MalformedURLException {
         URL url = new URL(rowUrl);
         StringBuilder s = new StringBuilder();
             try (
@@ -33,7 +50,7 @@ public class apimanager {
         return s.toString();
     } // end of main
 
-    public static void parseJsonFromInterval(String input){
+    public void parseJsonFromInterval(String input){
         try {
             JSONObject meta = (JSONObject) new JSONObject(input).get("meta");
             JSONArray values = new JSONObject(input).getJSONArray("values");

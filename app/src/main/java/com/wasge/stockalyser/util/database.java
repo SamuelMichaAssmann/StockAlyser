@@ -13,11 +13,11 @@ public class database extends SQLiteOpenHelper {
     public database(final Context context) {
         super(context, DB_NAME, null, VERSION);
     }
-    #+
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE "
+       /* String createQuery = "CREATE TABLE "
                 + TABLE_NAME
                 + " (ID INTEGER PRIMARY KEY, "
                 + "SYMBOL TEXT NOT NULL, "
@@ -28,14 +28,14 @@ public class database extends SQLiteOpenHelper {
                 + "OPEN NOT NULL, "
                 + "HIGH NOT NULL, "
                 +"LOW NOT NULL)";
-        sqLiteDatabase.execSQL(createQuery);
+        sqLiteDatabase.execSQL(createQuery);*/
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        String dropTable = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        /*String dropTable = "DROP TABLE IF EXISTS " + TABLE_NAME;
         sqLiteDatabase.execSQL(dropTable);
-        onCreate(sqLiteDatabase);
+        onCreate(sqLiteDatabase);*/
     }
 
     public void createTable (String TableName, String[] TableData){
@@ -52,6 +52,7 @@ public class database extends SQLiteOpenHelper {
         createQuery.append(")");
         sqLiteDatabase.execSQL(createQuery.toString());
     }
+
     public void insertTable (String TableName, String[] TableData){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         StringBuilder createQuery = new StringBuilder();
@@ -67,25 +68,22 @@ public class database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(createQuery.toString());
     }
 
-    public void readDatabase (String[] data){
+    public void updateTable (String TableName, String[] TableData){
 
     }
 
-    public List<database> readAllDatabase (){
+    public List<String> readTable (){
         return null;
     }
 
-    public database updateDatabase (final database database){
-        return null;
-    }
-
-    public void deleteDatabase (final database database){
+    public void deleteTable (String TableName){
 
     }
 }
 
 
 /*
+-------- Api-json -------
 {
 "symbol":"AAPL",
 "name":"Apple Inc",
