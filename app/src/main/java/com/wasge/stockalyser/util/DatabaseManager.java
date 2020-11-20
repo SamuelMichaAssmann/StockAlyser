@@ -5,12 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.List;
 
-public class database extends SQLiteOpenHelper {
+public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "STOCK_DATA";
     private static final int VERSION = 1;
 
-    public database(final Context context) {
+    public DatabaseManager(final Context context) {
         super(context, DB_NAME, null, VERSION);
     }
 
@@ -53,7 +53,7 @@ public class database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(createQuery.toString());
     }
 
-    public void insertTable (String TableName, String[] TableData){
+    public void insertTable (String TableName, String[] TableData){ // datentyp einfügen
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         StringBuilder createQuery = new StringBuilder();
         createQuery.append("INSERT INTO ")

@@ -13,11 +13,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class apimanager {
+public class ApiManager {
 
     private Context context;
 
-    public apimanager(Context context) {
+    public ApiManager(Context context) {
         this.context = context;
     }
 
