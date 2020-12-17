@@ -14,6 +14,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.yabu.livechart.model.DataPoint;
+import com.yabu.livechart.model.Dataset;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         }else
             Log.d("test", "apikey is null");
 
+        Dataset dataset = new Dataset(new ArrayList<DataPoint>());
+        //DataPoint dataPoint = new DataPoint()
 
 
     }
