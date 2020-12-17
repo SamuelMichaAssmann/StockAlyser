@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.List;
 
-public class database extends SQLiteOpenHelper {
+public class DatabaseManager extends SQLiteOpenHelper {
 
     // https://developer.android.com/topic/libraries/architecture/room#java
 
@@ -13,14 +13,14 @@ public class database extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     private static final String TABLE_NAME = "STOCK_DATA";
 
-    public database(final Context context) {
+    public DatabaseManager(final Context context) {
         super(context, DB_NAME, null, VERSION);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createQuery = "CREATE TABLE "
+       /* String createQuery = "CREATE TABLE "
                 + TABLE_NAME
                 + " (ID INTEGER PRIMARY KEY, "
                 + "SYMBOL TEXT NOT NULL, "
@@ -31,14 +31,14 @@ public class database extends SQLiteOpenHelper {
                 + "OPEN NOT NULL, "
                 + "HIGH NOT NULL, "
                 +"LOW NOT NULL)";
-        sqLiteDatabase.execSQL(createQuery);
+        sqLiteDatabase.execSQL(createQuery);*/
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        String dropTable = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        /*String dropTable = "DROP TABLE IF EXISTS " + TABLE_NAME;
         sqLiteDatabase.execSQL(dropTable);
-        onCreate(sqLiteDatabase);
+        onCreate(sqLiteDatabase);*/
     }
 
     public void createTable (String TableName, String[] TableData){
@@ -55,7 +55,8 @@ public class database extends SQLiteOpenHelper {
         createQuery.append(")");
         sqLiteDatabase.execSQL(createQuery.toString());
     }
-    public void insertTable (String TableName, String[] TableData){
+
+    public void insertTable (String TableName, String[] TableData){ // datentyp einfügen
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         StringBuilder createQuery = new StringBuilder();
         createQuery.append("INSERT INTO ")
@@ -70,25 +71,22 @@ public class database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(createQuery.toString());
     }
 
-    public void readDatabase (String[] data){
+    public void updateTable (String TableName, String[] TableData){
 
     }
 
-    public List<database> readAllDatabase (){
+    public List<String> readTable (){
         return null;
     }
 
-    public database updateDatabase (final database database){
-        return null;
-    }
-
-    public void deleteDatabase (final database database){
+    public void deleteTable (String TableName){
 
     }
 }
 
 
 /*
+-------- Api-json -------
 {
 "symbol":"AAPL",
 "name":"Apple Inc",

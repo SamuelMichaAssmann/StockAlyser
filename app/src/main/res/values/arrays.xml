@@ -1,8 +1,19 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="trend_entries">
-        <item>Weighted Moving Average(WMA)</item>
-        <item>Reply to all</item>
+        <item>Average Directional Index (ADX)</item>
+        <item>Exponential Moving Average (EMA)</item>
+        <item>Moving Average Convergence Divergence (MACD)</item>
+        <item>Relative Strength Index (RSI)</item>
+        <item>Simple Moving Average (SMA)</item>
+        <item>Stochastic Oscillator (STOCH)</item>
+        <item>Parabolic SAR (SAR)</item>
+        <item>Percentage Price Oscillator (PPO)</item>
+        <item>Triple Exponential Moving Average (TEMA)</item>
+        <item>Weighted Moving Average (WMA)</item>
+        <item>Highest value over period(MAX)</item>
+        <item>Lowest value over period(MIN)</item>
+
     </string-array>
 
     <string-array name="trend_values">
