@@ -3,7 +3,7 @@
     <PreferenceCategory app:title="@string/user_header">
 
         <EditTextPreference
-            app:defaultValue="d987721f7c58272c23e403edfd352a50"
+            app:defaultValue="2d9d8679a270405da1f46095b5b1ae27"
             app:key="apikey"
             app:title="@string/apikey_title"
             app:useSimpleSummaryProvider="true" />

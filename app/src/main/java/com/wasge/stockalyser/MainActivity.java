@@ -17,9 +17,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wasge.stockalyser.util.ApiManager;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
+import com.yabu.livechart.view.LiveChart;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,9 +47,16 @@ public class MainActivity extends AppCompatActivity {
         }else
             Log.d("test", "apikey is null");
 
-        Dataset dataset = new Dataset(new ArrayList<DataPoint>());
-        //DataPoint dataPoint = new DataPoint()
-        ApiManager apiManager = new ApiManager(MainActivity.this);
+        final ApiManager apiManager = new ApiManager(MainActivity.this);
+        final String test = apiManager.buildUrl("price", "AAPL");
+        Log.d("test", test);
+        new Thread(){
+            public void run(){
+                String s = apiManager.getUrlInformation(test);
+                Log.d("test", s);
+            }
+        }.start();
+
 
     }
 

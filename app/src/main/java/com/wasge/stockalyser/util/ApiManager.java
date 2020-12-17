@@ -28,7 +28,7 @@ public class ApiManager {
 
     //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
     //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
-    //  trend?symbol=AAPL&interval=1min&apikey=your_api_key
+    //  trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
     public String buildUrl(String kind, String symbol, String interval){
         return entypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
     }
@@ -51,8 +51,13 @@ public class ApiManager {
         return entypoint + "api_usage?apikey=" + apikey;
     }
 
-    public String getUrlInformation(String rowUrl) throws MalformedURLException {
-        URL url = new URL(rowUrl);
+    public String getUrlInformation(String rowUrl)  {
+        URL url = null;
+        try {
+            url = new URL(rowUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         StringBuilder s = new StringBuilder();
         try (
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {

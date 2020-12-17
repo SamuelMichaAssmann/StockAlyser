@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipChildren="false"
+    tools:context=".MainActivity">
+
+
+    <com.yabu.livechart.view.LiveChart
+        android:id="@+id/live_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:labelTextColor="@color/colorCyan"
+        app:pathColor="@color/colorCyan"
+        app:secondPathColor="@color/colorCyan"
+        app:boundsColor="@color/design_default_color_primary_variant"
+        app:mainCornerRadius="4dp"
+        app:secondCornerRadius="4dp"
+        app:pathStrokeWidth="4dp"
+        app:baselineStrokeWidth="4dp"
+        app:baselineDashGap="8dp"
+        app:labelTextHeight="14sp"
+        app:baselineColor="@color/design_default_color_primary_variant"
+        app:overlayCircleColor="@color/design_default_color_primary_variant"
+        app:overlayLineColor="@color/design_default_color_primary_variant"
+        app:overlayCircleDiameter="8dp"/>
 
     <TextView
         android:id="@+id/text_home"
@@ -14,9 +36,5 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_horizontal" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
