@@ -7,13 +7,16 @@ import java.util.List;
 
 public class database extends SQLiteOpenHelper {
 
+    // https://developer.android.com/topic/libraries/architecture/room#java
+
     private static final String DB_NAME = "STOCK_DATA";
     private static final int VERSION = 1;
+    private static final String TABLE_NAME = "STOCK_DATA";
 
     public database(final Context context) {
         super(context, DB_NAME, null, VERSION);
     }
-    #+
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
