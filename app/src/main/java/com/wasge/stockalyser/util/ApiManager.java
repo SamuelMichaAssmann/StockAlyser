@@ -16,33 +16,54 @@ import java.nio.charset.StandardCharsets;
 public class ApiManager {
 
     private Context context;
+    private String apikey;
+    private String entypoint = "https://api.twelvedata.com/";
 
     public ApiManager(Context context) {
+        SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
+        this.apikey = PreferenceKey.getString("apikey", null);
         this.context = context;
     }
 
-    public String buildUrl(String kind, String symbol, String interval){
-        SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
-        String apikey = PreferenceKey.getString("apikey", null);
 
-        return "https://api.twelvedata.com/" + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
+    //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
+    //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
+    //  trend?symbol=AAPL&interval=1min&apikey=your_api_key
+    public String buildUrl(String kind, String symbol, String interval){
+        return entypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
+    }
+
+
+    //  quote?symbol=AAPL&apikey=your_api_key --- Stock Info
+    //  price?symbol=AAPL&apikey=your_api_key --- Stock Price
+    public String buildUrl(String kind, String symbol){
+        return entypoint + kind + "?symbol=" + symbol  + "&apikey=" + apikey;
+    }
+
+
+    //symbol_search?symbol=AA --- Search Stock
+    public String search(String stock){
+        return entypoint + "symbol_search?symbol=" + stock;
+    }
+
+    //  api_usage?apikey=your_api_key --- Search Stock
+    public String usage(){
+        return entypoint + "api_usage?apikey=" + apikey;
     }
 
     public String getUrlInformation(String rowUrl) throws MalformedURLException {
         URL url = new URL(rowUrl);
         StringBuilder s = new StringBuilder();
-            try (
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+        try (
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             for (String line; (line = reader.readLine()) != null;) {
-
                 s.append(line);
             }
-        } catch (
-        IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return s.toString();
-    } // end of main
+    }
 
     public void parseJsonFromInterval(String input){
         try {
