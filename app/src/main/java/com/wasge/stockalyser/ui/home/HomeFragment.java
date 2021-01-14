@@ -1,11 +1,15 @@
 package com.wasge.stockalyser.ui.home;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,7 +24,10 @@ import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 import com.yabu.livechart.view.LiveChartStyle;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
@@ -28,47 +35,60 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-
 
         LiveChart liveChart = root.findViewById(R.id.live_chart);
+
         ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
-        dataPoints.add(new DataPoint(0f,6f));
-        dataPoints.add(new DataPoint(1f,3f));
-        dataPoints.add(new DataPoint(2f,3f));
-        dataPoints.add(new DataPoint(3f,4f));
-        dataPoints.add(new DataPoint(4f,5f));
+        for (int i = 0; i < 50; i++) {
+            Random r = new Random();
+            float rand = -10 + r.nextFloat() * (20);
+            dataPoints.add(new DataPoint(i,rand));
+        }
+
+
 
         ArrayList<DataPoint> dataPoints1 = new ArrayList<DataPoint>();
-        dataPoints.add(new DataPoint(0f,4f));
-        dataPoints.add(new DataPoint(1f,7f));
-        dataPoints.add(new DataPoint(2f,9f));
-        dataPoints.add(new DataPoint(3f,2f));
-        dataPoints.add(new DataPoint(4f,0f));
+        dataPoints1.add(new DataPoint(0f,4f));
+        dataPoints1.add(new DataPoint(1f,7f));
+        dataPoints1.add(new DataPoint(2f,9f));
+        dataPoints1.add(new DataPoint(3f,2f));
+        dataPoints1.add(new DataPoint(4f,0f));
 
         Dataset dataset = new Dataset(dataPoints);
         Dataset dataset1 = new Dataset(dataPoints1);
 
+        LiveChartStyle style = new LiveChartStyle();
+        style.setBaselineStrokeWidth(5f);
+        style.setMainColor(Color.GREEN);
+        style.setSecondColor(Color.RED);
+        style.setPathStrokeWidth(8f);
+        style.setSecondPathStrokeWidth(8f);
+        style.setOverlayLineColor(Color.BLUE);
+        style.setOverlayCircleDiameter(32f);
+        style.setOverlayCircleColor(Color.RED);
+        style.setBaselineColor(Color.GRAY);
+        style.setBaselineDashLineGap(100f);
+
+
+
         liveChart.setDataset(dataset)
+                .setOnTouchCallbackListener(new LiveChart.OnTouchCallback() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onTouchCallback(@NotNull DataPoint dataPoint) {
+                        Log.d("data", "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
+                    }
+
+                    @Override
+                    public void onTouchFinished() {
+
+                    }
+                })
                 .setSecondDataset(dataset1)
-                .drawYBounds()
-                .drawLastPointLabel()
-                .drawBaselineConditionalColor()
-                .drawVerticalGuidelines(4)
-                .drawHorizontalGuidelines(4)
-                .drawBaseline()
-                .drawSmoothPath()
-                .setBaselineManually(0.5f)
-                .drawFill(true)
+                .setLiveChartStyle(style)
+                .drawBaselineFromFirstPoint()
                 .drawFill(true)
                 .drawDataset();
 

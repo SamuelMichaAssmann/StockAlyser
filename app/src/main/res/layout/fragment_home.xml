@@ -7,34 +7,118 @@
     android:clipChildren="false"
     tools:context=".MainActivity">
 
-
-    <com.yabu.livechart.view.LiveChart
-        android:id="@+id/live_chart"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:labelTextColor="@color/colorCyan"
-        app:pathColor="@color/colorCyan"
-        app:secondPathColor="@color/colorCyan"
-        app:boundsColor="@color/design_default_color_primary_variant"
-        app:mainCornerRadius="4dp"
-        app:secondCornerRadius="4dp"
-        app:pathStrokeWidth="4dp"
-        app:baselineStrokeWidth="4dp"
-        app:baselineDashGap="8dp"
-        app:labelTextHeight="14sp"
-        app:baselineColor="@color/design_default_color_primary_variant"
-        app:overlayCircleColor="@color/design_default_color_primary_variant"
-        app:overlayLineColor="@color/design_default_color_primary_variant"
-        app:overlayCircleDiameter="8dp"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:gravity="center_horizontal" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/current_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="30sp"
+                    android:text="1.035,56" />
+
+                <TextView
+                    android:id="@+id/current_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="bottom"
+                    android:textSize="20sp"
+                    android:text="€" />
+
+                <TextView
+                    android:id="@+id/intervall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+
+            <com.yabu.livechart.view.LiveChart
+                android:id="@+id/live_chart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:gravity="center_horizontal"
+                android:padding="16dp"
+                app:baselineColor="@color/design_default_color_primary_variant"
+                app:baselineDashGap="8dp"
+                app:baselineStrokeWidth="4dp"
+                app:boundsColor="@color/design_default_color_primary_variant"
+                app:labelTextColor="@color/colorCyan"
+                app:labelTextHeight="14sp"
+                app:mainCornerRadius="4dp"
+                app:overlayCircleColor="@color/design_default_color_primary_variant"
+                app:overlayCircleDiameter="8dp"
+                app:overlayLineColor="@color/design_default_color_primary_variant"
+                app:pathColor="@color/colorCyan"
+                app:pathStrokeWidth="4dp"
+                app:secondCornerRadius="4dp"
+                app:secondPathColor="@color/colorCyan" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_heute" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_woche" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_monat" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_jahr" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_max" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <TextView
+                    android:id="@+id/text_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="center"
+                    android:text="efswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedf"
+                    android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
 </FrameLayout>

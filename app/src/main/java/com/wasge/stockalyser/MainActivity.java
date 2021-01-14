@@ -15,11 +15,6 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wasge.stockalyser.util.ApiManager;
-import com.yabu.livechart.model.DataPoint;
-import com.yabu.livechart.model.Dataset;
-import com.yabu.livechart.view.LiveChart;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         if (apikey != null){
             String s = apikey.getString("apikey", null);
 
-            Log.d("test", s);
+            Log.d("test", "" + s);
         }else
             Log.d("test", "apikey is null");
 
