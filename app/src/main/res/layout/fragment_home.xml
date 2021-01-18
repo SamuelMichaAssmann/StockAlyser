@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clipChildren="false"
     tools:context=".MainActivity">
 
@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp" >
 
@@ -43,14 +43,31 @@
                     android:textSize="20sp"
                     android:text="€" />
 
-                <TextView
-                    android:id="@+id/intervall"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:textSize="30sp" />
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/intervall"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="right"
+                        android:textSize="15sp"
+                        android:text="HEUTE"/>
+
+                    <ImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_green_box">
+
+                    </ImageButton>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -74,7 +91,8 @@
                 app:pathColor="@color/colorCyan"
                 app:pathStrokeWidth="4dp"
                 app:secondCornerRadius="4dp"
-                app:secondPathColor="@color/colorCyan" />
+                app:secondPathColor="@color/colorCyan"
+                tools:ignore="MissingClass" />
 
             <com.google.android.material.tabs.TabLayout
                 android:layout_width="match_parent"

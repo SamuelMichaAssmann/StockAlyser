@@ -7,25 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import com.wasge.stockalyser.R;
-
-import com.yabu.livechart.model.*;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 import com.yabu.livechart.view.LiveChartStyle;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -46,8 +36,6 @@ public class HomeFragment extends Fragment {
             float rand = -10 + r.nextFloat() * (20);
             dataPoints.add(new DataPoint(i,rand));
         }
-
-
 
         ArrayList<DataPoint> dataPoints1 = new ArrayList<DataPoint>();
         dataPoints1.add(new DataPoint(0f,4f));
