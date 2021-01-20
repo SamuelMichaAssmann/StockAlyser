@@ -24,23 +24,42 @@
                 android:orientation="vertical">
 
                 <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:stretchColumns="0,1"
+                    android:gravity="center">
 
-                    <TableRow
-                        android:gravity="end">
+                    <TableRow>
+                        <TableRow
+                            android:gravity="start">
 
-                        <TextView
-                            android:id="@+id/intervall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:layout_marginRight="8dp"
-                            android:text="HEUTE"
-                            android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/symbol"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:text="Apple Inc."
+                                android:textSize="15sp" />
 
+                        </TableRow>
+                        <TableRow
+                            android:gravity="end">
 
+                            <TextView
+                                android:id="@+id/intervall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:text="HEUTE"
+                                android:textSize="15sp" />
+
+                        </TableRow>
                     </TableRow>
+
 
                     <TableRow>
 
@@ -54,7 +73,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="8dp"
-                                android:layout_marginTop="-10dp"
                                 android:layout_marginEnd="8dp"
                                 android:text="1.035,56"
                                 android:textSize="30sp" />
@@ -63,7 +81,6 @@
                                 android:id="@+id/current_currency"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="-10dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginBottom="8dp"
                                 android:gravity="bottom"
@@ -74,18 +91,17 @@
 
 
                         <TableRow
-                            android:gravity="left">
+                            android:gravity="end">
 
                             <TextView
                                 android:id="@+id/test"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_marginTop="0dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginBottom="8dp"
-                                android:gravity="bottom"
+                                android:gravity="end"
                                 android:text="+20%"
-                                android:textSize="20sp" />
+                                android:textSize="30sp" />
 
 
 
@@ -149,17 +165,234 @@
                     android:text="@string/tab_max" />
             </com.google.android.material.tabs.TabLayout>
 
-            <TextView
-                    android:id="@+id/text_home"
-                    android:layout_width="match_parent"
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="0,1"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:gravity="center_horizontal"
-                    android:textAlignment="center"
-                    android:text="efswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedfefswejf\nserfoiaef\nezrfasefgiedf"
-                    android:textSize="20sp" />
+                    android:gravity="center"
+                    android:text="Data"
+                    android:textSize="30sp" />
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Name:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/name_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="Apple Inc"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/exchenge"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Exchenge:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/exchenge_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="NASDAQ"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/currency"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Currency:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/currency_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="USD"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Add Date:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/date_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="2020-11-17"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="Key Indicator"
+                    android:textSize="30sp" />
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/open"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Open:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/open_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="119.123124"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/high"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Exchenge:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/high_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="NASDAQ"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/currency"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Currency:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/currency_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="USD"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="Add Date:"
+                        android:textSize="20sp" />
+                    <TableRow>
+                        <TextView
+                            android:id="@+id/date_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="2020-11-17"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+            </TableLayout>
+
         </LinearLayout>
     </ScrollView>
 

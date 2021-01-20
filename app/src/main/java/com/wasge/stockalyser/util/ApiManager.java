@@ -115,20 +115,20 @@ public class ApiManager {
 
 -------- Api-json -------
 {
-"symbol":"AAPL", ====== ID
-"name":"Apple Inc", ===========
-"exchange":"NASDAQ", ===========
-"currency":"USD", ===========
-"datetime":"2020-11-17", ========
-"open":"119.54900",
-"high":"120.30000",
-"low":"118.96000",
-"close":"119.36000",
-"volume":"13012825",
-"previous_close":"120.30000",
-"change":"-0.94000",
-"percent_change":"-0.78138",
-"average_volume":"106265760",
+"symbol":"AAPL", ====== ID           !
+"name":"Apple Inc", ===========           !
+"exchange":"NASDAQ", ===========        !
+"currency":"USD", ===========          !
+"datetime":"2020-11-17", ========       !
+"open":"119.54900", ======
+"high":"120.30000",  ======     -------> ======= avg()       !
+"low":"118.96000",    =====
+"close":"119.36000", =====
+"volume":"13012825",=========
+"previous_close":"120.30000",========
+"change":"-0.94000",========
+"percent_change":"-0.78138",==========
+"average_volume":"106265760", =======
 "fifty_two_week":
     {
     "low":"53.15250", ==========
