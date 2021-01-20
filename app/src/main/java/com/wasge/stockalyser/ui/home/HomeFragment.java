@@ -31,9 +31,9 @@ public class HomeFragment extends Fragment {
         LiveChart liveChart = root.findViewById(R.id.live_chart);
 
         ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 96; i++) {
             Random r = new Random();
-            float rand = -10 + r.nextFloat() * (20);
+            float rand = r.nextFloat() * (3);
             dataPoints.add(new DataPoint(i,rand));
         }
 
