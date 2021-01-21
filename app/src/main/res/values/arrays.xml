@@ -1,6 +1,7 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="trend_entries">
+        <item>No trendline</item>
         <item>Average Directional Index (ADX)</item>
         <item>Exponential Moving Average (EMA)</item>
         <item>Moving Average Convergence Divergence (MACD)</item>
@@ -13,11 +14,21 @@
         <item>Weighted Moving Average (WMA)</item>
         <item>Highest value over period(MAX)</item>
         <item>Lowest value over period(MIN)</item>
-
     </string-array>
 
     <string-array name="trend_values">
-        <item>reply</item>
-        <item>reply_all</item>
+        <item>none</item>
+        <item>ADX</item>
+        <item>EMA</item>
+        <item>MACD</item>
+        <item>RSI</item>
+        <item>SMA</item>
+        <item>STOCH</item>
+        <item>SAR</item>
+        <item>PPO</item>
+        <item>TEMA</item>
+        <item>WMA</item>
+        <item>MAX</item>
+        <item>MIN</item>
     </string-array>
     </resources>

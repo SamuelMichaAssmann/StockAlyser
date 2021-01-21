@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1,2"
+        android:gravity="start">
+
+
+        <TableRow>
+            <TableRow
+                android:padding="15dp">
+
+                <com.yabu.livechart.view.LiveChart
+                    android:id="@+id/pre_chart"
+                    android:layout_height="80dp"
+                    android:layout_width="80dp"
+                    app:baselineColor="@color/colorBlack"
+                    app:baselineDashGap="8dp"
+                    app:baselineStrokeWidth="2dp"
+                    app:pathColor="@color/colorCyan"
+                    app:pathStrokeWidth="2dp"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:padding="15dp"
+                android:gravity="start">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/watch_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Companie"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:id="@+id/watch_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:text="----------"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+
+            </TableRow>
+            <TableRow
+
+                android:gravity="end"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/watch_value"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="---.--"
+                    android:textSize="25sp"/>
+
+                <TextView
+                    android:gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="$"
+                    android:textSize="25sp"/>
+
+            </TableRow>
+        </TableRow>
+
+    </TableLayout>
+</RelativeLayout>

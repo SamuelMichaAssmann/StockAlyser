@@ -1,6 +1,9 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:fragment="@string/settings">
 
-    <PreferenceCategory app:title="@string/user_header">
+    <PreferenceCategory
+        app:title="@string/user_header">
 
         <EditTextPreference
             app:defaultValue="2d9d8679a270405da1f46095b5b1ae27"
@@ -12,14 +15,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Trendgraphen">
+    <PreferenceCategory app:title="Trend graph">
 
         <ListPreference
-            app:defaultValue="reply"
+            app:defaultValue="none"
             app:entries="@array/trend_entries"
             app:entryValues="@array/trend_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:key="trend"
+            app:title="Choose one trend graph"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
