@@ -1,8 +1,6 @@
 package com.wasge.stockalyser.ui.watchlist;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,30 +8,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
-import com.yabu.livechart.view.LiveChartStyle;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 public class WatchlistFragment extends Fragment {
 
+    ListView listView;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final NavController navController = Navigation.findNavController(view);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("test", ""+ i);
+
+                navController.navigate(R.id.navigation_settings);
+            }
+        });
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
-        ListView listView = root.findViewById(R.id.listview);
+        final View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
+        listView = root.findViewById(R.id.listview);
+
+
 
         String[] name = {"Apple Inc.", "Airbus", "DB Systel"};
         String[] date = {"20-12-2020", "20-12-2020", "20-12-2020"};
@@ -43,12 +55,7 @@ public class WatchlistFragment extends Fragment {
 
         WatchlistAdapter adapter = new WatchlistAdapter(this.getContext(), name, date, value, data);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("test", ""+ i);
-            }
-        });
+
 
         return root;
     }
@@ -96,9 +103,6 @@ class WatchlistAdapter extends ArrayAdapter<String> {
             }
 
             Dataset dataset = new Dataset(dataPoints);
-            LiveChartStyle style = new LiveChartStyle();
-
-
 
             liveChart.setDataset(dataset)
                     .disableTouchOverlay()

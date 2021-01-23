@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,70 +18,78 @@ import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 import com.yabu.livechart.view.LiveChartStyle;
 import org.jetbrains.annotations.NotNull;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+    @SuppressLint("SetTextI18n")
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+        LiveChartStyle style = new LiveChartStyle();
+
         LiveChart liveChart = root.findViewById(R.id.live_chart);
+        final TextView currentPrice = root.findViewById(R.id.current_price);
+        final TextView percentPrice = root.findViewById(R.id.percent_price);
 
         ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
+        float temp = 5;
         for (int i = 0; i < 96; i++) {
             Random r = new Random();
-            float rand = r.nextFloat() * (3);
-            dataPoints.add(new DataPoint(i,rand));
+            float rand = -1 + r.nextFloat() * 2;
+            temp = temp + rand;
+            dataPoints.add(new DataPoint(i, temp));
         }
 
-        ArrayList<DataPoint> dataPoints1 = new ArrayList<DataPoint>();
-        dataPoints1.add(new DataPoint(0f,4f));
-        dataPoints1.add(new DataPoint(1f,7f));
-        dataPoints1.add(new DataPoint(2f,9f));
-        dataPoints1.add(new DataPoint(3f,2f));
-        dataPoints1.add(new DataPoint(4f,0f));
+        final float start = dataPoints.get(0).getY();
+        final float end = dataPoints.get(dataPoints.size()-1).getY();
+
+        percentPrice.setText(setPercent(start, end));
+        currentPrice.setText(setCurrent(end));
 
         Dataset dataset = new Dataset(dataPoints);
-        Dataset dataset1 = new Dataset(dataPoints1);
-
-        LiveChartStyle style = new LiveChartStyle();
-        style.setBaselineStrokeWidth(5f);
-        style.setMainColor(Color.GREEN);
-        style.setSecondColor(Color.RED);
-        style.setPathStrokeWidth(8f);
-        style.setSecondPathStrokeWidth(8f);
-        style.setOverlayLineColor(Color.BLUE);
-        style.setOverlayCircleDiameter(32f);
-        style.setOverlayCircleColor(Color.RED);
-        style.setBaselineColor(Color.GRAY);
-        style.setBaselineDashLineGap(100f);
-
-
 
         liveChart.setDataset(dataset)
                 .setOnTouchCallbackListener(new LiveChart.OnTouchCallback() {
-                    @SuppressLint("SetTextI18n")
+
                     @Override
                     public void onTouchCallback(@NotNull DataPoint dataPoint) {
                         Log.d("data", "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
+                        currentPrice.setText(setCurrent(dataPoint.getY()));
+                        percentPrice.setText(setPercent(start, dataPoint.getY()));
                     }
 
                     @Override
                     public void onTouchFinished() {
-
+                        currentPrice.setText(setCurrent(end));
+                        percentPrice.setText(setPercent(start, end));
                     }
                 })
-                .setSecondDataset(dataset1)
                 .setLiveChartStyle(style)
                 .drawBaselineFromFirstPoint()
-                .drawFill(true)
                 .drawDataset();
 
         return root;
+    }
+
+    private String setPercent(float start, float end){
+        final DecimalFormat df = new DecimalFormat("#.##");
+        String percentString = "";
+        float percent = (100/start * end) - 100;
+        if(percent >= 0 )
+            percentString = "+" + df.format(percent);
+        else
+            percentString = df.format(percent);
+        return percentString;
+
+    }
+
+    private String setCurrent(float end){
+        final DecimalFormat df = new DecimalFormat("#.##");
+        return df.format(end);
+
     }
 }

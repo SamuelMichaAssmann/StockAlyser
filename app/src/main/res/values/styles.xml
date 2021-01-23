@@ -5,6 +5,34 @@
         <item name="colorPrimary">@color/colorCyan</item>
         <item name="colorPrimaryDark">@color/colorBlue</item>
         <item name="colorAccent">@color/colorOrange</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="itemTextColor">@color/colorCyan</item>
+
+        <item name="colorCyan">@color/colorCyan</item>
+        <item name="colorBlue">@color/colorBlue</item>
+        <item name="colorOrange">@color/colorOrange</item>
+        <item name="colorWhite">@color/colorWhite</item>
+        <item name="colorBlack">@color/colorBlack</item>
+        <item name="colorGrey">@color/colorGrey</item>
+        <item name="colorRed">@color/colorRed</item>
+        <item name="colorGreen">@color/colorGreen</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="DarkTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorCyan</item>
+        <item name="colorAccent">@color/colorOrange</item>
+
+        <item name="colorCyan">@color/colorCyan</item>
+        <item name="colorBlue">@color/colorBlue</item>
+        <item name="colorOrange">@color/colorOrange</item>
+        <item name="colorWhite">@color/colorWhite</item>
+        <item name="colorBlack">@color/colorBlack</item>
+        <item name="colorGrey">@color/colorGrey</item>
+        <item name="colorRed">@color/colorRed</item>
+        <item name="colorGreen">@color/colorGreen</item>
+
+    </style>
 </resources>
