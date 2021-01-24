@@ -3,7 +3,7 @@
     <!-- Global -->
     <string name="app_name">StockAlyser</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_search">Search</string>
     <string name="title_watchlist">Watchlist</string>
 
     <!-- Preference -->
@@ -29,5 +29,6 @@
     <string name="tab_monat">Monat</string>
     <string name="tab_jahr">Jahr</string>
     <string name="tab_max">Max</string>
+    <string name="title_stock">Stock</string>
 
 </resources>

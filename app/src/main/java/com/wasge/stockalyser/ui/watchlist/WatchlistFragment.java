@@ -13,10 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
+import com.wasge.stockalyser.ui.StockFragment;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -31,12 +33,21 @@ public class WatchlistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
 
+        Fragment fragment = new Fragment();
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("test", ""+ i);
 
-                navController.navigate(R.id.navigation_settings);
+
+                //Bundle bundle = new Bundle();
+                //String myMessage = "Stack Overflow is cool!";
+                //bundle.putString("message", myMessage );
+                //StockFragment fragment = StockFragment.
+                //fragment.setArguments(bundle);
+                navController.navigate(R.id.navigation_stock);
             }
         });
     }

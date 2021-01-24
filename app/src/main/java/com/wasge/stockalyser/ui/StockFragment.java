@@ -1,4 +1,4 @@
-package com.wasge.stockalyser.ui.home;
+package com.wasge.stockalyser.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,18 +16,25 @@ import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 import com.yabu.livechart.view.LiveChartStyle;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HomeFragment extends Fragment {
+public class StockFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_stock, container, false);
+
+        try {
+            String myValue = this.getArguments().getString("message");
+            Log.d("argument", myValue);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         LiveChartStyle style = new LiveChartStyle();
 

@@ -4,17 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.watchlist.WatchlistFragment"
-    android:orientation="vertical">
+    tools:context=".ui.search.SearchFragment">
 
     <ListView
-        android:id="@+id/listview"
-        android:listSelector="@drawable/listview"
+        android:id="@+id/searchlist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:drawSelectorOnTop="false"
-        tools:layout_editor_absoluteY="1dp" />
-
-
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>
