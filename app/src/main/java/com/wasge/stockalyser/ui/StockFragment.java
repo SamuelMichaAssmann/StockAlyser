@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.FragmentReciever;
+import com.wasge.stockalyser.util.DatabaseManager;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -64,14 +65,25 @@ public class StockFragment extends Fragment implements FragmentReciever {
 
         setLiveChart(root, dataPoints, liveChart);
         setIndicator(root, dataPoints, liveChart);
-        // TODO
+        // TODO eneble data
         //setData(root, DatabaseManager.getDisplayData(stock));
 
         return root;
     }
 
     private float[] getData(int style, String symbol){
-        /*if (style == 1)
+        // TODO delete generator
+        float[] da = new float[90];
+        float temp = 5;
+        for (int i = 0; i < 90; i++) {
+            Random r = new Random();
+            float rand = -1 + r.nextFloat() * 2;
+            temp = temp + rand;
+            da[i] = temp;
+        }
+        return da;
+        /*
+        if (style == 1)
             return DatabaseManager.getWeekData(symbol);
         else if (style == 2)
             return DatabaseManager.getMonthData(symbol);
@@ -82,16 +94,6 @@ public class StockFragment extends Fragment implements FragmentReciever {
         else
             return DatabaseManager.getDayData(symbol);
         */
-        // TODO -------Test---------
-        float[] da = new float[90];
-        float temp = 5;
-        for (int i = 0; i < 90; i++) {
-            Random r = new Random();
-            float rand = -1 + r.nextFloat() * 2;
-            temp = temp + rand;
-            da[i] = temp;
-        }
-        return da;
     }
 
     private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints){

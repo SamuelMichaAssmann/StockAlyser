@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.wasge.stockalyser.ui.SettingsFragment"
-        android:label="@string/settings"
+        android:label="@string/menu_settings"
         tools:layout="@layout/fragment_stock" />
 
 </navigation>
