@@ -40,6 +40,9 @@
         <item name="bottemnavitemclick">@color/colorCyan</item>
         <item name="bottemnavitem">@color/colorWhite</item>
         <item name="android:textColorPrimary">@color/colorRed</item>
+        <item name="titleTextColor">@color/colorWhite</item>
+        <item name="backgroundTint">@color/colorBlue</item>
+
 
         <item name="colorDark">@color/colorGrey</item>
         <item name="colorLight">@color/colorBlack</item>

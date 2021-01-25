@@ -1,6 +1,6 @@
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:fragment="@string/settings">
+    app:fragment="@string/menu_settings">
 
     <PreferenceCategory
         app:title="@string/user_header">
