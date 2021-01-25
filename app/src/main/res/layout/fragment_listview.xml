@@ -2,14 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:stretchColumns="0,1,2"
+        android:stretchColumns="1,2"
         android:gravity="start">
 
 
@@ -21,7 +20,7 @@
                     android:id="@+id/pre_chart"
                     android:layout_height="80dp"
                     android:layout_width="80dp"
-                    app:baselineColor="@color/colorBlack"
+                    app:baselineColor="@color/colorGrey"
                     app:baselineDashGap="8dp"
                     app:baselineStrokeWidth="2dp"
                     app:pathColor="@color/colorCyan"
@@ -47,6 +46,7 @@
                         android:id="@+id/watch_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@drawable/listview_text"
                         android:gravity="start"
                         android:text="----------"
                         android:textSize="15sp" />
@@ -63,6 +63,7 @@
                     android:id="@+id/watch_value"
                     android:gravity="center"
                     android:layout_width="wrap_content"
+                    android:textColor="@drawable/listview_text"
                     android:layout_height="wrap_content"
                     android:text="---.--"
                     android:textSize="25sp"/>
@@ -71,6 +72,7 @@
                     android:gravity="end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@drawable/listview_text"
                     android:layout_marginStart="10dp"
                     android:text="$"
                     android:textSize="25sp"/>

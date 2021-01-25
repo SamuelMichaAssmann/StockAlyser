@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
+    android:background="?attr/backgroundColor"
     tools:context=".MainActivity">
 
     <ScrollView
@@ -78,7 +79,7 @@
                                 android:textSize="30sp" />
 
                             <TextView
-                                android:id="@+id/current_currency"
+                                android:id="@+id/current_price_sign"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="8dp"
@@ -94,14 +95,23 @@
                             android:gravity="end">
 
                             <TextView
-                                android:id="@+id/test"
+                                android:id="@+id/percent_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginBottom="8dp"
                                 android:gravity="end"
-                                android:text="+20%"
+                                android:text="20,43"
                                 android:textSize="30sp" />
+                            <TextView
+                                android:id="@+id/percent_price_sign"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:gravity="bottom"
+                                android:text="%"
+                                android:textSize="20sp" />
 
 
 
@@ -112,56 +122,49 @@
 
             </LinearLayout>
 
-
             <com.yabu.livechart.view.LiveChart
                 android:id="@+id/live_chart"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:gravity="center_horizontal"
-
-                app:baselineColor="@color/colorBlack"
+                app:baselineColor="?attr/colorDark"
                 app:baselineDashGap="8dp"
-                app:baselineStrokeWidth="4dp"
-                app:boundsColor="@color/design_default_color_primary_variant"
-                app:labelTextColor="@color/colorCyan"
-                app:labelTextHeight="14sp"
-                app:mainCornerRadius="4dp"
-                app:overlayCircleColor="@color/design_default_color_primary_variant"
-                app:overlayCircleDiameter="8dp"
-                app:overlayLineColor="@color/design_default_color_primary_variant"
-                app:pathColor="@color/colorCyan"
-                app:pathStrokeWidth="4dp"
-                app:secondCornerRadius="4dp"
-                app:secondPathColor="@color/colorCyan"
-                tools:ignore="MissingClass" />
+                app:baselineStrokeWidth="2dp"
+                app:pathColor="?attr/colorCyan"
+                app:pathStrokeWidth="2dp"
+                app:negativeColor="?attr/colorRed"
+                app:positiveColor="?attr/colorGreen"
+                />
 
             <com.google.android.material.tabs.TabLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:tabTextColor="?attr/tabTextColor"
+                app:tabSelectedTextColor="?attr/colorDark">
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_heute" />
+                    android:text="@string/tab_today" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/week"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_woche" />
+                    android:text="@string/tab_week" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_monat" />
+                    android:text="@string/tab_month" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_jahr" />
+                    android:text="@string/tab_year" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/max"
@@ -170,501 +173,7 @@
                     android:text="@string/tab_max" />
             </com.google.android.material.tabs.TabLayout>
 
-            <TableLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:stretchColumns="0,1"
-                android:gravity="center">
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:text="Data"
-                    android:textSize="30sp" />
-
-                <TableRow>
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Name"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/name_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="Apple Inc"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/exchenge"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Exchenge"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/exchenge_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="NASDAQ"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/currency"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Currency"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/currency_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="USD"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Add date"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/date_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="2020-11-17"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/insert"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Insert"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/insert_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="110.34636"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:text="Key Indicator"
-                    android:textSize="30sp" />
-
-                <TableRow>
-                    <TextView
-                        android:id="@+id/open"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Open"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/open_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="119.123124"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/high"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="High"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/high_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="120.2342"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/close"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Close"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/close_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="119.1235145"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/volumen"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Volumen"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/volumen_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="13012825"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/avgvolume"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Average volume"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/avgvolume_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="106265760"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/preclose"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Previous close"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/preclose_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="120.2354"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/range"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Range"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/range_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="-0.9838"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/perchange"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Percent change"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/perchange_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="-0.78138"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center"
-                    android:text="52-Week"
-                    android:textSize="30sp" />
-
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearlow"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Low"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearlow_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="53.1465778"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearhigh"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="High"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearhigh_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="137.346364"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearlowchange"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Low change"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearlowchange_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="66.234554"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearhighchange"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="High change"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearhighchange_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="-18.0356"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearperlowchange"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="Low change percent"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearperlowchange_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="124.234253"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-                <TableRow>
-                    <TextView
-                        android:id="@+id/yearperhighchange"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:gravity="start"
-                        android:text="High change percent"
-                        android:textSize="20sp" />
-                    <TableRow>
-                        <TextView
-                            android:id="@+id/yearperhighchange_data"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:gravity="end"
-                            android:text="-13.234253"
-                            android:textSize="20sp" />
-                    </TableRow>
-                </TableRow>
-            </TableLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

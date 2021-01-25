@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     AppBarConfiguration mAppBarConfiguration;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_watchlist)
+                R.id.navigation_home, R.id.navigation_search, R.id.navigation_watchlist)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -59,6 +62,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem itemSearch = menu.findItem(R.id.search_icon);
+        SearchView searchView = (SearchView) itemSearch.getActionView();
+        searchView.setQueryHint("Search...");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItem itemBook = menu.findItem(R.id.bookmark);
+        itemBook.setIcon(R.drawable.ic_baseline_bookmark);
         return true;
     }
 
@@ -76,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
         //Navigation on Settings
         if (item.getItemId() == R.id.navigation_settings) {
             navController.navigate(R.id.navigation_settings);
+        }
+        if (item.getItemId() == R.id.search_icon) {
+            navController.navigate(R.id.navigation_search);
         }
         return super.onOptionsItemSelected(item);
     }

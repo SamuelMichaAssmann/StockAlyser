@@ -2,8 +2,11 @@
 
     <!-- Global -->
     <string name="app_name">StockAlyser</string>
+
+    <!-- Titel -->
+    <string name="title_stock">Stock</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_search">Search</string>
     <string name="title_watchlist">Watchlist</string>
 
     <!-- Preference -->
@@ -16,18 +19,20 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
-    <string name="settings">Settings</string>
-    <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="tab_heute">Heute</string>
-    <string name="tab_woche">Woche</string>
-    <string name="tab_monat">Monat</string>
-    <string name="tab_jahr">Jahr</string>
+    <!-- Menu -->
+    <string name="settings">Settings</string>
+
+    <!-- TabLayout -->
+    <string name="tab_today">Today</string>
+    <string name="tab_week">Week</string>
+    <string name="tab_month">Month</string>
+    <string name="tab_year">Year</string>
     <string name="tab_max">Max</string>
+
+    <!-- New -->
+
 
 </resources>

@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.wasge.stockalyser.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_search"
+        android:name="com.wasge.stockalyser.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_watchlist"
@@ -24,9 +24,15 @@
         tools:layout="@layout/fragment_watchlist" />
 
     <fragment
+        android:id="@+id/navigation_stock"
+        android:name="com.wasge.stockalyser.ui.StockFragment"
+        android:label="@string/title_stock"
+        tools:layout="@layout/fragment_stock" />
+
+    <fragment
         android:id="@+id/navigation_settings"
         android:name="com.wasge.stockalyser.ui.SettingsFragment"
         android:label="@string/settings"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_stock" />
 
 </navigation>
