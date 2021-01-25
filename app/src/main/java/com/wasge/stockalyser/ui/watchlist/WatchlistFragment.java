@@ -28,6 +28,7 @@ public class WatchlistFragment extends Fragment {
 
     ListView listView;
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

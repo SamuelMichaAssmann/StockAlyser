@@ -5,16 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.watchlist.WatchlistFragment"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical">
 
     <ListView
         android:id="@+id/listview"
-        android:listSelector="@drawable/listview"
+        android:background="?attr/backgroundColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawSelectorOnTop="false"
+        android:drawSelectorOnTop="true"
         tools:layout_editor_absoluteY="1dp" />
-
-
 
 </LinearLayout>

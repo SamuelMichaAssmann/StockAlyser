@@ -29,12 +29,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        LiveChartStyle style = new LiveChartStyle();
-
         LiveChart liveChart = root.findViewById(R.id.live_chart);
         final TextView currentPrice = root.findViewById(R.id.current_price);
         final TextView percentPrice = root.findViewById(R.id.percent_price);
-        //final MenuItem menuItem = root.findViewById(R.id.bookmark);
 
         ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
         float temp = 5;
@@ -69,7 +66,6 @@ public class HomeFragment extends Fragment {
                         percentPrice.setText(setPercent(start, end));
                     }
                 })
-                .setLiveChartStyle(style)
                 .drawBaselineFromFirstPoint()
                 .drawDataset();
 

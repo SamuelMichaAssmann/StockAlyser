@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
+    android:background="?attr/backgroundColor"
     tools:context=".MainActivity">
 
     <ScrollView
@@ -126,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:gravity="center_horizontal"
-                app:baselineColor="?attr/colorBlack"
+                app:baselineColor="?attr/colorDark"
                 app:baselineDashGap="8dp"
                 app:baselineStrokeWidth="2dp"
                 app:pathColor="?attr/colorCyan"
@@ -136,32 +137,36 @@
                 />
 
             <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:tabTextColor="?attr/tabTextColor"
+                app:tabSelectedTextColor="?attr/colorDark"
+                android:background="?attr/colorLight">
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_heute" />
+                    android:text="@string/tab_today" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/week"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_woche" />
+                    android:text="@string/tab_week" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_monat" />
+                    android:text="@string/tab_month" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_jahr" />
+                    android:text="@string/tab_year" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/max"
@@ -212,14 +217,14 @@
                 </TableRow>
                 <TableRow>
                     <TextView
-                        android:id="@+id/exchenge"
+                        android:id="@+id/exchange"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:gravity="start"
-                        android:text="Exchenge"
+                        android:text="Exchange"
                         android:textSize="20sp" />
                     <TableRow>
                         <TextView

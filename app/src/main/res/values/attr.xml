@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Theme">
-        <attr name="colorWhite" format="color"/>
+        <attr name="colorLight" format="color"/>
         <attr name="colorGrey" format="color"/>
-        <attr name="colorBlack" format="color"/>
+        <attr name="colorDark" format="color"/>
         <attr name="colorRed" format="color"/>
         <attr name="colorGreen" format="color"/>
         <attr name="colorBlue" format="color"/>
         <attr name="colorCyan" format="color"/>
         <attr name="colorOrange" format="color"/>
+        <attr name="bottemnav" format="color"/>
+        <attr name="bottemnavitemclick" format="color"/>
+        <attr name="bottemnavitem" format="color"/>
     </declare-styleable>
 </resources>
