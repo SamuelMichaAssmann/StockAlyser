@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.R;
+import com.wasge.stockalyser.util.FragmentReciever;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -23,9 +25,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class StockFragment extends Fragment {
+public class StockFragment extends Fragment implements FragmentReciever {
 
     String symbol;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -188,5 +195,10 @@ public class StockFragment extends Fragment {
         yearhighchange.setText(data[16]);
         perlowchange.setText(data[17]);
         perhighchange.setText(data[18]);
+    }
+
+    @Override
+    public void recieveData(Object[] data) {
+        Log.d("test","message recieved");
     }
 }

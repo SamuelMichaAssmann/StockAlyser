@@ -9,6 +9,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -16,12 +17,23 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.util.ApiManager;
+import com.wasge.stockalyser.util.FragmentReciever;
+import com.wasge.stockalyser.util.FragmentSender;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentSender {
 
     AppBarConfiguration mAppBarConfiguration;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        StockFragment fragment = new StockFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment,fragment,"fragment_stock").commit();
+        Log.d("test","tag_2:" + fragment.getTag());
+        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,5 +113,11 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.navigation_search);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void sendToFragment(String fragment, Object[] input) {
+        FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
+        f.recieveData(input);
     }
 }
