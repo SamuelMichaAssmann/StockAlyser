@@ -117,28 +117,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public static float[] getDayData(String stockName){
-        return null;
+        return new float[]{};
     }
 
     public static float[] getWeekData(String stockName){
-        return null;
+        return new float[]{};
     }
 
     public static float[] getMonthData(String stockName){
-        return null;
+        return new float[]{};
     }
 
     public static float[] getYearData(String stockName){
-        return null;
+        return new float[]{};
+    }
+
+    public static float[] getMaxData(String stockName){
+        return new float[]{};
     }
 
     public static String[] getDisplayData(String stockName){
-        return null;
+        return new String[]{};
     }
 
     //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()"] , [...] , ...  ]
     public static ArrayList<String[]> getWatchlistStockIDs(){
-        return null;
+        return new ArrayList<String[]>();
     }
 
 
