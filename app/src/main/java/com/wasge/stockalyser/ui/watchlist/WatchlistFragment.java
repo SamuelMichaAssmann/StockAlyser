@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.ui.StockFragment;
+import com.wasge.stockalyser.util.FragmentSender;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -28,29 +29,43 @@ public class WatchlistFragment extends Fragment {
 
     ListView listView;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
 
-        Fragment fragment = new Fragment();
+
+        if(getActivity() instanceof FragmentSender) {
+            final FragmentSender sender = (FragmentSender) getActivity();
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d("test", ""+ i);
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("test", ""+ i);
+                    navController.navigate(R.id.navigation_stock);
+                    sender.sendToFragment("fragment_stock",null);
+                }
+            });
+        } else {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d("test", ""+ i);
 
 
-                //Bundle bundle = new Bundle();
-                //String myMessage = "Stack Overflow is cool!";
-                //bundle.putString("message", myMessage );
-                //StockFragment fragment = StockFragment.
-                //fragment.setArguments(bundle);
-                navController.navigate(R.id.navigation_stock);
-            }
-        });
+
+                    navController.navigate(R.id.navigation_stock);
+                }
+            });
+        }
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:background="?attr/backgroundColor"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/fragment_stock"
+    android:tag="fragment_stock">
 
     <ScrollView
         android:layout_width="match_parent"
