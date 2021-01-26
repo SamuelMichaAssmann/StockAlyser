@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.search_icon) {
             navController.navigate(R.id.navigation_search);
         }
+
         return super.onOptionsItemSelected(item);
     }
 

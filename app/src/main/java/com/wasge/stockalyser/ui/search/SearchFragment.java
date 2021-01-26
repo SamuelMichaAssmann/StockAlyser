@@ -108,11 +108,11 @@ public class SearchFragment extends Fragment  {
     private class SearchQueryTask extends AsyncTask<Object,Integer,Integer> {
 
 
-        private ArrayList<String[]> test = new ArrayList<>();
+        private ArrayList<String[]> output = new ArrayList<>();
 
         @Override
         protected void onPostExecute(Integer strings) {
-            update_list(test);
+            update_list(output);
         }
 
         @Override
@@ -125,16 +125,20 @@ public class SearchFragment extends Fragment  {
          * **/
         @Override
         protected Integer doInBackground(Object... objects) {
-            ApiManager mng = new ApiManager(getContext());
-            if(objects != null && objects.length == 2 &&
-                    objects[0] instanceof String &&
-                    objects[1] instanceof Integer)
-                if((Integer) objects[1] == 0)
-                    test = mng.parseJSONData(mng.search(),(Integer)objects[1]);
+            try {
+                ApiManager mng = new ApiManager(getContext());
+                if(objects != null && objects.length == 2 &&
+                        objects[0] instanceof String &&
+                        objects[1] instanceof Integer)
+                    if((Integer) objects[1] == 0)
+                        output = mng.parseJSONData(mng.search(),(Integer)objects[1]);
                     else
-                    test = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
+                        output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
+            }catch (Exception e){
+                Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
+            }
 
-            return test.size();
+            return output.size();
         }
     }
 }
