@@ -7,15 +7,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.FragmentReciever;
+import com.wasge.stockalyser.util.FragmentSender;
 
 import java.util.ArrayList;
 
@@ -35,12 +40,32 @@ public class SearchFragment extends Fragment implements FragmentReciever {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final NavController navController = Navigation.findNavController(view);
+
+        if(getActivity() instanceof FragmentSender) {
+            final FragmentSender sender = (FragmentSender) getActivity();
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d("Stock", symbole.get(i));
+                    navController.navigate(R.id.navigation_stock);
+                    sender.sendToFragment("fragment_stock", new Object[]{symbole.get(i)});
+                }
+            });
+        } else {
+            Log.d("Stock", "Error");
+        }
+
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_search, container, false);
         listView = root.findViewById(R.id.searchlist);
 
         new SearchQueryTask().execute("null",0);
-
 
         Log.d("Listview", "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
@@ -67,6 +92,7 @@ public class SearchFragment extends Fragment implements FragmentReciever {
             name.add(s[1]);
             currency.add(s[2]);
             exchange.add(s[3]);
+            Log.d("Listview", s[0]);
         }
         Log.d("Listview", "Notify changes Adapter");
         adapter.notifyDataSetChanged();
@@ -118,9 +144,10 @@ class SearchAdapter extends ArrayAdapter<String> {
     ArrayList<String> exchange;
 
     SearchAdapter (Context context, ArrayList<String> name, ArrayList<String> symbol, ArrayList<String> currency, ArrayList<String> exchange) {
-        super(context, R.layout.listview_watchlist, R.id.search_name, name);
+        super(context, R.layout.listview_search, R.id.search_name, name);
         this.context = context;
         this.symbol = symbol;
+        this.name = name;
         this.currency = currency;
         this.exchange = exchange;
     }
@@ -141,7 +168,9 @@ class SearchAdapter extends ArrayAdapter<String> {
             search_symbol.setText(symbol.get(position));
             search_currency.setText(currency.get(position));
             search_exchange.setText(exchange.get(position));
-        }catch (Exception ignored){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return root;
     }

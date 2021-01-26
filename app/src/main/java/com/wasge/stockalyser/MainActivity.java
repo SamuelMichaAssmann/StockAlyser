@@ -17,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.wasge.stockalyser.ui.SettingsFragment;
 import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.ui.search.SearchFragment;
 import com.wasge.stockalyser.util.ApiManager;
@@ -34,21 +35,24 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
     @Override
     protected void onStart() {
         super.onStart();
+        // TODO Startscreen?
         StockFragment fragment = new StockFragment();
         SearchFragment fragment1 = new SearchFragment();
+        SettingsFragment fragment2 =  new SettingsFragment();
 
         getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment,"fragment_stock").commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1,"fragment_search").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment,fragment2, "fragment_settings").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment,fragment1, "fragment_search").commit();
+
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_search, R.id.navigation_watchlist)
                 .build();
@@ -56,14 +60,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        SharedPreferences apikey = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if (apikey != null){
-            String s = apikey.getString("apikey", null);
-
-            Log.d("test", "" + s);
-        }else
-            Log.d("test", "apikey is null");
-
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     @Override
@@ -85,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
                 return true;
             }
         });
-
-
         return true;
     }
 
@@ -113,11 +108,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
 
     @Override
     public void sendToFragment(String fragment, Object[] input) {
-        if (input[0] instanceof Boolean) {
-
-        }else {
-            FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
-            f.recieveData(input);
-        }
+        FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
+        f.recieveData(input);
     }
 }
