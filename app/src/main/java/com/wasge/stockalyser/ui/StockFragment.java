@@ -231,10 +231,9 @@ public class StockFragment extends Fragment implements FragmentReciever {
 
     @Override
     public void recieveData(Object[] data) {
-        if (data[0] instanceof String)
+        if (data[0] instanceof String) {
+            Log.d("Data", "Data received");
             this.symbol = (String) data[0];
-        else
-
-        Log.d("test","message recieved");
+        }
     }
 }

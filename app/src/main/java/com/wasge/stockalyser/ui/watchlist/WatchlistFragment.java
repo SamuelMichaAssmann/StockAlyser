@@ -13,12 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import com.wasge.stockalyser.MainActivity;
+
 import com.wasge.stockalyser.R;
-import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.util.DatabaseManager;
 import com.wasge.stockalyser.util.FragmentSender;
 import com.yabu.livechart.model.DataPoint;
@@ -29,11 +27,11 @@ import java.util.ArrayList;
 public class WatchlistFragment extends Fragment {
 
     ListView listView;
-    ArrayList<String> symbole;
-    ArrayList<String> name;
-    ArrayList<String> date;
-    ArrayList<String> value;
-    ArrayList<float[]> data;
+    ArrayList<String> symbole = new ArrayList<>();
+    ArrayList<String> name = new ArrayList<>();
+    ArrayList<String> date = new ArrayList<>();
+    ArrayList<String> value = new ArrayList<>();
+    ArrayList<float[]> data = new ArrayList<>();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -67,14 +65,8 @@ public class WatchlistFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
         listView = root.findViewById(R.id.listview);
-
-        this.symbole = new ArrayList<>();
-        this.name = new ArrayList<>();
-        this.date = new ArrayList<>();
-        this.value = new ArrayList<>();
-        this.data = new ArrayList<>();
-
         getData();
+        Log.d("Listview", "Create Adapter");
         WatchlistAdapter adapter = new WatchlistAdapter(this.getContext(), name, date, value, data);
         listView.setAdapter(adapter);
 
@@ -89,13 +81,14 @@ public class WatchlistFragment extends Fragment {
             date.add(d[5]);
             value.add(d[4]);
         }
-
         for (String s : symbole) {
             data.add(DatabaseManager.getTenDayData(s));
         }
     }
 }
 
+
+// Adapterclass for Listview
 class WatchlistAdapter extends ArrayAdapter<String> {
 
     Context context;
@@ -105,7 +98,7 @@ class WatchlistAdapter extends ArrayAdapter<String> {
     ArrayList<float[]> data;
 
     WatchlistAdapter (Context context, ArrayList<String> name, ArrayList<String> date, ArrayList<String> value, ArrayList<float[]> data) {
-        super(context, R.layout.fragment_listview, R.id.watch_name, name);
+        super(context, R.layout.listview_watchlist, R.id.watch_name, name);
         this.context = context;
         this.name = name;
         this.date = date;
@@ -117,7 +110,7 @@ class WatchlistAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View root = layoutInflater.inflate(R.layout.fragment_listview, parent, false);
+        View root = layoutInflater.inflate(R.layout.listview_watchlist, parent, false);
 
         ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
 
@@ -142,9 +135,8 @@ class WatchlistAdapter extends ArrayAdapter<String> {
                     .disableTouchOverlay()
                     .drawBaselineFromFirstPoint()
                     .drawDataset();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        }catch (Exception ignored){}
+
         return root;
     }
 }
