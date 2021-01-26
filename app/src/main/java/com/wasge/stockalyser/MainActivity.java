@@ -19,26 +19,24 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.ui.search.SearchFragment;
-import com.wasge.stockalyser.util.ApiManager;
-import com.wasge.stockalyser.util.FragmentReciever;
-import com.wasge.stockalyser.util.FragmentSender;
 
-import org.json.JSONException;
-
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements FragmentSender {
+public class MainActivity extends AppCompatActivity {
 
     AppBarConfiguration mAppBarConfiguration;
+    SearchFragment searchFragment;
+    StockFragment stockFragment;
+
+    public void subscribeToMain(int id, Fragment f) {
+        if (R.id.navigation_stock == id && f instanceof StockFragment) {
+            stockFragment = (StockFragment) f;
+        } else if (R.id.navigation_search == id && f instanceof SearchFragment) {
+            searchFragment = (SearchFragment) f;
+        }
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        StockFragment fragment = new StockFragment();
-        SearchFragment fragment1 = new SearchFragment();
-
-        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment,"fragment_stock").commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1,"fragment_search").commit();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
     }
 
@@ -57,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         NavigationUI.setupWithNavController(navView, navController);
 
         SharedPreferences apikey = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if (apikey != null){
+        if (apikey != null) {
             String s = apikey.getString("apikey", null);
 
             Log.d("test", "" + s);
-        }else
+        } else
             Log.d("test", "apikey is null");
 
     }
@@ -76,12 +74,13 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                sendSearchRequest(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                sendToFragment("fragment_search",  new Object[]{newText});
+                sendSearchRequest(newText);
                 return true;
             }
         });
@@ -111,13 +110,16 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void sendToFragment(String fragment, Object[] input) {
-        if (input[0] instanceof Boolean) {
 
-        }else {
-            FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
-            f.recieveData(input);
-        }
+    public void sendSearchRequest(String query) {
+        if (searchFragment != null)
+            searchFragment.searchFor(query);
     }
+
+    public void sendToStockFragment(Object[] data) {
+        if (stockFragment != null)
+            stockFragment.recieveData(data);
+    }
+
+
 }

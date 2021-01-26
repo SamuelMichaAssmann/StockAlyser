@@ -13,13 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
-import com.wasge.stockalyser.util.FragmentReciever;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements FragmentReciever {
+public class SearchFragment extends Fragment  {
 
     ArrayList<String> name = new ArrayList<>();
     ArrayList<String> symbole = new ArrayList<>();
@@ -33,6 +34,14 @@ public class SearchFragment extends Fragment implements FragmentReciever {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.subscribeToMain(R.id.navigation_search,this);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        adapter.notifyDataSetInvalidated();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,12 +58,11 @@ public class SearchFragment extends Fragment implements FragmentReciever {
         return root;
     }
 
-    @Override
-    public void recieveData(Object[] data) {
-        if (data[0] instanceof String) {
-            Log.d("Data", "Data received");
-            new SearchQueryTask().execute(data[0],1);
-        }
+
+
+    public void searchFor(String query){
+        Log.d("searchFragment", "searching for: " + query );
+        new SearchQueryTask().execute(query,1);
     }
 
     private void update_list(ArrayList<String[]> table){
@@ -62,15 +70,19 @@ public class SearchFragment extends Fragment implements FragmentReciever {
         name.clear();
         currency.clear();
         exchange.clear();
+        //String debug = "\ngot:\n";
         for (String[] s : table) {
             symbole.add(s[0]);
+            //debug+="   " + s[0] + "\n";
             name.add(s[1]);
             currency.add(s[2]);
             exchange.add(s[3]);
         }
-        Log.d("Listview", "Notify changes Adapter");
+        //Log.d("searchFragment", debug);
         adapter.notifyDataSetChanged();
-        listView.invalidateViews();
+        adapter.notifyDataSetInvalidated();
+        Log.d("Listview", "Notify changes Adapter");
+
     }
 
 
@@ -82,6 +94,7 @@ public class SearchFragment extends Fragment implements FragmentReciever {
         @Override
         protected void onPostExecute(Integer strings) {
             update_list(test);
+
         }
 
         @Override
@@ -118,8 +131,9 @@ class SearchAdapter extends ArrayAdapter<String> {
     ArrayList<String> exchange;
 
     SearchAdapter (Context context, ArrayList<String> name, ArrayList<String> symbol, ArrayList<String> currency, ArrayList<String> exchange) {
-        super(context, R.layout.listview_watchlist, R.id.search_name, name);
+        super(context, R.layout.listview_search, R.id.search_name, name);
         this.context = context;
+        this.name = name;
         this.symbol = symbol;
         this.currency = currency;
         this.exchange = exchange;

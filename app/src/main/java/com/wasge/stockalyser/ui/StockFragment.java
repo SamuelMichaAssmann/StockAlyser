@@ -15,9 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
-import com.wasge.stockalyser.util.FragmentReciever;
 import com.wasge.stockalyser.util.DatabaseManager;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
@@ -27,15 +27,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Random;
 
-public class StockFragment extends Fragment implements FragmentReciever {
+public class StockFragment extends Fragment {
 
     String symbol;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity mainActivity = null;
+        if (getActivity() instanceof MainActivity)
+            mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null)
+            mainActivity.subscribeToMain(R.id.navigation_stock, this);
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -76,7 +81,7 @@ public class StockFragment extends Fragment implements FragmentReciever {
         return root;
     }
 
-    private float[] getData(View root, int style, String symbol){
+    private float[] getData(View root, int style, String symbol) {
         if (style == 1)
             return DatabaseManager.getWeekData(symbol);
         else if (style == 2)
@@ -85,45 +90,44 @@ public class StockFragment extends Fragment implements FragmentReciever {
             return DatabaseManager.getYearData(symbol);
         else if (style == 4)
             return DatabaseManager.getMaxData(symbol);
-        else if (style == 5){
+        else if (style == 5) {
             ApiManager apiManager = new ApiManager(root.getContext());
             float[] data = new float[]{};
             return data;
-        }
-        else
+        } else
             return DatabaseManager.getDayData(symbol);
     }
 
-    private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints){
+    private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints) {
         dataPoints.clear();
         int i = 0;
-        for (float d:data) {
+        for (float d : data) {
             dataPoints.add(new DataPoint(i, d));
             i++;
         }
 
     }
 
-    private void setGraph (View root, ArrayList<DataPoint> dataPoints,  LiveChart liveChart){
+    private void setGraph(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         String style = PreferenceKey.getString("trend", null);
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
         //Log.d("style", style);
-        if ( style == null || style.equals("none"))
+        if (style == null || style.equals("none"))
             setLiveChart(root, dataPoints, liveChart);
         else
             getDataPoints(getData(root, 5, symbol), dataPoints2);
-            setLiveChart(root, dataPoints, dataPoints2, liveChart);
+        setLiveChart(root, dataPoints, dataPoints2, liveChart);
     }
 
-    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints,  LiveChart liveChart){
+    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
         Dataset dataset = new Dataset(dataPoints);
         liveChart.setDataset(dataset)
                 .drawBaselineFromFirstPoint()
                 .drawDataset();
     }
 
-    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints1, ArrayList<DataPoint> dataPoints2,  LiveChart liveChart){
+    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints1, ArrayList<DataPoint> dataPoints2, LiveChart liveChart) {
         Dataset dataset1 = new Dataset(dataPoints1);
         Dataset dataset2 = new Dataset(dataPoints2);
         liveChart.setDataset(dataset1)
@@ -132,11 +136,11 @@ public class StockFragment extends Fragment implements FragmentReciever {
                 .drawDataset();
     }
 
-    private void setIndicator(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart){
+    private void setIndicator(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
         final TextView currentPrice = root.findViewById(R.id.current_price);
         final TextView percentPrice = root.findViewById(R.id.percent_price);
         final float start = dataPoints.get(0).getY();
-        final float end = dataPoints.get(dataPoints.size()-1).getY();
+        final float end = dataPoints.get(dataPoints.size() - 1).getY();
 
         percentPrice.setText(setPercent(start, end));
         currentPrice.setText(setCurrent(end));
@@ -158,11 +162,11 @@ public class StockFragment extends Fragment implements FragmentReciever {
         });
     }
 
-    private String setPercent(float start, float end){
+    private String setPercent(float start, float end) {
         final DecimalFormat df = new DecimalFormat("#.##");
-        String percentString = "";
-        float percent = ((end-start) / start) * 100;
-        if(percent >= 0 )
+        String percentString;
+        float percent = ((end - start) / start) * 100;
+        if (percent >= 0)
             percentString = "+" + df.format(percent);
         else
             percentString = df.format(percent);
@@ -170,13 +174,13 @@ public class StockFragment extends Fragment implements FragmentReciever {
 
     }
 
-    private String setCurrent(float end){
+    private String setCurrent(float end) {
         final DecimalFormat df = new DecimalFormat("#.##");
         return df.format(end);
 
     }
 
-    private void setData(View root, String[] data){
+    private void setData(View root, String[] data) {
         TextView symbol = root.findViewById(R.id.symbol);
         TextView name = root.findViewById(R.id.name_data);
         TextView exchange = root.findViewById(R.id.exchenge_data);
@@ -222,14 +226,13 @@ public class StockFragment extends Fragment implements FragmentReciever {
             perlowchange.setText(data[18]);
             perhighchange.setText(data[19]);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
     }
 
-    @Override
     public void recieveData(Object[] data) {
         if (data[0] instanceof String) {
             Log.d("Data", "Data received");

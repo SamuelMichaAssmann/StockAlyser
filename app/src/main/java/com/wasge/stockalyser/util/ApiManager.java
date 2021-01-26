@@ -96,7 +96,7 @@ public class ApiManager {
         try {
             String input = getUrlInformation(url);
             JSONArray values = new JSONObject(input).getJSONArray("data");
-            for (int i = 0; i < values.length(); i++) {
+            for (int i = 0; i < values.length() && i < 500; i++) {
                 String symbol = values.getJSONObject(i).get("symbol").toString();
                 String name = values.getJSONObject(i).get(stockName).toString();
                 String currency = values.getJSONObject(i).get("currency").toString();

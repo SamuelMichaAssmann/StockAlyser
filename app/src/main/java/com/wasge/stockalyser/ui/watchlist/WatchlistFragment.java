@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.DatabaseManager;
-import com.wasge.stockalyser.util.FragmentSender;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -38,15 +38,15 @@ public class WatchlistFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
 
-        if(getActivity() instanceof FragmentSender) {
-            final FragmentSender sender = (FragmentSender) getActivity();
+        if(getActivity() instanceof MainActivity) {
+            final MainActivity sender = (MainActivity) getActivity();
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("test", ""+ i);
 
                     navController.navigate(R.id.navigation_stock);
-                    sender.sendToFragment("fragment_stock", new Object[]{symbole.get(i)});
+                    sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
         } else {
@@ -112,7 +112,7 @@ class WatchlistAdapter extends ArrayAdapter<String> {
         LayoutInflater layoutInflater = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View root = layoutInflater.inflate(R.layout.listview_watchlist, parent, false);
 
-        ArrayList<DataPoint> dataPoints = new ArrayList<DataPoint>();
+        ArrayList<DataPoint> dataPoints = new ArrayList<>();
 
         LiveChart liveChart = root.findViewById(R.id.pre_chart);
         TextView watch_name = root.findViewById(R.id.watch_name);
