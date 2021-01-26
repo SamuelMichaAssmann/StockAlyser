@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment implements FragmentReciever {
 
-    ArrayList<String> list = new ArrayList<>();
     ArrayList<String> name = new ArrayList<>();
     ArrayList<String> symbole = new ArrayList<>();
     ArrayList<String> currency = new ArrayList<>();
