@@ -1,6 +1,7 @@
 package com.wasge.stockalyser.ui.search;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.FragmentReciever;
-import com.yabu.livechart.model.DataPoint;
 
 import java.util.ArrayList;
 
@@ -40,15 +40,9 @@ public class SearchFragment extends Fragment implements FragmentReciever {
         root = inflater.inflate(R.layout.fragment_search, container, false);
         listView = root.findViewById(R.id.searchlist);
 
-        ApiManager apiManager = new ApiManager(root.getContext());
-        ArrayList<String[]> stocklist = apiManager.parseJSONData(apiManager.search(), 0);
+        new SearchQueryTask().execute("null",0);
 
-        for (String[] s : stocklist) {
-            symbole.add(s[0]);
-            name.add(s[1]);
-            currency.add(s[2]);
-            exchange.add(s[3]);
-        }
+
         Log.d("Listview", "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
         listView.setAdapter(adapter);
@@ -60,23 +54,57 @@ public class SearchFragment extends Fragment implements FragmentReciever {
     public void recieveData(Object[] data) {
         if (data[0] instanceof String) {
             Log.d("Data", "Data received");
-            symbole.clear();
-            name.clear();
-            currency.clear();
-            exchange.clear();
+            new SearchQueryTask().execute(data[0],1);
+        }
+    }
 
-            ApiManager apiManager = new ApiManager(root.getContext());
-            ArrayList<String[]> stocklist = apiManager.parseJSONData(apiManager.search((String) data[0]), 1);
+    private void update_list(ArrayList<String[]> table){
+        symbole.clear();
+        name.clear();
+        currency.clear();
+        exchange.clear();
+        for (String[] s : table) {
+            symbole.add(s[0]);
+            name.add(s[1]);
+            currency.add(s[2]);
+            exchange.add(s[3]);
+        }
+        Log.d("Listview", "Notify changes Adapter");
+        adapter.notifyDataSetChanged();
+        listView.invalidateViews();
+    }
 
-            for (String[] s : stocklist) {
-                symbole.add(s[0]);
-                name.add(s[1]);
-                currency.add(s[2]);
-                exchange.add(s[3]);
-            }
-            Log.d("Listview", "Notify changes Adapter");
-            adapter.notifyDataSetChanged();
-            listView.invalidateViews();
+
+    private class SearchQueryTask extends AsyncTask<Object,Integer,Integer> {
+
+
+        private ArrayList<String[]> test = new ArrayList<>();
+
+        @Override
+        protected void onPostExecute(Integer strings) {
+            update_list(test);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        /**
+         * @param objects Url, kind if kind == 0 -> Url will be ignored
+         * **/
+        @Override
+        protected Integer doInBackground(Object... objects) {
+            ApiManager mng = new ApiManager(getContext());
+            if(objects != null && objects.length == 2 &&
+                    objects[0] instanceof String &&
+                    objects[1] instanceof Integer)
+                if((Integer) objects[1] == 0)
+                    test = mng.parseJSONData(mng.search(),(Integer)objects[1]);
+                    else
+                    test = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
+
+            return test.size();
         }
     }
 }
@@ -119,3 +147,4 @@ class SearchAdapter extends ArrayAdapter<String> {
         return root;
     }
 }
+

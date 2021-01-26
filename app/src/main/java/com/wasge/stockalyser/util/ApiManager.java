@@ -3,9 +3,11 @@ package com.wasge.stockalyser.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,75 +35,68 @@ public class ApiManager {
     //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
     //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
     //  trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
-    public String buildUrl(String kind, String symbol, String interval){
+    public String buildUrl(String kind, String symbol, String interval) {
         return entypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
     }
 
     //  quote?symbol=AAPL&apikey=your_api_key --- Stock Info
     //  price?symbol=AAPL&apikey=your_api_key --- Stock Price
-    public String buildUrl(String kind, String symbol){
-        return entypoint + kind + "?symbol=" + symbol  + "&apikey=" + apikey;
+    public String buildUrl(String kind, String symbol) {
+        return entypoint + kind + "?symbol=" + symbol + "&apikey=" + apikey;
     }
 
     // symbol_search?symbol=AA --- Search Stock
-    public String search(String stock){
+    public String search(String stock) {
         return entypoint + "symbol_search?symbol=" + stock;
     }
 
     // search
-    public String search(){
+    public String search() {
         return entypoint + "stocks";
     }
 
     //  api_usage?apikey=your_api_key --- Search Stock
-    public String usage(){
+    public String usage() {
         return entypoint + "api_usage?apikey=" + apikey;
     }
 
-    public String getUrlInformation(final String rowUrl)  {
+    public String getUrlInformation(final String rowUrl) {
         final StringBuilder s = new StringBuilder();
-        final Thread thread = new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                URL url = null;
-                try {
-                    url = new URL(rowUrl);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                if (url != null) {
-                    try (
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-                        for (String line; (line = reader.readLine()) != null; ) {
-                            s.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }};
-        thread.start();
 
-        while (thread.isAlive()){
-
+        URL url = null;
+        try {
+            url = new URL(rowUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        if (url != null) {
+            try (
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+                for (String line; (line = reader.readLine()) != null; ) {
+                    s.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+
         return s.toString();
     }
 
     //kind = 0 ist alles
     //kind = 1 exakte suche
-    public ArrayList<String[]> parseJSONData(final String url, final int kind){
-        final ArrayList<String[]> search = new ArrayList<String[]>(){};
+    public ArrayList<String[]> parseJSONData(final String url, final int kind) {
+        final ArrayList<String[]> search = new ArrayList<String[]>() {
+        };
         String stockName;
         if (kind == 1) {
             stockName = "instrument_name";
-        }else
+        } else
             stockName = "name";
         try {
             String input = getUrlInformation(url);
             JSONArray values = new JSONObject(input).getJSONArray("data");
-            for (int i = 0; i < values.length(); i++){
+            for (int i = 0; i < values.length(); i++) {
                 String symbol = values.getJSONObject(i).get("symbol").toString();
                 String name = values.getJSONObject(i).get(stockName).toString();
                 String currency = values.getJSONObject(i).get("currency").toString();
@@ -114,7 +109,7 @@ public class ApiManager {
         return search;
     }
 
-    public float[] parseJSONData(String url){
+    public float[] parseJSONData(String url) {
         ArrayList<Float> data = new ArrayList<>();
         return null;
     }

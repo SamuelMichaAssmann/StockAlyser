@@ -55,12 +55,12 @@ public class StockDataContract {
 
         public static String createTable(){
             return "CREATE TABLE " + TABLE_NAME + " (" +
-                    FOREIGN_ID + " TEXT NOT NULL," +
-                    COLUMN_NAME_DATETIME + " TEXT NOT NULL," +
-                    COLUMN_NAME_OPEN + " REAL NOT NULL," +
-                    COLUMN_NAME_HIGH  + " REAL NOT NULL," +
-                    COLUMN_NAME_LOW  + " REAL NOT NULL," +
-                    COLUMN_NAME_CLOSE + " REAL NOT NULL," +
+                    FOREIGN_ID + " TEXT NOT NULL, " +
+                    COLUMN_NAME_DATETIME + " TEXT NOT NULL, " +
+                    COLUMN_NAME_OPEN + " REAL NOT NULL, " +
+                    COLUMN_NAME_HIGH  + " REAL NOT NULL, " +
+                    COLUMN_NAME_LOW  + " REAL NOT NULL, " +
+                    COLUMN_NAME_CLOSE + " REAL NOT NULL, " +
                     COLUMN_NAME_VOLUME + " INTEGER NOT NULL)";
         }
         public static String deleteTable(){
@@ -74,6 +74,7 @@ public class StockDataContract {
         //METADATA
         public static final String ID = "stock";
         public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_EXCHANGE = "exchange";
         public static final String COLUMN_NAME_CURRENCY = "currency";
         public static final String COLUMN_NAME_DATETIME = "datetime";
         //CURRENT DATA
@@ -93,21 +94,22 @@ public class StockDataContract {
 
         public static final String createTable(){
             return "CREATE TABLE " + TABLE_NAME + " (" +
-                    ID + " TEXT PRIMARY KEY," +
-                    COLUMN_NAME_NAME + " TEXT NOT NULL," +
-                    COLUMN_NAME_CURRENCY + " TEXT NOT NULL," +
-                    COLUMN_NAME_DATETIME + " TEXT NOT NULL," +
-                    COLUMN_NAME_OPEN + " REAL NOT NULL," +
-                    COLUMN_NAME_HIGH  + " REAL NOT NULL," +
-                    COLUMN_NAME_LOW  + " REAL NOT NULL," +
-                    COLUMN_NAME_CLOSE + " REAL NOT NULL," +
-                    COLUMN_NAME_VOLUME + " INTEGER NOT NULL," +
+                    ID + " TEXT PRIMARY KEY, " +
+                    COLUMN_NAME_NAME + " TEXT NOT NULL, " +
+                    COLUMN_NAME_EXCHANGE + "TEXT NOT NULL, " +
+                    COLUMN_NAME_CURRENCY + " TEXT NOT NULL, " +
+                    COLUMN_NAME_DATETIME + " TEXT NOT NULL, " +
+                    COLUMN_NAME_OPEN + " REAL NOT NULL, " +
+                    COLUMN_NAME_HIGH  + " REAL NOT NULL, " +
+                    COLUMN_NAME_LOW  + " REAL NOT NULL, " +
+                    COLUMN_NAME_CLOSE + " REAL NOT NULL, " +
+                    COLUMN_NAME_VOLUME + " INTEGER NOT NULL, " +
 
-                    COLUMN_NAME_52HIGH  + " REAL NOT NULL," +
-                    COLUMN_NAME_52LOW  + " REAL NOT NULL," +
-                    COLUMN_NAME_52HIGH_CHANGE  + " REAL NOT NULL," +
-                    COLUMN_NAME_52LOW_CHANGE  + " REAL NOT NULL," +
-                    COLUMN_NAME_52HIGH_CHANGE_PERCENT  + " REAL NOT NULL," +
+                    COLUMN_NAME_52HIGH  + " REAL NOT NULL, " +
+                    COLUMN_NAME_52LOW  + " REAL NOT NULL, " +
+                    COLUMN_NAME_52HIGH_CHANGE  + " REAL NOT NULL, " +
+                    COLUMN_NAME_52LOW_CHANGE  + " REAL NOT NULL, " +
+                    COLUMN_NAME_52HIGH_CHANGE_PERCENT  + " REAL NOT NULL, " +
                     COLUMN_NAME_52LOW_CHANGE_PERCENT  + " REAL NOT NULL)" ;
         }
         public static final String deleteTable(){
@@ -120,12 +122,16 @@ public class StockDataContract {
 
         public static final String ID = "stock";
         public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_EXCHANGE = "exchange";
         public static final String COLUMN_NAME_CURRENCY = "currency";
+        public static final String COLUMN_NAME_AVG = "average";
         public static final String createTable(){
             return "CREATE TABLE " + TABLE_NAME + " (" +
-                    ID + " TEXT PRIMARY KEY," +
-                    COLUMN_NAME_NAME + " TEXT NOT NULL," +
-                    COLUMN_NAME_CURRENCY + " TEXT NOT NULL)";
+                    ID + " TEXT PRIMARY KEY, " +
+                    COLUMN_NAME_NAME + " TEXT NOT NULL, " +
+                    COLUMN_NAME_EXCHANGE + "TEXT NOT NULL, " +
+                    COLUMN_NAME_CURRENCY + " TEXT NOT NULL, " +
+                    COLUMN_NAME_AVG + "REAL NOT NULL)";
         }
         public static final String deleteTable(){
             return "DROP TABLE IF EXISTS " + TABLE_NAME;

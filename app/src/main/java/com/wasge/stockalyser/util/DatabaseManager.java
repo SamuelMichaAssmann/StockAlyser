@@ -3,6 +3,7 @@ package com.wasge.stockalyser.util;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 
 import org.json.JSONObject;
 
@@ -44,21 +45,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);*/
     }
 
-    public void createTable (String TableName, String[] TableData){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        StringBuilder createQuery = new StringBuilder();
-        createQuery.append("CREATE TABLE ")
-                .append(TableName)
-                .append(" (ID INTEGER PRIMARY KEY");
-        for (String datum : TableData) {
-            createQuery.append(", ")
-                    .append(datum)
-                    .append(" TEXT NOT NULL");
-        }
-        createQuery.append(")");
-        sqLiteDatabase.execSQL(createQuery.toString());
-    }
-
     public void insertTable (String TableName, String[] TableData){ // datentyp einfügen
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         StringBuilder createQuery = new StringBuilder();
@@ -91,10 +77,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    private final String deletion_template = "DELETE FROM %s WHERE %s <= date('now','%s')";
+
     private void truncateData(SQLiteDatabase db){
 
         //delete Data, older than the specified longest date
+        String deletion_template = "DELETE FROM %s WHERE %s <= date('now','%s')";
         String sql = String.format(deletion_template,
                 StockDataContract.DailyEntry.TABLE_NAME,
                 StockDataContract.DailyEntry.COLUMN_NAME_DATETIME,
@@ -189,6 +176,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return watchlist;
     }
 }
+
+
 
 enum REQUEST_TYPE {
     CURRENT_STATUS,

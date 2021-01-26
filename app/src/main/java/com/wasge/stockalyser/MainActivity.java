@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         SearchFragment fragment1 = new SearchFragment();
 
         getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment,"fragment_stock").commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment1,"fragment_search").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment1,"fragment_search").commit();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
     }
 

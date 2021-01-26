@@ -87,7 +87,7 @@ public class StockFragment extends Fragment implements FragmentReciever {
             return DatabaseManager.getMaxData(symbol);
         else if (style == 5){
             ApiManager apiManager = new ApiManager(root.getContext());
-            float[] data = null;
+            float[] data = new float[]{};
             return data;
         }
         else
@@ -108,8 +108,8 @@ public class StockFragment extends Fragment implements FragmentReciever {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         String style = PreferenceKey.getString("trend", null);
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        Log.d("style", style);
-        if (style.equals("none"))
+        //Log.d("style", style);
+        if ( style == null || style.equals("none"))
             setLiveChart(root, dataPoints, liveChart);
         else
             getDataPoints(getData(root, 5, symbol), dataPoints2);
