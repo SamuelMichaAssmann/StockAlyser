@@ -26,12 +26,13 @@ import java.util.ArrayList;
 
 public class WatchlistFragment extends Fragment {
 
-    ListView listView;
-    ArrayList<String> symbole = new ArrayList<>();
-    ArrayList<String> name = new ArrayList<>();
-    ArrayList<String> date = new ArrayList<>();
-    ArrayList<String> value = new ArrayList<>();
-    ArrayList<float[]> data = new ArrayList<>();
+    private String TAG = "WatchistFragment";
+    private ListView listView;
+    private ArrayList<String> symbole = new ArrayList<>();
+    private ArrayList<String> name = new ArrayList<>();
+    private ArrayList<String> date = new ArrayList<>();
+    private ArrayList<String> value = new ArrayList<>();
+    private ArrayList<float[]> data = new ArrayList<>();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -43,13 +44,13 @@ public class WatchlistFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d("Stock", symbole.get(i));
+                    Log.d(TAG, symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
                     sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
         } else {
-            Log.d("Stock", "Error");
+            Log.d(TAG, "Error");
         }
 
     }
@@ -58,7 +59,7 @@ public class WatchlistFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
         listView = root.findViewById(R.id.listview);
         getData();
-        Log.d("Listview", "Create Adapter");
+        Log.d(TAG, "Create Adapter");
         WatchlistAdapter adapter = new WatchlistAdapter(this.getContext(), name, date, value, data);
         listView.setAdapter(adapter);
 
@@ -66,7 +67,7 @@ public class WatchlistFragment extends Fragment {
     }
 
     private void getData(){
-        ArrayList<String[]> watchData = DatabaseManager.getWatchlistStockIDs();
+        ArrayList<String[]> watchData = DatabaseManager.getWatchlistStock();
         for (String[] d : watchData) {
             symbole.add(d[0]);
             name.add(d[1]);

@@ -162,18 +162,37 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
-    public static ArrayList<String[]> getWatchlistStockIDs(){
+    public static ArrayList<String[]> getWatchlistStock(){
 
         // TODO insert real data
-        ArrayList<String[]> watchlist = new ArrayList<String[]>();
+        ArrayList<String[]> watchlist = new ArrayList<>();
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
         watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
 
         return watchlist;
+    }
+
+    /**
+     * @param Symbol i.e. "AAPL"
+     * **/
+    public static boolean removeFromWatchlist(String Symbol){
+        return true;
+    }
+
+    /**
+     * @param Stock i.e. ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"]
+     * **/
+    public static boolean addToWatchlist(String[] Stock){
+        return true;
+    }
+
+    public static String[] getWatchlistStockIDs(){
+        return new String[]{"AAPL","AAPL","AAPL",  "AAPL", "AAPL","AAPL"};
     }
 }
 

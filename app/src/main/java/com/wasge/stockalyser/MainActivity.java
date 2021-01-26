@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     AppBarConfiguration mAppBarConfiguration;
     SearchFragment searchFragment;
     StockFragment stockFragment;
+    MenuItem bookmark;
 
     public void subscribeToMain(int id, Fragment f) {
         if (R.id.navigation_stock == id && f instanceof StockFragment) {
@@ -63,8 +66,15 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem itemSearch = menu.findItem(R.id.search_icon);
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         final SearchView searchView = (SearchView) itemSearch.getActionView();
         searchView.setQueryHint("Search...");
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.navigation_search);
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -78,6 +88,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        this.bookmark = menu.findItem(R.id.bookmark);
+        bookmark.setVisible(false);
+        bookmark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                toggleOpenStockWatchlist();
+                return false;
+            }
+        });
+
+
         return true;
     }
 
@@ -103,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void toggleOpenStockWatchlist(){
+        stockFragment.toggleCurrentToWatchlist();
+    }
+
     public void sendSearchRequest(String query) {
         if (searchFragment != null)
             searchFragment.searchFor(query);
@@ -111,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
     public void sendToStockFragment(Object[] data) {
         if (stockFragment != null)
             stockFragment.recieveData(data);
+    }
+
+    public void setBookmarkVisibility(boolean visibility){
+        bookmark.setVisible(visibility);
+    }
+
+    public void setBookmarkStyle(@DrawableRes int id){
+        bookmark.setIcon(id);
     }
 
 

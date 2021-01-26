@@ -26,14 +26,15 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment  {
 
-    ArrayList<String> name = new ArrayList<>();
-    ArrayList<String> symbole = new ArrayList<>();
-    ArrayList<String> currency = new ArrayList<>();
-    ArrayList<String> exchange = new ArrayList<>();
+    private ArrayList<String> name = new ArrayList<>();
+    private ArrayList<String> symbole = new ArrayList<>();
+    private ArrayList<String> currency = new ArrayList<>();
+    private ArrayList<String> exchange = new ArrayList<>();
 
-    SearchAdapter adapter;
-    ListView listView;
-    View root;
+    private String TAG = "SearchFragment";
+    private SearchAdapter adapter;
+    private ListView listView;
+    private View root;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,13 +55,13 @@ public class SearchFragment extends Fragment  {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d("Stock", symbole.get(i));
+                    Log.d(TAG, symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
                     sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
         } else {
-            Log.d("Stock", "Error");
+            Log.d(TAG, "Error");
         }
 
     }
@@ -71,7 +72,7 @@ public class SearchFragment extends Fragment  {
 
         new SearchQueryTask().execute("null",0);
 
-        Log.d("Listview", "Create Adapter");
+        Log.d(TAG, "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
         listView.setAdapter(adapter);
 
@@ -81,7 +82,7 @@ public class SearchFragment extends Fragment  {
 
 
     public void searchFor(String query){
-        Log.d("searchFragment", "searching for: " + query );
+        Log.d(TAG, "searching for: " + query );
         new SearchQueryTask().execute(query,1);
     }
 
@@ -98,9 +99,9 @@ public class SearchFragment extends Fragment  {
             currency.add(s[2]);
             exchange.add(s[3]);
         }
-        //Log.d("searchFragment", debug);
+        //Log.d(TAG, debug);
         adapter.notifyDataSetChanged();
-        Log.d("Listview", "Notify changes Adapter");
+        Log.d(TAG, "Notify changes Adapter");
 
     }
 
@@ -108,11 +109,11 @@ public class SearchFragment extends Fragment  {
     private class SearchQueryTask extends AsyncTask<Object,Integer,Integer> {
 
 
-        private ArrayList<String[]> test = new ArrayList<>();
+        private ArrayList<String[]> output = new ArrayList<>();
 
         @Override
         protected void onPostExecute(Integer strings) {
-            update_list(test);
+            update_list(output);
         }
 
         @Override
@@ -125,16 +126,21 @@ public class SearchFragment extends Fragment  {
          * **/
         @Override
         protected Integer doInBackground(Object... objects) {
-            ApiManager mng = new ApiManager(getContext());
-            if(objects != null && objects.length == 2 &&
-                    objects[0] instanceof String &&
-                    objects[1] instanceof Integer)
-                if((Integer) objects[1] == 0)
-                    test = mng.parseJSONData(mng.search(),(Integer)objects[1]);
+            try {
+                ApiManager mng = new ApiManager(getContext());
+                if(objects != null && objects.length == 2 &&
+                        objects[0] instanceof String &&
+                        objects[1] instanceof Integer)
+                    if((Integer) objects[1] == 0)
+                        output = mng.parseJSONData(mng.search(),(Integer)objects[1]);
                     else
-                    test = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
+                        output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
 
-            return test.size();
+
+            } catch (Exception e){
+                Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
+            }
+            return output.size();
         }
     }
 }

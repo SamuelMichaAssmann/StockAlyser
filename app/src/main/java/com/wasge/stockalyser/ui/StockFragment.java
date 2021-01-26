@@ -30,12 +30,37 @@ import java.util.ArrayList;
 
 public class StockFragment extends Fragment {
 
-    String symbol;
+    private MainActivity mainActivity;
+
+    //Stock Data:
+    // columns: symbol, name, exchange, currency, average;
+    private String symbol, name, exchange, currency, average, TAG ="StockFragment";
+
+    //for testing
+    boolean watched = false;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"entered onResume()");
+        if(isInWatchlist())
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark);
+        else
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark_border);
+        mainActivity.setBookmarkVisibility(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"entered onPause()");
+        mainActivity.setBookmarkVisibility(false);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity mainActivity = null;
+        mainActivity = null;
         if (getActivity() instanceof MainActivity)
             mainActivity = (MainActivity) getActivity();
         if (mainActivity != null)
@@ -112,7 +137,7 @@ public class StockFragment extends Fragment {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         String style = PreferenceKey.getString("trend", null);
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        //Log.d("style", style);
+        //Log.d(TAG, style);
         if (style == null || style.equals("none"))
             setLiveChart(root, dataPoints, liveChart);
         else
@@ -149,7 +174,7 @@ public class StockFragment extends Fragment {
 
             @Override
             public void onTouchCallback(@NotNull DataPoint dataPoint) {
-                Log.d("data", "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
+                Log.d(TAG, "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
                 currentPrice.setText(setCurrent(dataPoint.getY()));
                 percentPrice.setText(setPercent(start, dataPoint.getY()));
             }
@@ -180,7 +205,43 @@ public class StockFragment extends Fragment {
 
     }
 
+    public void toggleCurrentToWatchlist(){
+        //for testing
+        watched = !watched;
+
+        if(isInWatchlist())
+            removeFromWatchlist();
+        else
+            addToWatchlist();
+        updateBookmark();
+    }
+
+    private void removeFromWatchlist(){
+        if(DatabaseManager.removeFromWatchlist(symbol))
+            Log.d(TAG, "successfully removed stock: " + symbol + " from watchlist!");
+        else
+            Log.d(TAG,"failed to remove stock: " + symbol + " from watchlist!");
+    }
+
+    private void addToWatchlist(){
+        if(DatabaseManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
+            Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
+        else
+            Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
+
+    }
+
+    private void updateBookmark(){
+        if(isInWatchlist())
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark);
+        else
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark_border);
+    }
+
     private void setData(View root, String[] data) {
+        if(data == null) return;
+
+
         TextView symbol = root.findViewById(R.id.symbol);
         TextView name = root.findViewById(R.id.name_data);
         TextView exchange = root.findViewById(R.id.exchenge_data);
@@ -204,11 +265,29 @@ public class StockFragment extends Fragment {
         TextView perhighchange = root.findViewById(R.id.yearperhighchange_data);
 
         try {
-            symbol.setText(data[1]);
-            name.setText(data[1]);
-            exchange.setText(data[2]);
-            currency.setText(data[3]);
-            date.setText(data[4]);
+
+            for(int i = 0; i < 5; i++){
+                if(i == data.length)
+                    throw new Exception("Error setting data for Stock Fragment," +
+                            " data might be incorrect or corrupted!");
+                else if(data[i] == null) {
+                    throw new Exception("Error setting data for Stock Fragment," +
+                            " data might be incorrect or corrupted!");
+                }
+            }
+
+            this.symbol = data[0];
+            this.name = data[1];
+            this.exchange = data[2];
+            this.currency = data[3];
+            this.average = data[4];
+
+
+            symbol.setText(this.symbol);
+            name.setText(this.name);
+            exchange.setText(this.exchange);
+            currency.setText(this.currency);
+            date.setText(this.average);
             //insert.setText(?);
             open.setText(data[5]);
             high.setText(data[6]);
@@ -235,8 +314,23 @@ public class StockFragment extends Fragment {
 
     public void recieveData(Object[] data) {
         if (data[0] instanceof String) {
-            Log.d("Data", "Data received");
+            Log.d(TAG, "Data received");
             this.symbol = (String) data[0];
         }
+    }
+
+    private boolean isInWatchlist(){
+        //for testing
+
+        String[] ids = DatabaseManager.getWatchlistStockIDs();
+        if(ids == null || ids.length < 1)
+            return false;
+        for (String id: ids){
+            if(id == null)
+                continue;
+            if(symbol.contentEquals(id))
+                return true;
+        }
+        return false;
     }
 }
