@@ -1,6 +1,5 @@
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout="@layout/fragment_settings"
     app:fragment="@string/menu_settings">
 
     <PreferenceCategory
