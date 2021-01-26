@@ -135,8 +135,6 @@ public class SearchFragment extends Fragment  {
                         output = mng.parseJSONData(mng.search(),(Integer)objects[1]);
                     else
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
-
-
             } catch (Exception e){
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
