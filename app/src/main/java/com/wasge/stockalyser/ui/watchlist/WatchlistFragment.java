@@ -43,21 +43,13 @@ public class WatchlistFragment extends Fragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d("test", ""+ i);
-
+                    Log.d("Stock", symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
                     sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
         } else {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d("test", ""+ i);
-
-                    navController.navigate(R.id.navigation_stock);
-                }
-            });
+            Log.d("Stock", "Error");
         }
 
     }

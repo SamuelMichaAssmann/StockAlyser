@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,6 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.wasge.stockalyser.MainActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 
@@ -38,10 +42,27 @@ public class SearchFragment extends Fragment  {
         mainActivity.subscribeToMain(R.id.navigation_search,this);
     }
 
+
+
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        adapter.notifyDataSetInvalidated();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final NavController navController = Navigation.findNavController(view);
+
+        if(getActivity() instanceof MainActivity) {
+            final MainActivity sender = (MainActivity) getActivity();
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d("Stock", symbole.get(i));
+                    navController.navigate(R.id.navigation_stock);
+                    sender.sendToStockFragment(new Object[]{symbole.get(i)});
+                }
+            });
+        } else {
+            Log.d("Stock", "Error");
+        }
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +70,6 @@ public class SearchFragment extends Fragment  {
         listView = root.findViewById(R.id.searchlist);
 
         new SearchQueryTask().execute("null",0);
-
 
         Log.d("Listview", "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
@@ -80,7 +100,6 @@ public class SearchFragment extends Fragment  {
         }
         //Log.d("searchFragment", debug);
         adapter.notifyDataSetChanged();
-        adapter.notifyDataSetInvalidated();
         Log.d("Listview", "Notify changes Adapter");
 
     }
@@ -94,7 +113,6 @@ public class SearchFragment extends Fragment  {
         @Override
         protected void onPostExecute(Integer strings) {
             update_list(test);
-
         }
 
         @Override

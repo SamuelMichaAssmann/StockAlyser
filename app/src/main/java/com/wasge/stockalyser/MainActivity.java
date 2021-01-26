@@ -17,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.wasge.stockalyser.ui.SettingsFragment;
 import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.ui.search.SearchFragment;
 
@@ -54,14 +55,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        SharedPreferences apikey = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if (apikey != null) {
-            String s = apikey.getString("apikey", null);
-
-            Log.d("test", "" + s);
-        } else
-            Log.d("test", "apikey is null");
-
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     @Override
@@ -84,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
         return true;
     }
 

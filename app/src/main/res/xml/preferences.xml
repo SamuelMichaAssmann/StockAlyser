@@ -11,8 +11,6 @@
             app:title="@string/apikey_title"
             app:useSimpleSummaryProvider="true" />
 
-
-
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Trend graph">
@@ -30,15 +28,9 @@
     <PreferenceCategory app:title="@string/view_header">
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            app:defaultValue="false"
+            app:key="darktheme"
+            app:title="Darkmode" />
 
     </PreferenceCategory>
 </PreferenceScreen>
