@@ -18,9 +18,14 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wasge.stockalyser.ui.StockFragment;
+import com.wasge.stockalyser.ui.search.SearchFragment;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.FragmentReciever;
 import com.wasge.stockalyser.util.FragmentSender;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements FragmentSender {
 
@@ -30,8 +35,10 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
     protected void onStart() {
         super.onStart();
         StockFragment fragment = new StockFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment,fragment,"fragment_stock").commit();
-        Log.d("test","tag_2:" + fragment.getTag());
+        SearchFragment fragment1 = new SearchFragment();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment,"fragment_stock").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, fragment1,"fragment_search").commit();
         Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
     }
 
@@ -57,17 +64,6 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         }else
             Log.d("test", "apikey is null");
 
-        final ApiManager apiManager = new ApiManager(MainActivity.this);
-        final String test = apiManager.buildUrl("price", "AAPL");
-        Log.d("test", test);
-        new Thread(){
-            public void run(){
-                String s = apiManager.getUrlInformation(test);
-                Log.d("test", s);
-            }
-        }.start();
-
-
     }
 
     @Override
@@ -75,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem itemSearch = menu.findItem(R.id.search_icon);
-        SearchView searchView = (SearchView) itemSearch.getActionView();
+        final SearchView searchView = (SearchView) itemSearch.getActionView();
         searchView.setQueryHint("Search...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -85,12 +81,12 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                sendToFragment("fragment_search",  new Object[]{newText});
+                return true;
             }
         });
 
-        MenuItem itemBook = menu.findItem(R.id.bookmark);
-        itemBook.setIcon(R.drawable.ic_baseline_bookmark);
+
         return true;
     }
 
@@ -117,7 +113,11 @@ public class MainActivity extends AppCompatActivity implements FragmentSender {
 
     @Override
     public void sendToFragment(String fragment, Object[] input) {
-        FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
-        f.recieveData(input);
+        if (input[0] instanceof Boolean) {
+
+        }else {
+            FragmentReciever f = (FragmentReciever) getSupportFragmentManager().findFragmentByTag(fragment);
+            f.recieveData(input);
+        }
     }
 }

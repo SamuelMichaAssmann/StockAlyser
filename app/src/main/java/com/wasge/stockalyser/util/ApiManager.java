@@ -3,7 +3,6 @@ package com.wasge.stockalyser.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class ApiManager {
 
@@ -21,17 +21,14 @@ public class ApiManager {
     // Monat 4h - jeden 2  löschen
     // Jahr 1d - jeden 3  löschen
 
-    // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
-    private Context context;
-    private String apikey;
-    private String entypoint = "https://api.twelvedata.com/";
+    private final String apikey;
+    private final String entypoint = "https://api.twelvedata.com/";
 
     public ApiManager(Context context) {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
         this.apikey = PreferenceKey.getString("apikey", null);
-        this.context = context;
+        // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
     }
-
 
     //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
     //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
@@ -40,17 +37,20 @@ public class ApiManager {
         return entypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
     }
 
-
     //  quote?symbol=AAPL&apikey=your_api_key --- Stock Info
     //  price?symbol=AAPL&apikey=your_api_key --- Stock Price
     public String buildUrl(String kind, String symbol){
         return entypoint + kind + "?symbol=" + symbol  + "&apikey=" + apikey;
     }
 
-
-    //symbol_search?symbol=AA --- Search Stock
+    // symbol_search?symbol=AA --- Search Stock
     public String search(String stock){
         return entypoint + "symbol_search?symbol=" + stock;
+    }
+
+    // search
+    public String search(){
+        return entypoint + "stocks";
     }
 
     //  api_usage?apikey=your_api_key --- Search Stock
@@ -58,50 +58,65 @@ public class ApiManager {
         return entypoint + "api_usage?apikey=" + apikey;
     }
 
-    public String getUrlInformation(String rowUrl)  {
-        URL url = null;
-        try {
-            url = new URL(rowUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        StringBuilder s = new StringBuilder();
-        try (
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            for (String line; (line = reader.readLine()) != null;) {
-                s.append(line);
+    public String getUrlInformation(final String rowUrl)  {
+        final StringBuilder s = new StringBuilder();
+        final Thread thread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                URL url = null;
+                try {
+                    url = new URL(rowUrl);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                if (url != null) {
+                    try (
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+                        for (String line; (line = reader.readLine()) != null; ) {
+                            s.append(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }};
+        thread.start();
+
+        while (thread.isAlive()){
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return s.toString();
     }
 
-    public void parseJsonFromInterval(String input){
+    //kind = 0 ist alles
+    //kind = 1 exakte suche
+    public ArrayList<String[]> parseJSONData(final String url, final int kind){
+        final ArrayList<String[]> search = new ArrayList<String[]>(){};
+        String stockName;
+        if (kind == 1) {
+            stockName = "instrument_name";
+        }else
+            stockName = "name";
         try {
-            JSONObject meta = (JSONObject) new JSONObject(input).get("meta");
-            JSONArray values = new JSONObject(input).getJSONArray("values");
-
-            System.out.println(meta.get("symbol"));
-            System.out.println(meta.get("symbol"));
-            System.out.println(meta.get("symbol"));
-            System.out.println(meta.get("symbol"));
-
+            String input = getUrlInformation(url);
+            JSONArray values = new JSONObject(input).getJSONArray("data");
             for (int i = 0; i < values.length(); i++){
-
-                System.out.print(values.getJSONObject(i).get("volume"));
-                System.out.print(values.getJSONObject(i).get("datetime"));
-                System.out.print(values.getJSONObject(i).get("high"));
-                System.out.print(values.getJSONObject(i).get("low"));
-                System.out.print(values.getJSONObject(i).get("close"));
-                System.out.println(values.getJSONObject(i).get("open"));
+                String symbol = values.getJSONObject(i).get("symbol").toString();
+                String name = values.getJSONObject(i).get(stockName).toString();
+                String currency = values.getJSONObject(i).get("currency").toString();
+                String exchange = values.getJSONObject(i).get("exchange").toString();
+                search.add(new String[]{symbol, name, currency, exchange});
             }
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return search;
+    }
+
+    public float[] parseJSONData(String url){
+        ArrayList<Float> data = new ArrayList<>();
+        return null;
     }
 }
 // 15 min intervall

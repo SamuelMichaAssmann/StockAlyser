@@ -10,9 +10,9 @@
         <item name="tabIndicatorColor">@color/colorOrange</item>
         <item name="bottemnav">@color/colorCyan</item>
         <item name="backgroundColor">@color/colorWhite</item>
-        <item name="bottemnavitemclick">@color/colorGrey</item>
+        <item name="bottemnavitemclick">@color/colorBlue</item>
         <item name="bottemnavitem">@color/colorWhite</item>
-
+        <item name="backgroundTint">@color/colorCyan</item>
         <item name="colorDark">@color/colorBlack</item>
         <item name="colorLight">@color/colorWhite</item>
 
@@ -43,11 +43,8 @@
         <item name="titleTextColor">@color/colorWhite</item>
         <item name="backgroundTint">@color/colorBlue</item>
 
-
         <item name="colorDark">@color/colorGrey</item>
         <item name="colorLight">@color/colorBlack</item>
-
-
         <item name="colorCyan">@color/colorCyan</item>
         <item name="colorBlue">@color/colorBlue</item>
         <item name="colorOrange">@color/colorOrange</item>

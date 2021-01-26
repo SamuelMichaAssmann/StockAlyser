@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DatabaseManager extends SQLiteOpenHelper {
 
@@ -116,36 +117,77 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
+    // last is newest value
+
+    //TODO remove generate
+    private static float[] gernerateData(int many){
+        float[] da = new float[many];
+        float temp = 5;
+        for (int i = 0; i < many; i++) {
+            Random r = new Random();
+            float rand = -1 + r.nextFloat() * 2;
+            temp = temp + rand;
+            da[i] = temp;
+        }
+        return da;
+    }
+
+    // SELECT * FROM Tabelle1 ORDER BY key DESC LIMIT 10
+    public static float[] getTenDayData(String stockName){
+        return gernerateData(10);
+    }
+
     public static float[] getDayData(String stockName){
-        return new float[]{};
+        return gernerateData(90);
     }
 
     public static float[] getWeekData(String stockName){
-        return new float[]{};
+        return gernerateData(90);
     }
 
     public static float[] getMonthData(String stockName){
-        return new float[]{};
+        return gernerateData(90);
     }
 
     public static float[] getYearData(String stockName){
-        return new float[]{};
+        return gernerateData(90);
     }
 
     public static float[] getMaxData(String stockName){
-        return new float[]{};
+        return gernerateData(90);
     }
 
     public static String[] getDisplayData(String stockName){
-        return new String[]{};
+        String[] data = new String[]{
+                "AAPL", "Apple Inc",
+                "NASDAQ", "USD", "2020-11-17",
+
+                "119.54900", "120.30000", "118.96000", "119.36000",
+                "13012825", "120.30000", "-0.94000", "-0.78138",
+                "106265760",
+
+                "53.15250", "137.39000",
+                "66.20750", "-18.03000",
+                "124.56140", "-13.12323"
+        };
+
+        return data;
     }
 
-    //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()"] , [...] , ...  ]
+    //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
     public static ArrayList<String[]> getWatchlistStockIDs(){
-        return new ArrayList<String[]>();
+
+        // TODO insert real data
+        ArrayList<String[]> watchlist = new ArrayList<String[]>();
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+
+        return watchlist;
     }
-
-
 }
 
 enum REQUEST_TYPE {

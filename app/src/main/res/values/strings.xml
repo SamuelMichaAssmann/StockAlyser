@@ -26,13 +26,38 @@
     <string name="menu_settings">Settings</string>
 
     <!-- TabLayout -->
-    <string name="tab_today">Today</string>
-    <string name="tab_week">Week</string>
-    <string name="tab_month">Month</string>
-    <string name="tab_year">Year</string>
-    <string name="tab_max">Max</string>
+    <string name="tab_today">TODAY</string>
+    <string name="tab_week">WEEK</string>
+    <string name="tab_month">MONTH</string>
+    <string name="tab_year">YEAR</string>
+    <string name="tab_max">MAX</string>
     <string name="menu_search">Search</string>
     <string name="menu_bookmark">Bookmark</string>
+    <string name="empty_str">------</string>
+    <string name="empty_value">--.--</string>
+    <string name="str_currency">$</string>
+    <string name="str_percent">%</string>
+    <string name="stock_data">Data</string>
+    <string name="stock_name">Name</string>
+    <string name="stock_exchange">Exchange</string>
+    <string name="stock_currency">Currency</string>
+    <string name="stock_add_date">Add date</string>
+    <string name="stock_insert">Insert</string>
+    <string name="stock_key_indicator">Key Indicator</string>
+    <string name="stock_open">Open</string>
+    <string name="stock_close">Close</string>
+    <string name="stock_volumen">Volumen</string>
+    <string name="stock_average_volume">Average volume</string>
+    <string name="stock_previous_close">Previous close</string>
+    <string name="stock_change">Change</string>
+    <string name="stock_percent_change">Percent change</string>
+    <string name="stock_52_week">52-Week</string>
+    <string name="stock_low">Low</string>
+    <string name="stock_high">High</string>
+    <string name="stock_low_change">Low change</string>
+    <string name="stock_high_change">High change</string>
+    <string name="stock_low_change_percent">Low change percent</string>
+    <string name="stock_high_change_percent">High change percent</string>
 
     <!-- New -->
 

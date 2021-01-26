@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.ui.StockFragment;
+import com.wasge.stockalyser.util.DatabaseManager;
 import com.wasge.stockalyser.util.FragmentSender;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
@@ -28,18 +29,16 @@ import java.util.ArrayList;
 public class WatchlistFragment extends Fragment {
 
     ListView listView;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
+    ArrayList<String> symbole;
+    ArrayList<String> name;
+    ArrayList<String> date;
+    ArrayList<String> value;
+    ArrayList<float[]> data;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
-
 
         if(getActivity() instanceof FragmentSender) {
             final FragmentSender sender = (FragmentSender) getActivity();
@@ -48,9 +47,8 @@ public class WatchlistFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("test", ""+ i);
 
-
                     navController.navigate(R.id.navigation_stock);
-                    sender.sendToFragment("fragment_stock",null);
+                    sender.sendToFragment("fragment_stock", new Object[]{symbole.get(i)});
                 }
             });
         } else {
@@ -58,8 +56,6 @@ public class WatchlistFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d("test", ""+ i);
-
-
 
                     navController.navigate(R.id.navigation_stock);
                 }
@@ -72,32 +68,43 @@ public class WatchlistFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
         listView = root.findViewById(R.id.listview);
 
+        this.symbole = new ArrayList<>();
+        this.name = new ArrayList<>();
+        this.date = new ArrayList<>();
+        this.value = new ArrayList<>();
+        this.data = new ArrayList<>();
 
-
-        String[] name = {"Apple Inc.", "Airbus", "DB Systel"};
-        String[] date = {"20-12-2020", "20-12-2020", "20-12-2020"};
-        String[] value = {"16520.34", "34.54"};
-        float[][] data = {{3f, 5f, 7f, 1f, 4f, 7f, 10f, 6f, 3f,5f},{7f, 3f, 4f, 3.5f,5f, 7f, 10f, 12f, 7f, 10f}};
-
-
+        getData();
         WatchlistAdapter adapter = new WatchlistAdapter(this.getContext(), name, date, value, data);
         listView.setAdapter(adapter);
-
 
         return root;
     }
 
+    private void getData(){
+        ArrayList<String[]> watchData = DatabaseManager.getWatchlistStockIDs();
+        for (String[] d : watchData) {
+            symbole.add(d[0]);
+            name.add(d[1]);
+            date.add(d[5]);
+            value.add(d[4]);
+        }
+
+        for (String s : symbole) {
+            data.add(DatabaseManager.getTenDayData(s));
+        }
+    }
 }
 
 class WatchlistAdapter extends ArrayAdapter<String> {
 
     Context context;
-    String[] name;
-    String[] date;
-    String[] value;
-    float[][] data;
+    ArrayList<String> name;
+    ArrayList<String> date;
+    ArrayList<String> value;
+    ArrayList<float[]> data;
 
-    WatchlistAdapter (Context context, String[] name, String[] date, String[] value, float[][] data) {
+    WatchlistAdapter (Context context, ArrayList<String> name, ArrayList<String> date, ArrayList<String> value, ArrayList<float[]> data) {
         super(context, R.layout.fragment_listview, R.id.watch_name, name);
         this.context = context;
         this.name = name;
@@ -120,11 +127,11 @@ class WatchlistAdapter extends ArrayAdapter<String> {
         TextView watch_value = root.findViewById(R.id.watch_value);
 
         try {
-            watch_name.setText(name[position]);
-            watch_date.setText(date[position]);
-            watch_value.setText(value[position]);
+            watch_name.setText(name.get(position));
+            watch_date.setText(date.get(position));
+            watch_value.setText(value.get(position));
             int i = 0;
-            for (float d : data[position]) {
+            for (float d : data.get(position)) {
                 dataPoints.add(new DataPoint(i,d));
                 i++;
             }
@@ -138,8 +145,6 @@ class WatchlistAdapter extends ArrayAdapter<String> {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
         return root;
     }
 }

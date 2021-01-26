@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.watchlist.WatchlistFragment"
     android:background="?attr/backgroundColor"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="?attr/actionBarSize">
 
     <ListView
         android:id="@+id/listview"
