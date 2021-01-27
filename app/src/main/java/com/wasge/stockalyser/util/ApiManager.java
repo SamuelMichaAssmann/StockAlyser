@@ -3,6 +3,7 @@ package com.wasge.stockalyser.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ public class ApiManager {
     // Woche 2h
     // Monat 4h - jeden 2  löschen
     // Jahr 1d - jeden 3  löschen
+    // Max 1 week last 90
 
     private final String apikey;
     private final String entypoint = "https://api.twelvedata.com/";
@@ -85,9 +87,8 @@ public class ApiManager {
 
     //kind = 0 ist alles
     //kind = 1 exakte suche
-    public ArrayList<String[]> parseJSONData(final String url, final int kind) {
-        final ArrayList<String[]> search = new ArrayList<String[]>() {
-        };
+    public ArrayList<String[]> parseJSONData(final String url, final int kind, int more) {
+        final ArrayList<String[]> search = new ArrayList<String[]>() {};
         String stockName;
         if (kind == 1) {
             stockName = "instrument_name";
@@ -95,8 +96,9 @@ public class ApiManager {
             stockName = "name";
         try {
             String input = getUrlInformation(url);
+            Log.d("Json", input);
             JSONArray values = new JSONObject(input).getJSONArray("data");
-            for (int i = 0; i < values.length() && i < 500; i++) {
+            for (int i = 0; i < values.length() && i < more; i++) {
                 String symbol = values.getJSONObject(i).get("symbol").toString();
                 String name = values.getJSONObject(i).get(stockName).toString();
                 String currency = values.getJSONObject(i).get("currency").toString();
@@ -109,9 +111,25 @@ public class ApiManager {
         return search;
     }
 
-    public float[] parseJSONData(String url) {
+    public float[] parseJSONData(String url, String style) {
+        //TODO fix it!
         ArrayList<Float> data = new ArrayList<>();
-        return null;
+        try {
+            String input = getUrlInformation(url);
+            Log.d("Json", input);
+            JSONArray values = new JSONObject(input).getJSONArray("values");
+            for (int i = 0; i < values.length(); i++) {
+                data.add(Float.parseFloat((String) values.getJSONObject(i).get(style)));
+            }
+        }catch (JSONException e) {
+            return null;
+        }
+        float[] floatArray = new float[data.size()];
+        int i = 0;
+        for (Float f : data) {
+            floatArray[i++] = (f != null ? f : 0);
+        }
+        return floatArray;
     }
 }
 // 15 min intervall

@@ -131,11 +131,11 @@
                 app:baselineColor="?attr/colorDark"
                 app:baselineDashGap="8dp"
                 app:baselineStrokeWidth="2dp"
+                app:negativeColor="?attr/colorRed"
                 app:pathColor="?attr/colorCyan"
                 app:pathStrokeWidth="2dp"
-                app:negativeColor="?attr/colorRed"
                 app:positiveColor="?attr/colorGreen"
-                />
+                app:secondPathColor="?attr/colorAccent" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout"

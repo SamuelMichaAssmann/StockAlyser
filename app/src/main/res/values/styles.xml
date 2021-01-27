@@ -16,7 +16,6 @@
         <item name="colorDark">@color/colorBlack</item>
         <item name="colorLight">@color/colorWhite</item>
 
-
         <item name="colorCyan">@color/colorCyan</item>
         <item name="colorBlue">@color/colorBlue</item>
         <item name="colorOrange">@color/colorOrange</item>
