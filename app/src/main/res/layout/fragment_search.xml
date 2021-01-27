@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="?attr/backgroundColor"
     tools:context=".ui.search.SearchFragment"
-    android:tag="fragment_search">
+    android:tag="fragment_search"
+    android:paddingBottom="?attr/actionBarSize"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/button_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/more"
+        android:src="@drawable/ic_baseline_expand_more"
+        android:tint="@color/colorWhite" />
 
     <ListView
         android:id="@+id/searchlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/backgroundColor"
-        />
-</LinearLayout>
+        android:layout_above="@id/button_more"/>
+
+</RelativeLayout>

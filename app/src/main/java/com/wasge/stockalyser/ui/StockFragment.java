@@ -31,8 +31,6 @@ import java.util.ArrayList;
 
 public class StockFragment extends Fragment {
 
-
-    String symbol;
     ArrayList<DataPoint> dataPoints;
     LiveChart liveChart;
     View root;
@@ -82,8 +80,8 @@ public class StockFragment extends Fragment {
         final TextView intervall = root.findViewById(R.id.intervall);
         liveChart = root.findViewById(R.id.live_chart);
         dataPoints = new ArrayList<>();
-        getDataPoints(getData(0, symbol), dataPoints);
-        setLiveChart();
+
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -142,7 +140,10 @@ public class StockFragment extends Fragment {
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
         getDataPoints(output,dataPoints2);
         Dataset dataset = new Dataset(dataPoints2);
-        liveChart.setSecondDataset(dataset).drawDataset();
+        liveChart.setDataset(dataset)
+                .setSecondDataset(dataset)
+                .drawBaselineFromFirstPoint()
+                .drawDataset();
         Log.d("Trend", "Trend printed");
     }
 
@@ -151,18 +152,11 @@ public class StockFragment extends Fragment {
         String style = PreferenceKey.getString("trend", null);
 
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        //Log.d(TAG, style);
-        if (style == null || style.equals("none"))
-            setLiveChart(root, dataPoints, liveChart);
-        else
-            getDataPoints(getData(root, 5, symbol), dataPoints2);
-        setLiveChart(root, dataPoints, dataPoints2, liveChart);
-    }
-
         Log.d("Trend", style);
-        if (style != null || !style.equals("none"))
+        if (style != null || !style.equals("none") || symbol != null)
             new TrendlineTask().execute(style);
 
+        getDataPoints(getData(0, symbol), dataPoints);
         Dataset dataset = new Dataset(dataPoints);
         liveChart.setDataset(dataset)
                 .drawBaselineFromFirstPoint()
@@ -211,9 +205,6 @@ public class StockFragment extends Fragment {
         return df.format(end);
     }
 
-
-    
-
     public void toggleCurrentToWatchlist(){
         //for testing
         watched = !watched;
@@ -247,7 +238,7 @@ public class StockFragment extends Fragment {
             mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark_border);
     }
 
-    private void setData(View root, String[] data) {
+    private void setData(String[] data) {
         if(data == null) return;
         TextView symbol = root.findViewById(R.id.symbol);
         TextView name = root.findViewById(R.id.name_data);
@@ -326,7 +317,7 @@ public class StockFragment extends Fragment {
                 interval = "4h";
                 break;
             case 3:
-                interval = "1d";
+                interval = "1day";
                 break;
             case 4:
                 interval = "1week";
@@ -336,6 +327,21 @@ public class StockFragment extends Fragment {
                 break;
         }
 
+    }
+
+    private boolean isInWatchlist(){
+        //for testing
+
+        String[] ids = DatabaseManager.getWatchlistStockIDs();
+        if(ids == null || ids.length < 1)
+            return false;
+        for (String id: ids){
+            if(id == null)
+                continue;
+            if(symbol.contentEquals(id))
+                return true;
+        }
+        return false;
     }
 
     public void recieveData(Object[] data) {
@@ -361,34 +367,20 @@ public class StockFragment extends Fragment {
 
         /**
          * @param objects Url, kind if kind == 0 -> Url will be ignored
-         * **/
+         **/
         @Override
         protected Integer doInBackground(Object... objects) {
             try {
                 ApiManager mng = new ApiManager(getContext());
-                if(objects != null && objects.length == 1 && objects[0] instanceof String) {
+                if (objects != null && objects.length == 1 && objects[0] instanceof String) {
                     Log.d("Trend", (String) objects[0] + " -- " + symbol + " -- " + interval);
                     Log.d("url", mng.buildUrl((String) objects[0], symbol, interval));
                     output = mng.parseJSONData(mng.buildUrl((String) objects[0], symbol, interval), (String) objects[0]);
                 }
-            }catch (Exception e){
-                Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
+            } catch (Exception e) {
+                Log.e("searchFragment", "BackgroundTask failed: " + e.getMessage());
             }
             return 1;
         }
-
-    private boolean isInWatchlist(){
-        //for testing
-
-        String[] ids = DatabaseManager.getWatchlistStockIDs();
-        if(ids == null || ids.length < 1)
-            return false;
-        for (String id: ids){
-            if(id == null)
-                continue;
-            if(symbol.contentEquals(id))
-                return true;
-        }
-        return false;
     }
 }

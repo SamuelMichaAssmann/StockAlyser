@@ -87,9 +87,8 @@ public class ApiManager {
 
     //kind = 0 ist alles
     //kind = 1 exakte suche
-    public ArrayList<String[]> parseJSONData(final String url, final int kind) {
-        final ArrayList<String[]> search = new ArrayList<String[]>() {
-        };
+    public ArrayList<String[]> parseJSONData(final String url, final int kind, int more) {
+        final ArrayList<String[]> search = new ArrayList<String[]>() {};
         String stockName;
         if (kind == 1) {
             stockName = "instrument_name";
@@ -99,7 +98,7 @@ public class ApiManager {
             String input = getUrlInformation(url);
             Log.d("Json", input);
             JSONArray values = new JSONObject(input).getJSONArray("data");
-            for (int i = 0; i < values.length() && i < 500; i++) {
+            for (int i = 0; i < values.length() && i < more; i++) {
                 String symbol = values.getJSONObject(i).get("symbol").toString();
                 String name = values.getJSONObject(i).get(stockName).toString();
                 String currency = values.getJSONObject(i).get("currency").toString();

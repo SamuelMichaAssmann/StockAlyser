@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ public class SearchFragment extends Fragment  {
     private SearchAdapter adapter;
     private ListView listView;
     private View root;
+    private int more = 20;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +54,15 @@ public class SearchFragment extends Fragment  {
 
         if(getActivity() instanceof MainActivity) {
             final MainActivity sender = (MainActivity) getActivity();
+            ImageButton imageButton = root.findViewById(R.id.button_more);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    more = more + 30;
+                    new SearchQueryTask().execute("null",0, more);
+                }
+            });
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -70,7 +81,7 @@ public class SearchFragment extends Fragment  {
         root = inflater.inflate(R.layout.fragment_search, container, false);
         listView = root.findViewById(R.id.searchlist);
 
-        new SearchQueryTask().execute("null",0);
+        new SearchQueryTask().execute("null",0, more);
 
         Log.d(TAG, "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
@@ -83,7 +94,7 @@ public class SearchFragment extends Fragment  {
 
     public void searchFor(String query){
         Log.d(TAG, "searching for: " + query );
-        new SearchQueryTask().execute(query,1);
+        new SearchQueryTask().execute(query, 1, more);
     }
 
     private void update_list(ArrayList<String[]> table){
@@ -128,13 +139,14 @@ public class SearchFragment extends Fragment  {
         protected Integer doInBackground(Object... objects) {
             try {
                 ApiManager mng = new ApiManager(getContext());
-                if(objects != null && objects.length == 2 &&
+                if(objects != null && objects.length == 3 &&
                         objects[0] instanceof String &&
-                        objects[1] instanceof Integer)
+                        objects[1] instanceof Integer &&
+                        objects[2] instanceof Integer)
                     if((Integer) objects[1] == 0)
-                        output = mng.parseJSONData(mng.search(),(Integer)objects[1]);
+                        output = mng.parseJSONData(mng.search(), (Integer) objects[1], (Integer) objects[2]);
                     else
-                        output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1]);
+                        output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
