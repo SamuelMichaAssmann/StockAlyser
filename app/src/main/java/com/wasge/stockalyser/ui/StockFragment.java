@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class StockFragment extends Fragment {
 
-    ArrayList<DataPoint> dataPoints;
+    ArrayList<DataPoint> dataPoints = new ArrayList<>();
     LiveChart liveChart;
     View root;
     String interval = "15min";
@@ -76,18 +76,15 @@ public class StockFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_stock, container, false);
-        TabLayout tabLayout = root.findViewById(R.id.tablayout);
         final TextView intervall = root.findViewById(R.id.intervall);
         liveChart = root.findViewById(R.id.live_chart);
-        dataPoints = new ArrayList<>();
 
 
-
+        TabLayout tabLayout = root.findViewById(R.id.tablayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                ArrayList<DataPoint> dataPoints = new ArrayList<>();
-                getDataPoints(getData(tab.getPosition(), symbol), dataPoints);
+                dataPoints = getDataPoints(getData(tab.getPosition(), symbol), dataPoints);
                 setInterval(tab.getPosition());
                 setLiveChart();
                 setIndicator();
@@ -104,7 +101,7 @@ public class StockFragment extends Fragment {
 
             }
         });
-
+        dataPoints = getDataPoints(getData(0, symbol), dataPoints);
         setLiveChart();
         setIndicator();
         setData(DatabaseManager.getDisplayData(symbol));
@@ -125,35 +122,40 @@ public class StockFragment extends Fragment {
             return DatabaseManager.getDayData(symbol);
     }
 
-    private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints) {
+    private ArrayList<DataPoint> getDataPoints(float[] data, ArrayList<DataPoint> dataPointslist) {
         if (data == null)
-            return;
-        dataPoints.clear();
+            return null;
+        dataPointslist.clear();
         int i = 0;
         for (float d : data) {
-            dataPoints.add(new DataPoint(i, d));
+            dataPointslist.add(new DataPoint(i, d));
             i++;
         }
+        return dataPointslist;
     }
 
     private void setGraph(float[] output) {
+        Log.d("Data", String.valueOf(output[0]));
         ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        getDataPoints(output,dataPoints2);
-        Dataset dataset = new Dataset(dataPoints2);
-        liveChart.setDataset(dataset)
-                .setSecondDataset(dataset)
-                .drawBaselineFromFirstPoint()
-                .drawDataset();
-        Log.d("Trend", "Trend printed");
+        dataPoints2 = getDataPoints(output, dataPoints2);
+        if (output != null){
+            Dataset dataset = new Dataset(dataPoints);
+            Dataset dataset2 = new Dataset(dataPoints2);
+            Log.d("datapoint", String.valueOf(dataPoints2.get(0).getY()));
+            liveChart.setDataset(dataset)
+                    .setSecondDataset(dataset2)
+                    .drawBaselineFromFirstPoint()
+                    .drawDataset();
+            Log.d("Trend", "Trend printed");
+        }
     }
 
     private void setLiveChart() {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         String style = PreferenceKey.getString("trend", null);
 
-        ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
         Log.d("Trend", style);
-        if (style != null || !style.equals("none") || symbol != null)
+        if (style != null || !style.equals("none") || !symbol.equals("null"))
             new TrendlineTask().execute(style);
 
         getDataPoints(getData(0, symbol), dataPoints);
@@ -357,7 +359,10 @@ public class StockFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Integer strings) {
-            setGraph(output);
+            if (output != null)
+                setGraph(output);
+            else
+                Log.d("Data", "data empty");
         }
 
         @Override

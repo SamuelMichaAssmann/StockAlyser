@@ -135,6 +135,7 @@
                 app:pathStrokeWidth="2dp"
                 app:negativeColor="?attr/colorRed"
                 app:positiveColor="?attr/colorGreen"
+                app:secondPathColor="@color/colorOrange"
                 />
 
             <com.google.android.material.tabs.TabLayout

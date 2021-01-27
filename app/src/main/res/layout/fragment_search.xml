@@ -17,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:contentDescription="@string/more"
         android:src="@drawable/ic_baseline_expand_more"
-        android:tint="@color/colorWhite" />
+        android:tint="?attr/backgroundColor" />
 
     <ListView
         android:id="@+id/searchlist"

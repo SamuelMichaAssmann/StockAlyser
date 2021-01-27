@@ -111,7 +111,6 @@ public class ApiManager {
         return search;
     }
 
-
     public float[] parseJSONData(String url, String style) {
         //TODO fix it!
         ArrayList<Float> data = new ArrayList<>();
@@ -123,9 +122,14 @@ public class ApiManager {
                 data.add(Float.parseFloat((String) values.getJSONObject(i).get(style)));
             }
         }catch (JSONException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
+        float[] floatArray = new float[data.size()];
+        int i = 0;
+        for (Float f : data) {
+            floatArray[i++] = (f != null ? f : 0);
+        }
+        return floatArray;
     }
 }
 // 15 min intervall
