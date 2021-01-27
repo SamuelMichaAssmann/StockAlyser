@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
+import com.wasge.stockalyser.util.DatabaseManager;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -24,6 +27,21 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class HomeFragment extends Fragment {
+
+    private MainActivity mainActivity;
+    private DatabaseManager dbManager;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = null;
+        if (getActivity() instanceof MainActivity)
+            mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            dbManager = mainActivity.getDatabaseManager();
+            mainActivity.subscribeToMain(R.id.navigation_stock, this);
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

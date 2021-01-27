@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class StockFragment extends Fragment {
 
     private MainActivity mainActivity;
+    private DatabaseManager dbManager;
 
     //Stock Data:
     // columns: symbol, name, exchange, currency, average;
@@ -63,8 +64,10 @@ public class StockFragment extends Fragment {
         mainActivity = null;
         if (getActivity() instanceof MainActivity)
             mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null)
+        if (mainActivity != null) {
+            dbManager = mainActivity.getDatabaseManager();
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
+        }
 
     }
 
@@ -101,26 +104,26 @@ public class StockFragment extends Fragment {
 
         setLiveChart(root, dataPoints, liveChart);
         setIndicator(root, dataPoints, liveChart);
-        setData(root, DatabaseManager.getDisplayData(symbol));
+        setData(root, dbManager.getDisplayData(symbol));
 
         return root;
     }
 
     private float[] getData(View root, int style, String symbol) {
         if (style == 1)
-            return DatabaseManager.getWeekData(symbol);
+            return dbManager.getWeekData(symbol);
         else if (style == 2)
-            return DatabaseManager.getMonthData(symbol);
+            return dbManager.getMonthData(symbol);
         else if (style == 3)
-            return DatabaseManager.getYearData(symbol);
+            return dbManager.getYearData(symbol);
         else if (style == 4)
-            return DatabaseManager.getMaxData(symbol);
+            return dbManager.getMaxData(symbol);
         else if (style == 5) {
             ApiManager apiManager = new ApiManager(root.getContext());
             float[] data = new float[]{};
             return data;
         } else
-            return DatabaseManager.getDayData(symbol);
+            return dbManager.getDayData(symbol);
     }
 
     private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints) {
@@ -217,14 +220,14 @@ public class StockFragment extends Fragment {
     }
 
     private void removeFromWatchlist(){
-        if(DatabaseManager.removeFromWatchlist(symbol))
+        if(dbManager.removeFromWatchlist(symbol))
             Log.d(TAG, "successfully removed stock: " + symbol + " from watchlist!");
         else
             Log.d(TAG,"failed to remove stock: " + symbol + " from watchlist!");
     }
 
     private void addToWatchlist(){
-        if(DatabaseManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
+        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
             Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
         else
             Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
@@ -321,8 +324,9 @@ public class StockFragment extends Fragment {
 
     private boolean isInWatchlist(){
         //for testing
+        if(true) return watched;
 
-        String[] ids = DatabaseManager.getWatchlistStockIDs();
+        String[] ids = dbManager.getWatchlistStockIDs();
         if(ids == null || ids.length < 1)
             return false;
         for (String id: ids){

@@ -45,8 +45,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);*/
     }
 
-    public void insertTable (String TableName, String[] TableData){ // datentyp einfügen
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+    public static void insertTable (SQLiteDatabase sqLiteDatabase,String TableName, String[] TableData){ // datentyp einfügen
+
         StringBuilder createQuery = new StringBuilder();
         createQuery.append("INSERT INTO ")
                 .append(TableName)
@@ -78,7 +78,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
-    private void truncateData(SQLiteDatabase db){
+    private static void truncateData(SQLiteDatabase db){
 
         //delete Data, older than the specified longest date
         String deletion_template = "DELETE FROM %s WHERE %s <= date('now','%s')";
@@ -120,31 +120,31 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     // SELECT * FROM Tabelle1 ORDER BY key DESC LIMIT 10
-    public static float[] getTenDayData(String stockName){
+    public float[] getTenDayData(String stockName){
         return gernerateData(10);
     }
 
-    public static float[] getDayData(String stockName){
+    public float[] getDayData(String stockName){
         return gernerateData(90);
     }
 
-    public static float[] getWeekData(String stockName){
+    public float[] getWeekData(String stockName){
         return gernerateData(90);
     }
 
-    public static float[] getMonthData(String stockName){
+    public float[] getMonthData(String stockName){
         return gernerateData(90);
     }
 
-    public static float[] getYearData(String stockName){
+    public float[] getYearData(String stockName){
         return gernerateData(90);
     }
 
-    public static float[] getMaxData(String stockName){
+    public float[] getMaxData(String stockName){
         return gernerateData(90);
     }
 
-    public static String[] getDisplayData(String stockName){
+    public String[] getDisplayData(String stockName){
         String[] data = new String[]{
                 "AAPL", "Apple Inc",
                 "NASDAQ", "USD", "2020-11-17",
@@ -162,7 +162,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
-    public static ArrayList<String[]> getWatchlistStock(){
+    public ArrayList<String[]> getWatchlistStock(){
 
         // TODO insert real data
         ArrayList<String[]> watchlist = new ArrayList<>();
@@ -180,18 +180,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * @param Symbol i.e. "AAPL"
      * **/
-    public static boolean removeFromWatchlist(String Symbol){
+    public boolean removeFromWatchlist(String Symbol){
         return true;
     }
 
     /**
      * @param Stock i.e. ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"]
      * **/
-    public static boolean addToWatchlist(String[] Stock){
+    public boolean addToWatchlist(String[] Stock){
+
         return true;
     }
 
-    public static String[] getWatchlistStockIDs(){
+    public String[] getWatchlistStockIDs(){
         return new String[]{"AAPL","AAPL","AAPL",  "AAPL", "AAPL","AAPL"};
     }
 }

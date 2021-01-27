@@ -2,6 +2,7 @@ package com.wasge.stockalyser;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +23,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wasge.stockalyser.ui.SettingsFragment;
 import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.ui.search.SearchFragment;
+import com.wasge.stockalyser.util.DatabaseManager;
 
 public class MainActivity extends AppCompatActivity {
 
     AppBarConfiguration mAppBarConfiguration;
+    DatabaseManager databaseManager;
     SearchFragment searchFragment;
     StockFragment stockFragment;
     MenuItem bookmark;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        databaseManager = new DatabaseManager(this);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -148,5 +152,7 @@ public class MainActivity extends AppCompatActivity {
         bookmark.setIcon(id);
     }
 
-
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
 }

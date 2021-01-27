@@ -27,6 +27,8 @@ import java.util.ArrayList;
 public class WatchlistFragment extends Fragment {
 
     private String TAG = "WatchistFragment";
+    private MainActivity mainActivity;
+    private DatabaseManager dbManager;
     private ListView listView;
     private ArrayList<String> symbole = new ArrayList<>();
     private ArrayList<String> name = new ArrayList<>();
@@ -35,26 +37,19 @@ public class WatchlistFragment extends Fragment {
     private ArrayList<float[]> data = new ArrayList<>();
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        final NavController navController = Navigation.findNavController(view);
-
-        if(getActivity() instanceof MainActivity) {
-            final MainActivity sender = (MainActivity) getActivity();
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Log.d(TAG, symbole.get(i));
-                    navController.navigate(R.id.navigation_stock);
-                    sender.sendToStockFragment(new Object[]{symbole.get(i)});
-                }
-            });
-        } else {
-            Log.d(TAG, "Error");
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = null;
+        if (getActivity() instanceof MainActivity)
+            mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            dbManager = mainActivity.getDatabaseManager();
+            mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
 
     }
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_watchlist, container, false);
         listView = root.findViewById(R.id.listview);
@@ -66,8 +61,30 @@ public class WatchlistFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final NavController navController = Navigation.findNavController(view);
+
+        if(mainActivity != null) {
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Log.d(TAG, symbole.get(i));
+                    navController.navigate(R.id.navigation_stock);
+                    mainActivity.sendToStockFragment(new Object[]{symbole.get(i)});
+                }
+            });
+        } else {
+            Log.d(TAG, "Error");
+        }
+
+    }
+
+
     private void getData(){
-        ArrayList<String[]> watchData = DatabaseManager.getWatchlistStock();
+        ArrayList<String[]> watchData = dbManager.getWatchlistStock();
         for (String[] d : watchData) {
             symbole.add(d[0]);
             name.add(d[1]);
@@ -75,7 +92,7 @@ public class WatchlistFragment extends Fragment {
             value.add(d[4]);
         }
         for (String s : symbole) {
-            data.add(DatabaseManager.getTenDayData(s));
+            data.add(dbManager.getTenDayData(s));
         }
     }
 }
