@@ -2,6 +2,7 @@ package com.wasge.stockalyser.ui;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -31,6 +32,10 @@ import java.util.ArrayList;
 public class StockFragment extends Fragment {
 
     String symbol;
+    ArrayList<DataPoint> dataPoints;
+    LiveChart liveChart;
+    View root;
+    String interval = "15min";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,21 +50,22 @@ public class StockFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_stock, container, false);
+        root = inflater.inflate(R.layout.fragment_stock, container, false);
         TabLayout tabLayout = root.findViewById(R.id.tablayout);
         final TextView intervall = root.findViewById(R.id.intervall);
-        final LiveChart liveChart = root.findViewById(R.id.live_chart);
+        liveChart = root.findViewById(R.id.live_chart);
+        dataPoints = new ArrayList<>();
+        getDataPoints(getData(0, symbol), dataPoints);
+        setLiveChart();
 
-        ArrayList<DataPoint> dataPoints = new ArrayList<>();
-        getDataPoints(getData(root, 0, symbol), dataPoints);
-        setGraph(root, dataPoints, liveChart);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 ArrayList<DataPoint> dataPoints = new ArrayList<>();
-                getDataPoints(getData(root, tab.getPosition(), symbol), dataPoints);
-                setLiveChart(root, dataPoints, liveChart);
-                setIndicator(root, dataPoints, liveChart);
+                getDataPoints(getData(tab.getPosition(), symbol), dataPoints);
+                setInterval(tab.getPosition());
+                setLiveChart();
+                setIndicator();
                 intervall.setText(tab.getText());
             }
 
@@ -74,14 +80,14 @@ public class StockFragment extends Fragment {
             }
         });
 
-        setLiveChart(root, dataPoints, liveChart);
-        setIndicator(root, dataPoints, liveChart);
-        setData(root, DatabaseManager.getDisplayData(symbol));
+        setLiveChart();
+        setIndicator();
+        setData(DatabaseManager.getDisplayData(symbol));
 
         return root;
     }
 
-    private float[] getData(View root, int style, String symbol) {
+    private float[] getData(int style, String symbol) {
         if (style == 1)
             return DatabaseManager.getWeekData(symbol);
         else if (style == 2)
@@ -90,53 +96,44 @@ public class StockFragment extends Fragment {
             return DatabaseManager.getYearData(symbol);
         else if (style == 4)
             return DatabaseManager.getMaxData(symbol);
-        else if (style == 5) {
-            ApiManager apiManager = new ApiManager(root.getContext());
-            float[] data = new float[]{};
-            return data;
-        } else
+        else
             return DatabaseManager.getDayData(symbol);
     }
 
     private void getDataPoints(float[] data, ArrayList<DataPoint> dataPoints) {
+        if (data == null)
+            return;
         dataPoints.clear();
         int i = 0;
         for (float d : data) {
             dataPoints.add(new DataPoint(i, d));
             i++;
         }
-
     }
 
-    private void setGraph(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
+    private void setGraph(float[] output) {
+        ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
+        getDataPoints(output,dataPoints2);
+        Dataset dataset = new Dataset(dataPoints2);
+        liveChart.setSecondDataset(dataset).drawDataset();
+        Log.d("Trend", "Trend printed");
+    }
+
+    private void setLiveChart() {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         String style = PreferenceKey.getString("trend", null);
-        ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        //Log.d("style", style);
-        if (style == null || style.equals("none"))
-            setLiveChart(root, dataPoints, liveChart);
-        else
-            getDataPoints(getData(root, 5, symbol), dataPoints2);
-        setLiveChart(root, dataPoints, dataPoints2, liveChart);
-    }
 
-    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
+        Log.d("Trend", style);
+        if (style != null || !style.equals("none"))
+            new TrendlineTask().execute(style);
+
         Dataset dataset = new Dataset(dataPoints);
         liveChart.setDataset(dataset)
                 .drawBaselineFromFirstPoint()
                 .drawDataset();
     }
 
-    private void setLiveChart(View root, ArrayList<DataPoint> dataPoints1, ArrayList<DataPoint> dataPoints2, LiveChart liveChart) {
-        Dataset dataset1 = new Dataset(dataPoints1);
-        Dataset dataset2 = new Dataset(dataPoints2);
-        liveChart.setDataset(dataset1)
-                .setSecondDataset(dataset2)
-                .drawBaselineFromFirstPoint()
-                .drawDataset();
-    }
-
-    private void setIndicator(View root, ArrayList<DataPoint> dataPoints, LiveChart liveChart) {
+    private void setIndicator() {
         final TextView currentPrice = root.findViewById(R.id.current_price);
         final TextView percentPrice = root.findViewById(R.id.percent_price);
         final float start = dataPoints.get(0).getY();
@@ -171,16 +168,14 @@ public class StockFragment extends Fragment {
         else
             percentString = df.format(percent);
         return percentString;
-
     }
 
     private String setCurrent(float end) {
         final DecimalFormat df = new DecimalFormat("#.##");
         return df.format(end);
-
     }
 
-    private void setData(View root, String[] data) {
+    private void setData(String[] data) {
         TextView symbol = root.findViewById(R.id.symbol);
         TextView name = root.findViewById(R.id.name_data);
         TextView exchange = root.findViewById(R.id.exchenge_data);
@@ -229,7 +224,26 @@ public class StockFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void setInterval(int intervalInt){
+        switch (intervalInt){
+            case 1:
+                interval = "2h";
+                break;
+            case 2:
+                interval = "4h";
+                break;
+            case 3:
+                interval = "1d";
+                break;
+            case 4:
+                interval = "1week";
+                break;
+            default:
+                interval = "15min";
+                break;
+        }
 
     }
 
@@ -237,6 +251,38 @@ public class StockFragment extends Fragment {
         if (data[0] instanceof String) {
             Log.d("Data", "Data received");
             this.symbol = (String) data[0];
+        }
+    }
+
+    private class TrendlineTask extends AsyncTask<Object,Integer,Integer> {
+        float[] output;
+
+        @Override
+        protected void onPostExecute(Integer strings) {
+            setGraph(output);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        /**
+         * @param objects Url, kind if kind == 0 -> Url will be ignored
+         * **/
+        @Override
+        protected Integer doInBackground(Object... objects) {
+            try {
+                ApiManager mng = new ApiManager(getContext());
+                if(objects != null && objects.length == 1 && objects[0] instanceof String) {
+                    Log.d("Trend", (String) objects[0] + " -- " + symbol + " -- " + interval);
+                    Log.d("url", mng.buildUrl((String) objects[0], symbol, interval));
+                    output = mng.parseJSONData(mng.buildUrl((String) objects[0], symbol, interval), (String) objects[0]);
+                }
+            }catch (Exception e){
+                Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
+            }
+            return 1;
         }
     }
 }
