@@ -18,17 +18,17 @@
 
     <string-array name="trend_values">
         <item>none</item>
-        <item>ADX</item>
-        <item>EMA</item>
-        <item>MACD</item>
-        <item>RSI</item>
-        <item>SMA</item>
-        <item>STOCH</item>
-        <item>SAR</item>
-        <item>PPO</item>
-        <item>TEMA</item>
-        <item>WMA</item>
-        <item>MAX</item>
-        <item>MIN</item>
+        <item>adx</item>
+        <item>ema</item>
+        <item>macd</item>
+        <item>rsi</item>
+        <item>sma</item>
+        <item>stoch</item>
+        <item>sar</item>
+        <item>pro</item>
+        <item>tema</item>
+        <item>wma</item>
+        <item>max</item>
+        <item>min</item>
     </string-array>
     </resources>

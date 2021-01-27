@@ -46,6 +46,7 @@ public class WatchlistFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d(TAG, symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
+                    Log.d("Stock", symbole.get(i));
                     sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
