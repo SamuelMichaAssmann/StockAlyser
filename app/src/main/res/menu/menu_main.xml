@@ -8,7 +8,7 @@
         android:id="@+id/search_icon"
         android:title="@string/menu_search"
         android:icon="@drawable/ic_baseline_search"
-        app:showAsAction="ifRoom|withText"
+        app:showAsAction="always|withText"
         android:visible="true"
         app:actionViewClass="android.widget.SearchView"/>
 
@@ -17,12 +17,12 @@
         android:title="@string/menu_bookmark"
         android:icon="@drawable/ic_baseline_bookmark_border"
         android:visible="true"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/navigation_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_baseline_settings"
         android:visible="true"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 </menu>

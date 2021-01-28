@@ -10,11 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
@@ -23,20 +21,18 @@ import com.wasge.stockalyser.util.DatabaseManager;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class StockFragment extends Fragment {
 
-    ArrayList<DataPoint> dataPoints = new ArrayList<>();
+    private MainActivity mainActivity;
+    private DatabaseManager dbManager;
+    private final ChartProcess c = new ChartProcess();
+
+
     LiveChart liveChart;
     View root;
     String interval = "15min";
-    private MainActivity mainActivity;
-    private DatabaseManager dbManager;
 
     //Stock Data:
     // columns: symbol, name, exchange, currency, average;
@@ -79,168 +75,18 @@ public class StockFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_stock, container, false);
-        final TextView intervall = root.findViewById(R.id.intervall);
+        final TextView currentPrice = root.findViewById(R.id.current_price);
+        final TextView percentPrice = root.findViewById(R.id.percent_price);
+        final TextView inter = root.findViewById(R.id.intervall);
         liveChart = root.findViewById(R.id.live_chart);
-
-
         TabLayout tabLayout = root.findViewById(R.id.tablayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                dataPoints = getDataPoints(getData(tab.getPosition(), symbol), dataPoints);
-                setInterval(tab.getPosition());
-                setLiveChart();
-                setIndicator();
-                intervall.setText(tab.getText());
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        c.setData(liveChart, dbManager, inter,null, currentPrice, percentPrice);
+        c.setTab(tabLayout, liveChart, dbManager, inter, null, currentPrice, percentPrice);
 
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        dataPoints = getDataPoints(getData(0, symbol), dataPoints);
-        setLiveChart();
-        setIndicator();
         setData(dbManager.getDisplayData(symbol));
 
         return root;
-    }
-
-    private float[] getData(int style, String symbol) {
-        if (style == 1)
-            return dbManager.getWeekData(symbol);
-        else if (style == 2)
-            return dbManager.getMonthData(symbol);
-        else if (style == 3)
-            return dbManager.getYearData(symbol);
-        else if (style == 4)
-            return dbManager.getMaxData(symbol);
-        else
-            return dbManager.getDayData(symbol);
-    }
-
-    private ArrayList<DataPoint> getDataPoints(float[] data, ArrayList<DataPoint> dataPointslist) {
-        if (data == null)
-            return null;
-        dataPointslist.clear();
-        int i = 0;
-        for (float d : data) {
-            dataPointslist.add(new DataPoint(i, d));
-            i++;
-        }
-        return dataPointslist;
-    }
-
-    private void setGraph(float[] output) {
-        Log.d("Data", String.valueOf(output[0]));
-        ArrayList<DataPoint> dataPoints2 = new ArrayList<>();
-        dataPoints2 = getDataPoints(output, dataPoints2);
-        if (output != null){
-            Dataset dataset = new Dataset(dataPoints);
-            Dataset dataset2 = new Dataset(dataPoints2);
-            Log.d("datapoint", String.valueOf(dataPoints2.get(0).getY()));
-            liveChart.setDataset(dataset)
-                    .setSecondDataset(dataset2)
-                    .drawBaselineFromFirstPoint()
-                    .drawDataset();
-            Log.d("Trend", "Trend printed");
-        }
-    }
-
-    private void setLiveChart() {
-        SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(root.getContext());
-        String style = PreferenceKey.getString("trend", null);
-
-        Log.d("Trend", style);
-        if (style != null || !style.equals("none") || !symbol.equals("null"))
-            new TrendlineTask().execute(style);
-
-        getDataPoints(getData(0, symbol), dataPoints);
-        Dataset dataset = new Dataset(dataPoints);
-        liveChart.setDataset(dataset)
-                .drawBaselineFromFirstPoint()
-                .drawDataset();
-    }
-
-    private void setIndicator() {
-        final TextView currentPrice = root.findViewById(R.id.current_price);
-        final TextView percentPrice = root.findViewById(R.id.percent_price);
-        final float start = dataPoints.get(0).getY();
-        final float end = dataPoints.get(dataPoints.size() - 1).getY();
-
-        percentPrice.setText(setPercent(start, end));
-        currentPrice.setText(setCurrent(end));
-
-        liveChart.setOnTouchCallbackListener(new LiveChart.OnTouchCallback() {
-
-            @Override
-            public void onTouchCallback(@NotNull DataPoint dataPoint) {
-                Log.d(TAG, "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
-                currentPrice.setText(setCurrent(dataPoint.getY()));
-                percentPrice.setText(setPercent(start, dataPoint.getY()));
-            }
-
-            @Override
-            public void onTouchFinished() {
-                currentPrice.setText(setCurrent(end));
-                percentPrice.setText(setPercent(start, end));
-            }
-        });
-    }
-
-    private String setPercent(float start, float end) {
-        final DecimalFormat df = new DecimalFormat("#.##");
-        String percentString;
-        float percent = ((end - start) / start) * 100;
-        if (percent >= 0)
-            percentString = "+" + df.format(percent);
-        else
-            percentString = df.format(percent);
-        return percentString;
-    }
-
-    private String setCurrent(float end) {
-        final DecimalFormat df = new DecimalFormat("#.##");
-        return df.format(end);
-    }
-
-    public void toggleCurrentToWatchlist(){
-        //for testing
-        watched = !watched;
-
-        if(isInWatchlist())
-            removeFromWatchlist();
-        else
-            addToWatchlist();
-        updateBookmark();
-    }
-
-    private void removeFromWatchlist(){
-        if(dbManager.removeFromWatchlist(symbol))
-            Log.d(TAG, "successfully removed stock: " + symbol + " from watchlist!");
-        else
-            Log.d(TAG,"failed to remove stock: " + symbol + " from watchlist!");
-    }
-
-    private void addToWatchlist(){
-        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
-            Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
-        else
-            Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
-
-    }
-
-    private void updateBookmark(){
-        if(isInWatchlist())
-            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark);
-        else
-            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark_border);
     }
 
     private void setData(String[] data) {
@@ -315,25 +161,46 @@ public class StockFragment extends Fragment {
         }
     }
 
-    private void setInterval(int intervalInt){
-        switch (intervalInt){
-            case 1:
-                interval = "2h";
-                break;
-            case 2:
-                interval = "4h";
-                break;
-            case 3:
-                interval = "1day";
-                break;
-            case 4:
-                interval = "1week";
-                break;
-            default:
-                interval = "15min";
-                break;
-        }
+    private void setGraph(float[] output) {
+        if (output == null)
+            return;
+        Dataset dataset2 = new Dataset(c.getDataPoints(output));
+        liveChart.setSecondDataset(dataset2)
+                .drawBaselineFromFirstPoint()
+                .drawDataset();
+    }
 
+    public void toggleCurrentToWatchlist(){
+        //for testing
+        watched = !watched;
+
+        if(isInWatchlist())
+            removeFromWatchlist();
+        else
+            addToWatchlist();
+        updateBookmark();
+    }
+
+    private void removeFromWatchlist(){
+        if(dbManager.removeFromWatchlist(symbol))
+            Log.d(TAG, "successfully removed stock: " + symbol + " from watchlist!");
+        else
+            Log.d(TAG,"failed to remove stock: " + symbol + " from watchlist!");
+    }
+
+    private void addToWatchlist(){
+        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
+            Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
+        else
+            Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
+
+    }
+
+    private void updateBookmark(){
+        if(isInWatchlist())
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark);
+        else
+            mainActivity.setBookmarkStyle(R.drawable.ic_baseline_bookmark_border);
     }
 
     private boolean isInWatchlist(){
