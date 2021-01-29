@@ -1,36 +1,20 @@
 package com.wasge.stockalyser.ui.home;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.ui.ChartProcess;
-import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.util.DatabaseManager;
-import com.wasge.stockalyser.util.ProcessData;
-import com.yabu.livechart.model.DataPoint;
-import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class HomeFragment extends Fragment {
 

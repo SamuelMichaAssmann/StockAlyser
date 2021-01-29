@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.DatabaseManager;
