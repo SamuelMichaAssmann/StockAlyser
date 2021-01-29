@@ -242,11 +242,11 @@ public class StockDataContract {
         public static final String createTable(){
             return "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                     ID + " TEXT PRIMARY KEY, " +
-                    COLUMN_NAME_NAME + " TEXT NOT NULL, " +
-                    COLUMN_NAME_EXCHANGE + " TEXT NOT NULL, " +
-                    COLUMN_NAME_CURRENCY + " TEXT NOT NULL, " +
-                    COLUMN_NAME_AVG + " REAL NOT NULL," +
-                    COLUMN_NAME_DATE + " TEXT NOT NULL)";
+                    COLUMN_NAME_NAME + " TEXT, " +
+                    COLUMN_NAME_EXCHANGE + " TEXT, " +
+                    COLUMN_NAME_CURRENCY + " TEXT, " +
+                    COLUMN_NAME_AVG + " REAL," +
+                    COLUMN_NAME_DATE + " TEXT)";
         }
         public static final String deleteTable(){
             return "DROP TABLE IF EXISTS " + TABLE_NAME;

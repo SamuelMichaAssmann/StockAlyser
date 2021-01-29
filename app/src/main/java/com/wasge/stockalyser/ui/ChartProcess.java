@@ -59,6 +59,11 @@ public class ChartProcess {
         ArrayList<float[]> data = new ArrayList<>();
         for (String stock : stocks) {
             data.add(getData(style, stock, dbm));
+            for (float e : getData(style, stock, dbm)) {
+                Log.d("Test", String.valueOf(e));
+            }
+
+
         }
         float[] output = processData.compactData(data);
         return output;
@@ -117,7 +122,13 @@ public class ChartProcess {
     private String setPercent(float start, float end) {
         final DecimalFormat df = new DecimalFormat("#.##");
         String percentString;
-        float percent = ((end - start) / start) * 100;
+        float percent;
+        if (start != 0) {
+            Log.wtf("Data", end + " - " + start);
+            percent = ((end - start) / start) * 100;
+        }
+        else
+            percent = end * 100;
         if (percent >= 0)
             percentString = "+" + df.format(percent);
         else

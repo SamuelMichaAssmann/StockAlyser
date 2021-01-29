@@ -81,8 +81,8 @@ public class StockFragment extends Fragment {
         liveChart = root.findViewById(R.id.live_chart);
         TabLayout tabLayout = root.findViewById(R.id.tablayout);
 
-        c.setData(liveChart, dbManager, inter,null, currentPrice, percentPrice);
-        c.setTab(tabLayout, liveChart, dbManager, inter, null, currentPrice, percentPrice);
+        c.setData(liveChart, dbManager, inter,symbol, currentPrice, percentPrice);
+        c.setTab(tabLayout, liveChart, dbManager, inter, symbol, currentPrice, percentPrice);
 
         setData(dbManager.getDisplayData(symbol));
         if(symbol != null) {
