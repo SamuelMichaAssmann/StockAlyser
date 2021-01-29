@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.TextView;
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.util.DatabaseManager;
+import com.wasge.stockalyser.util.ProcessData;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -38,6 +39,8 @@ public class ChartProcess {
     }
 
     public float[] getData(int style, String symbol, DatabaseManager dbm) {
+        if (symbol == null)
+            return getAllData(dbm, style);
         if (style == 1)
             return dbm.getWeekData(symbol);
         else if (style == 2)
@@ -48,6 +51,17 @@ public class ChartProcess {
             return dbm.getMaxData(symbol);
         else
             return dbm.getDayData(symbol);
+    }
+
+    private float[] getAllData(DatabaseManager dbm, int style){
+        String[] stocks = dbm.getWatchlistStockIDs();
+        ProcessData processData = new ProcessData();
+        ArrayList<float[]> data = new ArrayList<>();
+        for (String stock : stocks) {
+            data.add(getData(style, stock, dbm));
+        }
+        float[] output = processData.compactData(data);
+        return output;
     }
 
     public ArrayList<DataPoint> getDataPoints(float[] data) {
