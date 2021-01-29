@@ -33,6 +33,7 @@ public class SearchFragment extends Fragment  {
     private ArrayList<String> exchange = new ArrayList<>();
 
     private String TAG = "SearchFragment";
+    private MainActivity mainActivity;
     private SearchAdapter adapter;
     private ListView listView;
     private View root;
@@ -41,25 +42,43 @@ public class SearchFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.subscribeToMain(R.id.navigation_search,this);
+        setRetainInstance(true);
+        mainActivity = null;
+        if (getActivity() instanceof MainActivity)
+            mainActivity = (MainActivity) getActivity();
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mainActivity.setSearchActive(true);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mainActivity.setSearchActive(false);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
+        if (mainActivity != null) {
+            mainActivity.subscribeToMain(R.id.navigation_search, this);
+        }
 
-        if(getActivity() instanceof MainActivity) {
-            final MainActivity sender = (MainActivity) getActivity();
+        if(mainActivity != null) {
             ImageButton imageButton = root.findViewById(R.id.button_more);
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String query = mainActivity.getSearchView().getQuery().toString();
+                    int kind = 1;
+                    if(query.length() < 1) kind = 0;
                     more = more + 30;
-                    new SearchQueryTask().execute("null",0, more);
+                    new SearchQueryTask().execute(query,kind, more);
                 }
             });
 
@@ -67,8 +86,8 @@ public class SearchFragment extends Fragment  {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d(TAG, symbole.get(i));
+                    mainActivity.setSymbol_for_stock_fragment(symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
-                    sender.sendToStockFragment(new Object[]{symbole.get(i)});
                 }
             });
         } else {
@@ -80,8 +99,10 @@ public class SearchFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_search, container, false);
         listView = root.findViewById(R.id.searchlist);
-
-        new SearchQueryTask().execute("null",0, more);
+        String query = mainActivity.getSearchView().getQuery().toString();
+        int kind = 1;
+        if(query.length() < 1) kind = 0;
+        new SearchQueryTask().execute(query,kind, more);
 
         Log.d(TAG, "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
@@ -93,6 +114,7 @@ public class SearchFragment extends Fragment  {
 
 
     public void searchFor(String query){
+        more = 20;
         Log.d(TAG, "searching for: " + query );
         new SearchQueryTask().execute(query, 1, more);
     }

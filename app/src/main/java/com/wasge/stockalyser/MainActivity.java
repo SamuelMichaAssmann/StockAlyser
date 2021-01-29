@@ -27,11 +27,15 @@ import com.wasge.stockalyser.util.DatabaseManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    AppBarConfiguration mAppBarConfiguration;
-    DatabaseManager databaseManager;
-    SearchFragment searchFragment;
-    StockFragment stockFragment;
-    MenuItem bookmark;
+    private String TAG = "MainActivity";
+    private AppBarConfiguration mAppBarConfiguration;
+    private DatabaseManager databaseManager;
+    private SearchFragment searchFragment;
+    private StockFragment stockFragment;
+    private String symbol_for_stock_fragment;
+    private boolean searchActive = false;
+    private MenuItem bookmark;
+    private SearchView searchView;
 
     public void subscribeToMain(int id, Fragment f) {
         if (R.id.navigation_stock == id && f instanceof StockFragment) {
@@ -74,12 +78,13 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem itemSearch = menu.findItem(R.id.search_icon);
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        final SearchView searchView = (SearchView) itemSearch.getActionView();
+        searchView = (SearchView) itemSearch.getActionView();
         searchView.setQueryHint("Search...");
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navController.navigate(R.id.navigation_search);
+                if(!isSearchActive())
+                    navController.navigate(R.id.navigation_search);
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -140,11 +145,8 @@ public class MainActivity extends AppCompatActivity {
     public void sendSearchRequest(String query) {
         if (searchFragment != null)
             searchFragment.searchFor(query);
-    }
-
-    public void sendToStockFragment(Object[] data) {
-        if (stockFragment != null)
-            stockFragment.recieveData(data);
+        else
+            Log.e(TAG,"no search fragment known");
     }
 
     public void setBookmarkVisibility(boolean visibility){
@@ -155,7 +157,27 @@ public class MainActivity extends AppCompatActivity {
         bookmark.setIcon(id);
     }
 
+    public void setSymbol_for_stock_fragment(String symbol_for_stock_fragment) {
+        this.symbol_for_stock_fragment = symbol_for_stock_fragment;
+    }
+
+    public String getSymbol_for_stock_fragment() {
+        return symbol_for_stock_fragment;
+    }
+
+    public SearchView getSearchView() {
+        return searchView;
+    }
+
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public void setSearchActive(boolean searchActive) {
+        this.searchActive = searchActive;
+    }
+
+    public boolean isSearchActive() {
+        return searchActive;
     }
 }

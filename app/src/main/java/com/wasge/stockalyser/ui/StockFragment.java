@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.MainActivity;
@@ -40,7 +42,7 @@ public class StockFragment extends Fragment {
 
     //Stock Data:
     // columns: symbol, name, exchange, currency, average;
-    private String symbol, name, exchange, currency, average, TAG ="StockFragment";
+    private String symbol, name, exchange, currency, average, date, TAG ="StockFragment";
 
     //for testing
     boolean watched = false;
@@ -66,6 +68,7 @@ public class StockFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate() entered");
         mainActivity = null;
         if (getActivity() instanceof MainActivity)
             mainActivity = (MainActivity) getActivity();
@@ -73,11 +76,14 @@ public class StockFragment extends Fragment {
             dbManager = mainActivity.getDatabaseManager();
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
+        this.symbol = mainActivity.getSymbol_for_stock_fragment();
+
 
     }
 
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView() entered");
         root = inflater.inflate(R.layout.fragment_stock, container, false);
         final TextView intervall = root.findViewById(R.id.intervall);
         liveChart = root.findViewById(R.id.live_chart);
@@ -104,12 +110,22 @@ public class StockFragment extends Fragment {
 
             }
         });
-        dataPoints = getDataPoints(getData(0, symbol), dataPoints);
-        setLiveChart();
-        setIndicator();
-        setData(dbManager.getDisplayData(symbol));
-
+        if(symbol != null) {
+            dataPoints = getDataPoints(getData(0, symbol), dataPoints);
+            setLiveChart();
+            setIndicator();
+            setData(dbManager.getDisplayData(symbol));
+        }
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG,"onViewCreated() entered");
+        if(this.symbol != null) return;
+        NavController navController = Navigation.findNavController(view);
+        navController.navigate(R.id.navigation_home);
     }
 
     private float[] getData(int style, String symbol) {
@@ -229,7 +245,7 @@ public class StockFragment extends Fragment {
     }
 
     private void addToWatchlist(){
-        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
+        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average, date}))
             Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
         else
             Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
@@ -244,10 +260,15 @@ public class StockFragment extends Fragment {
     }
 
     private void setData(String[] data) {
-        if(data == null) return;
-
-
         TextView symbol = root.findViewById(R.id.symbol);
+        if(data == null) {
+            symbol.setText(this.symbol);
+            Log.e(TAG,"error setting data, null recieved");
+            return;
+        }
+
+
+
         TextView name = root.findViewById(R.id.name_data);
         TextView exchange = root.findViewById(R.id.exchenge_data);
         TextView currency = root.findViewById(R.id.currency_data);
@@ -285,7 +306,8 @@ public class StockFragment extends Fragment {
             this.name = data[1];
             this.exchange = data[2];
             this.currency = data[3];
-            this.average = data[4];
+            this.date = data[4];
+            this.average = data[5];
 
 
             symbol.setText(this.symbol);
@@ -337,8 +359,6 @@ public class StockFragment extends Fragment {
     }
 
     private boolean isInWatchlist(){
-        //for testing
-        if(true) return watched;
 
         String[] ids = dbManager.getWatchlistStockIDs();
         if(ids == null || ids.length < 1)
@@ -350,13 +370,6 @@ public class StockFragment extends Fragment {
                 return true;
         }
         return false;
-    }
-
-    public void recieveData(Object[] data) {
-        if (data[0] instanceof String) {
-            Log.d(TAG, "Data received");
-            this.symbol = (String) data[0];
-        }
     }
 
 

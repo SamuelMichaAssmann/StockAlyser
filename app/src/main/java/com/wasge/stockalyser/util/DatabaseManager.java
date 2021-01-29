@@ -44,6 +44,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         dbW.execSQL(StockDataContract.Stocks.deleteTable());
         dbW.execSQL(StockDataContract.Watchlist.deleteTable());
+
+        dbR.close();
+        dbW.close();
     }
 
     /**
@@ -63,7 +66,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         dbW.execSQL(StockDataContract.Stocks.createTable());
         dbW.execSQL(StockDataContract.Watchlist.createTable());
 
-
+        dbR.close();
+        dbW.close();
     }
 
     /**
@@ -112,14 +116,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         for(int i = 0; i < columnMap.length && i < data.length; i++){
-            if(data[i] == null) continue;
             values.put(columnMap[i],data[i]);
         }
 
-        int id = (int) db.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        int id = (int) db.insert(table, null, values);
         if (id == -1) {
             db.update(table, values, columnMap[0]+"=?", new String[] {data[0]});
         }
+        db.close();
 
 
     }
@@ -197,6 +201,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 StockDataContract.DailyEntry.COLUMN_NAME_DATETIME,
                 StockDataContract.DailyEntry.EXPIRATION_TIME);
         db.execSQL(sql);
+        db.close();
     }
 
     // last is newest value
@@ -223,12 +228,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * **/
     private Cursor getLastNElements(@NotNull String table, @NotNull String stock, int n) {
         SQLiteDatabase dbR = getReadableDatabase();
-        return dbR.query(table,StockDataContract.IntervalEntry.getValueColums(),
+        Cursor out = dbR.query(table,StockDataContract.IntervalEntry.getValueColums(),
                 StockDataContract.IntervalEntry.FOREIGN_ID + " LIKE ?" ,
                 new String[]{stock},
                 null,null,
-                StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + "DESC",
+                StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " DESC",
                 n + "");
+        return out;
     }
 
     /**
@@ -316,6 +322,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return gernerateData(90);
     }
 
+    /**
+     * returns null if none found in database
+     * **/
     public String[] getDisplayData(@NotNull String stockName) {
 
         String[] columns = StockDataContract.Stocks.getColumnMap();
@@ -324,57 +333,92 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 StockDataContract.Stocks.ID + " LIKE ?" ,
                 new String[]{stockName},
                 null,null,
-                StockDataContract.Stocks.COLUMN_NAME_DATETIME + "DESC",
+                StockDataContract.Stocks.COLUMN_NAME_DATETIME + " DESC",
                 1 + "");
         c.moveToFirst();
+        if(c.getCount() < 1){
+            return null;
+        }
         String[] output = new String[columns.length];
         for(int i = 0; i < columns.length; i++){
             output[i] = c.getString(c.getColumnIndex(columns[i]));
         }
+        c.close();
+        dbR.close();
 
         return output;
     }
 
     //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
     public ArrayList<String[]> getWatchlistStock() {
-
-
-        // TODO insert real data
         ArrayList<String[]> watchlist = new ArrayList<>();
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
 
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        SQLiteDatabase dbR = getReadableDatabase();
+        Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME,null,
+                null,
+                null,
+                null,null,
+                StockDataContract.Watchlist.ID + " DESC");
+        if(c.getCount() < 1) return watchlist;
+        c.moveToFirst();
+        String[] columns = c.getColumnNames();
+        while(!c.isAfterLast()){
+            String[] stock = new String[columns.length];
+            for(int i = 0; i< columns.length;i++){
+                stock[i] = c.getString(i);
+            }
+            watchlist.add(stock);
+            c.moveToNext();
+        }
+        c.close();
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+//
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
 
         return watchlist;
     }
 
     /**
-     * @param Symbol i.e. "AAPL"
+     * @param symbol i.e. "AAPL"
      **/
-    public boolean removeFromWatchlist(String Symbol) {
-        return true;
+    public boolean removeFromWatchlist(String symbol) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete(StockDataContract.Watchlist.TABLE_NAME,
+                StockDataContract.Watchlist.ID + " = \"" + symbol + "\"",
+                null) > 0;
     }
 
     /**
-     * @param Stock i.e. ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"]
+     * @param stock i.e. ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"]
      **/
-    public boolean addToWatchlist(String[] Stock) {
-
+    public boolean addToWatchlist(String[] stock) {
+        insertToTable(StockDataContract.Watchlist.TABLE_NAME,stock);
         return true;
     }
 
     public String[] getWatchlistStockIDs() {
-        String template = "SELECT %s FROM %s ORDER BY ASC";
-        String query = String.format(
-                template,
-                StockDataContract.Watchlist.ID,
-                StockDataContract.Watchlist.TABLE_NAME);
 
-        return new String[]{"AAPL", "AAPL", "AAPL", "AAPL", "AAPL", "AAPL"};
+
+        SQLiteDatabase dbR = getReadableDatabase();
+        Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME,null,
+                null,
+                null,
+                null,null,
+                StockDataContract.Watchlist.ID + " DESC");
+        String[] out = new String[c.getCount()];
+        if(c.getCount() < 1) return out;
+        c.moveToFirst();
+        for(int i = 0; i < out.length; i++){
+            out[i] = c.getString(c.getColumnIndex(StockDataContract.Watchlist.ID));
+            c.moveToNext();
+        }
+        c.close();
+
+        return out;
     }
 }
 
