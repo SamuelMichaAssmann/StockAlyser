@@ -14,8 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.MainActivity;
@@ -35,6 +33,7 @@ public class StockFragment extends Fragment {
 
     private MainActivity mainActivity;
     private DatabaseManager dbManager;
+    private final ChartProcess c = new ChartProcess();
 
 
     LiveChart liveChart;
@@ -86,12 +85,16 @@ public class StockFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG,"onCreateView() entered");
         root = inflater.inflate(R.layout.fragment_stock, container, false);
-        final TextView intervall = root.findViewById(R.id.intervall);
+        final TextView currentPrice = root.findViewById(R.id.current_price);
+        final TextView percentPrice = root.findViewById(R.id.percent_price);
+        final TextView inter = root.findViewById(R.id.intervall);
         liveChart = root.findViewById(R.id.live_chart);
+        TabLayout tabLayout = root.findViewById(R.id.tablayout);
 
+        c.setData(liveChart, dbManager, inter,null, currentPrice, percentPrice);
+        c.setTab(tabLayout, liveChart, dbManager, inter, null, currentPrice, percentPrice);
 
-
-
+        setData(dbManager.getDisplayData(symbol));
         if(symbol != null) {
             if(dbManager.hasStockInfo(symbol))
                 setData(dbManager.getDisplayData(symbol));
@@ -183,7 +186,14 @@ public class StockFragment extends Fragment {
         }
     }
 
-    private void setGraph(float[] output) {}
+    private void setGraph(float[] output) {
+        if (output == null)
+            return;
+        Dataset dataset2 = new Dataset(c.getDataPoints(output));
+        liveChart.setSecondDataset(dataset2)
+                .drawBaselineFromFirstPoint()
+                .drawDataset();
+    }
 
     public void toggleCurrentToWatchlist(){
         //for testing
@@ -204,7 +214,7 @@ public class StockFragment extends Fragment {
     }
 
     private void addToWatchlist(){
-        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average, date}))
+        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
             Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
         else
             Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");

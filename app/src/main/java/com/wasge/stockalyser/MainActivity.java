@@ -1,8 +1,6 @@
 package com.wasge.stockalyser;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,10 +18,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.wasge.stockalyser.ui.SettingsFragment;
 import com.wasge.stockalyser.ui.StockFragment;
 import com.wasge.stockalyser.ui.search.SearchFragment;
 import com.wasge.stockalyser.util.DatabaseManager;
+import com.wasge.stockalyser.util.ProcessData;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         databaseManager.insertTestData();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_search, R.id.navigation_watchlist)
                 .build();
@@ -70,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        ProcessData data = new ProcessData();
+        float[] da = data.setDatatoPercent(new float[]{1.1f, 1.9f, 7.5f, 6.997f});
+        for (float f : da) {
+            Log.d("Data", String.valueOf(f));
+        }
     }
 
     @Override
