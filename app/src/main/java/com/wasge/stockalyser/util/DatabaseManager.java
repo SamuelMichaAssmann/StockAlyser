@@ -427,15 +427,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 }
 
 
-enum REQUEST_TYPE {
-    CURRENT_STATUS,
-    DAILY,
-    WEEKLY,
-    MONTHLY,
-    YEARLY,
-}
-
-
 /*
 -------- Api-json -------
 {

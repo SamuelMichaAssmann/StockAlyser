@@ -20,6 +20,7 @@ import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
+import com.wasge.stockalyser.util.REQUEST_TYPE;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -214,7 +215,7 @@ public class StockFragment extends Fragment {
     }
 
     private void addToWatchlist(){
-        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
+        if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average, date}))
             Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
         else
             Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
@@ -282,7 +283,8 @@ public class StockFragment extends Fragment {
 
         @Override
         protected Integer doInBackground(Object... objects) {
-            //request data from api (and insert to database)
+            //TODO: request data from api (and insert to database)
+            //dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS,  *insert JSON Data here*  );
             return 0;
         }
     }
