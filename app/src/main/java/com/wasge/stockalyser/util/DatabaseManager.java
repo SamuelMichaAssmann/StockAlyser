@@ -335,10 +335,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 null,null,
                 StockDataContract.Stocks.COLUMN_NAME_DATETIME + " DESC",
                 1 + "");
-        c.moveToFirst();
         if(c.getCount() < 1){
             return null;
         }
+        c.moveToFirst();
         String[] output = new String[columns.length];
         for(int i = 0; i < columns.length; i++){
             output[i] = c.getString(c.getColumnIndex(columns[i]));
@@ -398,6 +398,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public boolean addToWatchlist(String[] stock) {
         insertToTable(StockDataContract.Watchlist.TABLE_NAME,stock);
         return true;
+    }
+
+    public boolean hasStockInfo(String symbol){
+        return getDisplayData(symbol) != null;
     }
 
     public String[] getWatchlistStockIDs() {

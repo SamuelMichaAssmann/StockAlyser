@@ -114,7 +114,10 @@ public class StockFragment extends Fragment {
             dataPoints = getDataPoints(getData(0, symbol), dataPoints);
             setLiveChart();
             setIndicator();
-            setData(dbManager.getDisplayData(symbol));
+            if(dbManager.hasStockInfo(symbol))
+                setData(dbManager.getDisplayData(symbol));
+            else
+                new StockDataTask().execute(symbol);
         }
         return root;
     }
@@ -302,7 +305,11 @@ public class StockFragment extends Fragment {
                 }
             }
 
-            this.symbol = data[0];
+            //symbol = 0, name = 1, exchange = 2, currency = 3, date = 4, open = 5,
+            // high = 6, low = 7, close = 8, volume = 9, avgvolume = 10, preclose = 11,
+            // range = 12, perchange = 13, yearlow = 14, yearhigh = 15, yearlowchange = 16,
+            // yearhighchange = 17, yearlowchangeper = 18, yearhighchangeper = 19
+
             this.name = data[1];
             this.exchange = data[2];
             this.currency = data[3];
@@ -314,7 +321,7 @@ public class StockFragment extends Fragment {
             name.setText(this.name);
             exchange.setText(this.exchange);
             currency.setText(this.currency);
-            date.setText(this.average);
+            date.setText(this.date);
             //insert.setText(?);
             open.setText(data[5]);
             high.setText(data[6]);
@@ -384,11 +391,6 @@ public class StockFragment extends Fragment {
                 Log.d("Data", "data empty");
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }
-
         /**
          * @param objects Url, kind if kind == 0 -> Url will be ignored
          **/
@@ -405,6 +407,20 @@ public class StockFragment extends Fragment {
                 Log.e("searchFragment", "BackgroundTask failed: " + e.getMessage());
             }
             return 1;
+        }
+    }
+
+    private class StockDataTask extends AsyncTask<Object,Integer,Integer>{
+        @Override
+        protected void onPostExecute(Integer code) {
+            super.onPostExecute(code);
+            setData(dbManager.getDisplayData(symbol));
+        }
+
+        @Override
+        protected Integer doInBackground(Object... objects) {
+            //request data from api (and insert to database)
+            return 0;
         }
     }
 }

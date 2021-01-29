@@ -157,7 +157,10 @@ public class StockDataContract {
         public static final String COLUMN_NAME_LOW = "low";
         public static final String COLUMN_NAME_CLOSE = "close";
         public static final String COLUMN_NAME_VOLUME = "volume";
-
+        public static final String COLUMN_NAME_AVGVOLUME = "average_volume";
+        public static final String COLUMN_NAME_PRECLOSE = "previous_close";
+        public static final String COLUMN_NAME_RANGE = "range";
+        public static final String COLUMN_NAME_PERCHANGE = "change";
         //52WEEKS
         public static final String COLUMN_NAME_52HIGH = "fhigh";
         public static final String COLUMN_NAME_52LOW = "flow";
@@ -178,6 +181,10 @@ public class StockDataContract {
                     COLUMN_NAME_LOW  + " REAL NOT NULL, " +
                     COLUMN_NAME_CLOSE + " REAL NOT NULL, " +
                     COLUMN_NAME_VOLUME + " INTEGER NOT NULL, " +
+                    COLUMN_NAME_AVGVOLUME + " INTEGER NOT NULL, " +
+                    COLUMN_NAME_PRECLOSE + " REAL NOT NULL, " +
+                    COLUMN_NAME_RANGE + " TEXT NOT NULL, " +
+                    COLUMN_NAME_PERCHANGE + " REAL NOT NULL, " +
 
                     COLUMN_NAME_52HIGH  + " REAL NOT NULL, " +
                     COLUMN_NAME_52LOW  + " REAL NOT NULL, " +
@@ -189,6 +196,12 @@ public class StockDataContract {
         public static final String deleteTable(){
             return "DROP TABLE IF EXISTS " + TABLE_NAME;
         }
+
+        //symbol = 0, name = 1, exchange = 2, currency = 3, date = 4, open = 5,
+        // high = 6, low = 7, close = 8, volume = 9, avgvolume = 10, preclose = 11,
+        // range = 12, perchange = 13, yearlow = 14, yearhigh = 15, yearlowchange = 16,
+        // yearhighchange = 17, yearlowchangeper = 18, yearhighchangeper = 19
+
         public static final String[] getColumnMap(){
             return new String[]{
                     ID,
@@ -202,6 +215,10 @@ public class StockDataContract {
                     COLUMN_NAME_LOW,
                     COLUMN_NAME_CLOSE,
                     COLUMN_NAME_VOLUME,
+                    COLUMN_NAME_AVGVOLUME,
+                    COLUMN_NAME_PRECLOSE,
+                    COLUMN_NAME_RANGE,
+                    COLUMN_NAME_PERCHANGE,
 
                     COLUMN_NAME_52HIGH,COLUMN_NAME_52LOW,
                     COLUMN_NAME_52HIGH_CHANGE,COLUMN_NAME_52LOW_CHANGE,

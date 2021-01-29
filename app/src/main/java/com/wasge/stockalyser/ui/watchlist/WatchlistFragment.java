@@ -86,12 +86,14 @@ public class WatchlistFragment extends Fragment {
 
     private void getData(){
         ArrayList<String[]> watchData = dbManager.getWatchlistStock();
+
         for (String[] d : watchData) {
             symbole.add(d[0]);
             name.add(d[1]);
             date.add(d[5]);
             value.add(d[4]);
         }
+        data.clear();
         for (String s : symbole) {
             data.add(dbManager.getTenDayData(s));
         }
