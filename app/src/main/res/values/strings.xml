@@ -31,6 +31,7 @@
     <string name="tab_month">MONTH</string>
     <string name="tab_year">YEAR</string>
     <string name="tab_max">MAX</string>
+
     <string name="menu_search">Search</string>
     <string name="menu_bookmark">Bookmark</string>
     <string name="empty_str">------</string>
@@ -59,6 +60,12 @@
     <string name="stock_low_change_percent">Low change percent</string>
     <string name="stock_high_change_percent">High change percent</string>
     <string name="more">More</string>
+    <string name="home_data">Values</string>
+    <string name="homeavg">Average</string>
+    <string name="homemin">Min</string>
+    <string name="homemax">Max</string>
+    <string name="homegradiant">Gradient</string>
+    <string name="infotxt">- Information provided without warranty -</string>
 
     <!-- New -->
 

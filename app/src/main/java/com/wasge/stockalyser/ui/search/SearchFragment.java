@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -88,6 +90,7 @@ public class SearchFragment extends Fragment  {
                 }
             });
         } else {
+            Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Error");
         }
 
@@ -167,6 +170,7 @@ public class SearchFragment extends Fragment  {
                     else
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
+                Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
             return output.size();

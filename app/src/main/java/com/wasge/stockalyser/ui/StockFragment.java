@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,7 +25,7 @@ public class StockFragment extends Fragment {
 
     private MainActivity mainActivity;
     private DatabaseManager dbManager;
-    private final ChartProcess c = new ChartProcess();
+    private ChartProcess c;
 
 
     LiveChart liveChart;
@@ -67,7 +69,7 @@ public class StockFragment extends Fragment {
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
         this.symbol = mainActivity.getSymbol_for_stock_fragment();
-
+        c = new ChartProcess(getContext());
 
     }
 
@@ -81,7 +83,7 @@ public class StockFragment extends Fragment {
         liveChart = root.findViewById(R.id.live_chart);
         TabLayout tabLayout = root.findViewById(R.id.tablayout);
 
-        c.setData(liveChart, dbManager, inter,symbol, currentPrice, percentPrice);
+        c.setData(liveChart, dbManager, symbol, currentPrice, percentPrice);
         c.setTab(tabLayout, liveChart, dbManager, inter, symbol, currentPrice, percentPrice);
 
         setData(dbManager.getDisplayData(symbol));
@@ -98,6 +100,7 @@ public class StockFragment extends Fragment {
         TextView symbol = root.findViewById(R.id.symbol);
         if(data == null) {
             symbol.setText(this.symbol);
+            Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
             Log.e(TAG,"error setting data, null recieved");
             return;
         }
@@ -108,7 +111,6 @@ public class StockFragment extends Fragment {
         TextView exchange = root.findViewById(R.id.exchenge_data);
         TextView currency = root.findViewById(R.id.currency_data);
         TextView date = root.findViewById(R.id.date_data);
-        TextView insert = root.findViewById(R.id.insert_data);
         TextView open = root.findViewById(R.id.open_data);
         TextView high = root.findViewById(R.id.high_data);
         TextView low = root.findViewById(R.id.low_data);
@@ -128,10 +130,13 @@ public class StockFragment extends Fragment {
         try {
 
             for(int i = 0; i < 5; i++){
-                if(i == data.length)
+                if(i == data.length) {
+                    Toast.makeText(getContext(), "Loading data error", Toast.LENGTH_SHORT).show();
                     throw new Exception("Error setting data for Stock Fragment," +
                             " data might be incorrect or corrupted!");
+                }
                 else if(data[i] == null) {
+                    Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
                     throw new Exception("Error setting data for Stock Fragment," +
                             " data might be incorrect or corrupted!");
                 }
@@ -154,7 +159,6 @@ public class StockFragment extends Fragment {
             exchange.setText(this.exchange);
             currency.setText(this.currency);
             date.setText(this.date);
-            //insert.setText(?);
             open.setText(data[5]);
             high.setText(data[6]);
             low.setText(data[7]);
@@ -199,15 +203,19 @@ public class StockFragment extends Fragment {
     private void removeFromWatchlist(){
         if(dbManager.removeFromWatchlist(symbol))
             Log.d(TAG, "successfully removed stock: " + symbol + " from watchlist!");
-        else
-            Log.d(TAG,"failed to remove stock: " + symbol + " from watchlist!");
+        else {
+            Toast.makeText(getContext(), "Remove failed", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "failed to remove stock: " + symbol + " from watchlist!");
+        }
     }
 
     private void addToWatchlist(){
         if(dbManager.addToWatchlist(new String[]{symbol, name, exchange, currency, average}))
             Log.d(TAG, "successfully added stock: " + symbol + " to watchlist!");
-        else
-            Log.d(TAG,"failed to add stock: " + symbol + " to watchlist!");
+        else {
+            Toast.makeText(getContext(), "failed to add stock: " + symbol + " to watchlist!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "failed to add stock: " + symbol + " to watchlist!");
+        }
 
     }
 
@@ -230,37 +238,6 @@ public class StockFragment extends Fragment {
                 return true;
         }
         return false;
-    }
-
-
-    private class TrendlineTask extends AsyncTask<Object,Integer,Integer> {
-        float[] output;
-
-        @Override
-        protected void onPostExecute(Integer strings) {
-            if (output != null)
-                setGraph(output);
-            else
-                Log.d("Data", "data empty");
-        }
-
-        /**
-         * @param objects Url, kind if kind == 0 -> Url will be ignored
-         **/
-        @Override
-        protected Integer doInBackground(Object... objects) {
-            try {
-                ApiManager mng = new ApiManager(getContext());
-                if (objects != null && objects.length == 1 && objects[0] instanceof String) {
-                    Log.d("Trend", (String) objects[0] + " -- " + symbol + " -- " + interval);
-                    Log.d("url", mng.buildUrl((String) objects[0], symbol, interval));
-                    output = mng.parseJSONData(mng.buildUrl((String) objects[0], symbol, interval), (String) objects[0]);
-                }
-            } catch (Exception e) {
-                Log.e("searchFragment", "BackgroundTask failed: " + e.getMessage());
-            }
-            return 1;
-        }
     }
 
     private class StockDataTask extends AsyncTask<Object,Integer,Integer>{

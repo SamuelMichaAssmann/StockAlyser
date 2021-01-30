@@ -20,7 +20,7 @@ public class HomeFragment extends Fragment {
 
     private MainActivity mainActivity;
     private DatabaseManager dbManager;
-    private final ChartProcess c = new ChartProcess();
+    private ChartProcess c;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment {
             dbManager = mainActivity.getDatabaseManager();
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
+        c = new ChartProcess(getContext());
     }
 
     @SuppressLint("SetTextI18n")
@@ -41,8 +42,14 @@ public class HomeFragment extends Fragment {
         TabLayout tabLayout = root.findViewById(R.id.tabs);
         TextView percent = root.findViewById(R.id.home_percent);
         TextView interval = root.findViewById(R.id.home_intervall);
-        c.setData(liveChart, dbManager, interval,null, null, percent);
+
+        TextView max = root.findViewById(R.id.home_max_data);
+        TextView min = root.findViewById(R.id.home_min_data);
+        TextView avg = root.findViewById(R.id.home_avg_data);
+
+        c.setData(liveChart, dbManager,null, null, percent);
         c.setTab(tabLayout, liveChart, dbManager, interval, null, null, percent);
+        c.setValues(max, min, avg);
 
         return root;
     }
