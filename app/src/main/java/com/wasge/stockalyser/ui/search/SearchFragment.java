@@ -90,7 +90,7 @@ public class SearchFragment extends Fragment  {
                 }
             });
         } else {
-            Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
+            mainActivity.displayToast("Error occured, couldn't load data properly!");
             Log.d(TAG, "Error");
         }
 
@@ -143,9 +143,14 @@ public class SearchFragment extends Fragment  {
 
 
         private ArrayList<String[]> output = new ArrayList<>();
+        private boolean errorOccured = false;
 
         @Override
         protected void onPostExecute(Integer strings) {
+            if(errorOccured){
+                mainActivity.displayToast("Error occured, couldn't load data properly!");
+                return;
+            }
             update_list(output);
         }
 
@@ -170,7 +175,7 @@ public class SearchFragment extends Fragment  {
                     else
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
-                Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
+                errorOccured = true;
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
             return output.size();

@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -179,5 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isSearchActive() {
         return searchActive;
+    }
+    public void displayToast(String message){
+        Toast.makeText(this,""+message, Toast.LENGTH_SHORT).show();
     }
 }
