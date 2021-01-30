@@ -3,6 +3,7 @@ package com.wasge.stockalyser.ui;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,16 @@ import com.wasge.stockalyser.util.REQUEST_TYPE;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 public class StockFragment extends Fragment {
 
     private MainActivity mainActivity;
     private DatabaseManager dbManager;
     private ChartProcess c;
-
+    ApiManager mng;
 
     LiveChart liveChart;
     View root;
@@ -70,7 +75,8 @@ public class StockFragment extends Fragment {
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
         this.symbol = mainActivity.getSymbol_for_stock_fragment();
-        c = new ChartProcess(getContext());
+        this.c = new ChartProcess(getContext());
+        this.mng  = new ApiManager(getContext());
 
     }
 
@@ -251,7 +257,12 @@ public class StockFragment extends Fragment {
         @Override
         protected Integer doInBackground(Object... objects) {
             //TODO: request data from api (and insert to database)
-            dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS, null  /*insert JSON Data here*/  );
+            try {
+                dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS, new JSONObject(mng.getUrlInformation(mng.buildUrl("quote", symbol))));
+            } catch (JSONException e) {
+                Toast.makeText(getContext(), "Dataloading failed", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
             return 0;
         }
     }

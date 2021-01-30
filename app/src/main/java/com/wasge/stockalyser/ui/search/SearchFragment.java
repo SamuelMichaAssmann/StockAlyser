@@ -170,7 +170,7 @@ public class SearchFragment extends Fragment  {
                     else
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
-                Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(root.getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
             return output.size();

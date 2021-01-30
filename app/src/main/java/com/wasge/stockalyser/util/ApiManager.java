@@ -61,6 +61,7 @@ public class ApiManager {
     }
 
     public String getUrlInformation(final String rowUrl) {
+        Log.d("Url", rowUrl);
         final StringBuilder s = new StringBuilder();
 
         URL url = null;
