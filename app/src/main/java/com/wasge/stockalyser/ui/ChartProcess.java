@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
 import com.wasge.stockalyser.util.ProcessData;
+import com.wasge.stockalyser.util.ToastyAsyncTask;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
@@ -28,6 +29,7 @@ public class ChartProcess {
     private ArrayList<DataPoint> data = null;
     LiveChart liveChart;
     String symbol;
+    TabLayout tabLayout;
     private float NaN;
 
     public ChartProcess(Context context) {
@@ -36,27 +38,28 @@ public class ChartProcess {
     }
 
     public void setData(final LiveChart liveChart, DatabaseManager dbm, final String symbol, final TextView currentPrice, final TextView percentPrice){
-        ArrayList<DataPoint> dataPoints = getDataPoints(getData(0,symbol, dbm));
-        setLiveChart(liveChart, dataPoints);
-        setIndicator(dataPoints, liveChart, currentPrice, percentPrice);
-        new TrendlineTask().execute(symbol, inter);
-        this.data = dataPoints;
+        new TrendlineTask(context).execute(symbol, inter);
         this.liveChart = liveChart;
         this.symbol = symbol;
+        ArrayList<DataPoint> dataPoints = getDataPoints(getData(0,symbol, dbm));
+        this.data = dataPoints;
+        setLiveChart( dataPoints);
+        setIndicator(dataPoints, liveChart, currentPrice, percentPrice);
     }
 
     public void setTab(TabLayout tabLayout, final LiveChart liveChart, final DatabaseManager dbm, final TextView interval, final String symbol, final TextView currentPrice, final TextView percentPrice){
         this.liveChart = liveChart;
         this.symbol = symbol;
+        this.tabLayout = tabLayout;
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 ArrayList<DataPoint> dataPoints = getDataPoints(getData(tab.getPosition(),symbol, dbm));
-                setLiveChart(liveChart, dataPoints);
+                setLiveChart(dataPoints);
                 interval.setText(tab.getText());
                 setInterval(tab.getPosition());
                 setIndicator(dataPoints, liveChart,currentPrice, percentPrice);
-                new TrendlineTask().execute(symbol, inter);
+                new TrendlineTask(context).execute(symbol, inter);
                 data = dataPoints;
             }
 
@@ -131,7 +134,7 @@ public class ChartProcess {
         return dataPoints;
     }
 
-    private void setLiveChart(LiveChart liveChart, ArrayList<DataPoint> dataPoints) {
+    public void setLiveChart( ArrayList<DataPoint> dataPoints) {
         if (dataPoints == null)
             return;
         Dataset dataset = new Dataset(dataPoints);
@@ -226,11 +229,18 @@ public class ChartProcess {
         }
     }
 
-    private class TrendlineTask extends AsyncTask<Object,Integer,Integer> {
+    private class TrendlineTask extends ToastyAsyncTask<Object,Integer,Integer> {
         float[] output;
+        boolean errorOccured = false;
+
+        public TrendlineTask(Context context) {
+            super(context);
+            message = "Error! Couldn't load Trendgraph Data!";
+        }
 
         @Override
-        protected void onPostExecute(Integer strings) {
+        protected void onPostExecute(Integer code) {
+            super.onPostExecute(code);
             if (output != null)
                 setTrend(output);
             else
@@ -250,7 +260,7 @@ public class ChartProcess {
                     output = mng.parseJSONData(mng.buildUrl(style, (String) objects[0], (String) objects[1]), style);
                 }
             } catch (Exception e) {
-                Toast.makeText(context,"Loading data error", Toast.LENGTH_SHORT).show();
+                errorOccured = true;
                 Log.e("Chartprocess", "BackgroundTask failed: " + e.getMessage());
             }
             return 1;

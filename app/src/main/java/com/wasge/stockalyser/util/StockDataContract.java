@@ -6,7 +6,12 @@ public class StockDataContract {
     public static String[] getAppropriateColumnMap(String tableName){
         String[] output = new String[]{};
         if(tableName == null) return output;
-        if(tableName.contentEquals(YearlyEntry.TABLE_NAME) || tableName.contentEquals(MonthlyEntry.TABLE_NAME) || tableName.contentEquals(WeeklyEntry.TABLE_NAME) || tableName.contentEquals(DailyEntry.TABLE_NAME)){
+        if(tableName.contentEquals(YearlyEntry.TABLE_NAME) ||
+                tableName.contentEquals(MonthlyEntry.TABLE_NAME) ||
+                tableName.contentEquals(WeeklyEntry.TABLE_NAME) ||
+                tableName.contentEquals(DailyEntry.TABLE_NAME) ||
+                tableName.contentEquals(MaxEntry.TABLE_NAME)
+        ){
             return IntervalEntry.getColumnMap();
         } else if(tableName.contentEquals(Stocks.TABLE_NAME)){
             return Stocks.getColumnMap();
@@ -90,6 +95,28 @@ public class StockDataContract {
         public static String EXPIRATION_TIME = "-370 days";
 
         private YearlyEntry() {
+        }
+
+        public static String createTable(){
+            return "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+                    FOREIGN_ID + " TEXT NOT NULL, " +
+                    COLUMN_NAME_DATETIME + " TEXT NOT NULL, " +
+                    COLUMN_NAME_OPEN + " REAL NOT NULL, " +
+                    COLUMN_NAME_HIGH  + " REAL NOT NULL, " +
+                    COLUMN_NAME_LOW  + " REAL NOT NULL, " +
+                    COLUMN_NAME_CLOSE + " REAL NOT NULL, " +
+                    COLUMN_NAME_VOLUME + " INTEGER NOT NULL)";
+        }
+
+        public static String deleteTable(){
+            return "DROP TABLE IF EXISTS " + TABLE_NAME;
+        }
+    }
+
+    public static class MaxEntry extends IntervalEntry{
+        public static String TABLE_NAME = "max"; //intervall
+
+        private MaxEntry() {
         }
 
         public static String createTable(){
@@ -227,8 +254,6 @@ public class StockDataContract {
             };
         }
     }
-
-
 
     public static class Watchlist{
         public static final String TABLE_NAME = "watchlist";

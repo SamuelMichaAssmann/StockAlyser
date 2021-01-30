@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         databaseManager = new DatabaseManager(this);
-        databaseManager.deleteDB();
         databaseManager.initializeDB();
         databaseManager.insertTestData();
         setContentView(R.layout.activity_main);

@@ -24,40 +24,41 @@ public class ApiManager {
     // Max 1 week last 90
 
     private final String apikey;
-    private final String entypoint = "https://api.twelvedata.com/";
+    private final String entrypoint = "https://api.twelvedata.com/";
 
     public ApiManager(Context context) {
         SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
         this.apikey = PreferenceKey.getString("apikey", null);
-        // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+
     }
 
+    // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
     //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
     //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
     //  trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
     public String buildUrl(String kind, String symbol, String interval) {
-        return entypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
+        return entrypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
     }
 
     //  quote?symbol=AAPL&apikey=your_api_key --- Stock Info
     //  price?symbol=AAPL&apikey=your_api_key --- Stock Price
     public String buildUrl(String kind, String symbol) {
-        return entypoint + kind + "?symbol=" + symbol + "&apikey=" + apikey;
+        return entrypoint + kind + "?symbol=" + symbol + "&apikey=" + apikey;
     }
 
     // symbol_search?symbol=AA --- Search Stock
     public String search(String stock) {
-        return entypoint + "symbol_search?symbol=" + stock;
+        return entrypoint + "symbol_search?symbol=" + stock;
     }
 
     // search
     public String search() {
-        return entypoint + "stocks";
+        return entrypoint + "stocks";
     }
 
     //  api_usage?apikey=your_api_key --- Search Stock
     public String usage() {
-        return entypoint + "api_usage?apikey=" + apikey;
+        return entrypoint + "api_usage?apikey=" + apikey;
     }
 
     public String getUrlInformation(final String rowUrl) {

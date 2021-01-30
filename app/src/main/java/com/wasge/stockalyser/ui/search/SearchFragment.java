@@ -22,6 +22,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
+import com.wasge.stockalyser.util.ToastyAsyncTask;
+
 import java.util.ArrayList;
 
 public class SearchFragment extends Fragment  {
@@ -77,7 +79,7 @@ public class SearchFragment extends Fragment  {
                     int kind = 1;
                     if(query.length() < 1) kind = 0;
                     more = more + 30;
-                    new SearchQueryTask().execute(query,kind, more);
+                    new SearchQueryTask(mainActivity).execute(query,kind, more);
                 }
             });
 
@@ -102,7 +104,7 @@ public class SearchFragment extends Fragment  {
         String query = mainActivity.getSearchView().getQuery().toString();
         int kind = 1;
         if(query.length() < 1) kind = 0;
-        new SearchQueryTask().execute(query,kind, more);
+        new SearchQueryTask(mainActivity).execute(query,kind, more);
 
         Log.d(TAG, "Create Adapter");
         adapter = new SearchAdapter(this.getContext(), name, symbole, currency, exchange);
@@ -116,7 +118,7 @@ public class SearchFragment extends Fragment  {
     public void searchFor(String query){
         more = 20;
         Log.d(TAG, "searching for: " + query );
-        new SearchQueryTask().execute(query, 1, more);
+        new SearchQueryTask(mainActivity).execute(query, 1, more);
     }
 
     private void update_list(ArrayList<String[]> table){
@@ -139,16 +141,20 @@ public class SearchFragment extends Fragment  {
     }
 
 
-    private class SearchQueryTask extends AsyncTask<Object,Integer,Integer> {
+    private class SearchQueryTask extends ToastyAsyncTask<Object,Integer,Integer> {
 
 
         private ArrayList<String[]> output = new ArrayList<>();
-        private boolean errorOccured = false;
+
+        public SearchQueryTask(Context context) {
+            super(context);
+            message = "Error occured, couldn't load data properly!";
+        }
 
         @Override
         protected void onPostExecute(Integer strings) {
+            super.onPostExecute(strings);
             if(errorOccured){
-                mainActivity.displayToast("Error occured, couldn't load data properly!");
                 return;
             }
             update_list(output);
@@ -175,7 +181,7 @@ public class SearchFragment extends Fragment  {
                     else
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
-                errorOccured = true;
+                errorOccured();
                 Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
             }
             return output.size();

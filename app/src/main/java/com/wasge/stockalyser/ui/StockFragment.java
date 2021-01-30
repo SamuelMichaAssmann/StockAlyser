@@ -1,6 +1,7 @@
 package com.wasge.stockalyser.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -20,6 +21,7 @@ import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
 import com.wasge.stockalyser.util.REQUEST_TYPE;
+import com.wasge.stockalyser.util.ToastyAsyncTask;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 
@@ -75,8 +77,9 @@ public class StockFragment extends Fragment {
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
         this.symbol = mainActivity.getSymbol_for_stock_fragment();
-        this.c = new ChartProcess(getContext());
+        this.c = new ChartProcess(mainActivity);
         this.mng  = new ApiManager(getContext());
+        new IntervalDataTask(mainActivity).execute();
 
     }
 
@@ -98,7 +101,7 @@ public class StockFragment extends Fragment {
             if(dbManager.hasStockInfo(symbol))
                 setData(dbManager.getDisplayData(symbol));
             else
-                new StockDataTask().execute(symbol);
+                new StockDataTask(mainActivity).execute(symbol);
         }
         return root;
     }
@@ -107,7 +110,6 @@ public class StockFragment extends Fragment {
         TextView symbol = root.findViewById(R.id.symbol);
         if(data == null) {
             symbol.setText(this.symbol);
-            Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
             Log.e(TAG,"error setting data, null recieved");
             return;
         }
@@ -138,12 +140,10 @@ public class StockFragment extends Fragment {
 
             for(int i = 0; i < 5; i++){
                 if(i == data.length) {
-                    Toast.makeText(getContext(), "Loading data error", Toast.LENGTH_SHORT).show();
                     throw new Exception("Error setting data for Stock Fragment," +
                             " data might be incorrect or corrupted!");
                 }
                 else if(data[i] == null) {
-                    Toast.makeText(getContext(),"Loading data error", Toast.LENGTH_SHORT).show();
                     throw new Exception("Error setting data for Stock Fragment," +
                             " data might be incorrect or corrupted!");
                 }
@@ -247,23 +247,75 @@ public class StockFragment extends Fragment {
         return false;
     }
 
-    private class StockDataTask extends AsyncTask<Object,Integer,Integer>{
+    private class StockDataTask extends ToastyAsyncTask<Object,Integer,Integer>{
+
+        private String defaultMessage = "Error occured, couldn't load data properly!";
+        public StockDataTask(Context context) {
+            super(context);
+            message = defaultMessage;
+        }
+
         @Override
         protected void onPostExecute(Integer code) {
-            super.onPostExecute(code);
+            switch (code){
+                case 400:
+                    errorOccured();
+                    duration = Toast.LENGTH_LONG;
+                    message = "Stock not accessible with current API Key, please upgrade your plan at https://twelvedata.com/prime.";
+                    super.onPostExecute(code);
+                    duration = Toast.LENGTH_SHORT;
+                    message = defaultMessage;
+                    break;
+                case 0:
+                    errorOccured();
+                    super.onPostExecute(code);
+                    break;
+                case -1:
+                    super.onPostExecute(code);
+                    break;
+            }
             setData(dbManager.getDisplayData(symbol));
         }
 
         @Override
         protected Integer doInBackground(Object... objects) {
-            //TODO: request data from api (and insert to database)
             try {
-                dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS, new JSONObject(mng.getUrlInformation(mng.buildUrl("quote", symbol))));
+                return dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS, new JSONObject(mng.getUrlInformation(mng.buildUrl("quote", symbol))));
             } catch (JSONException e) {
-                Toast.makeText(getContext(), "Dataloading failed", Toast.LENGTH_SHORT).show();
+                errorOccured();
                 e.printStackTrace();
             }
             return 0;
+        }
+    }
+
+    private class IntervalDataTask extends ToastyAsyncTask<Object,Integer,Integer>{
+
+        public IntervalDataTask(Context context) {
+            super(context);
+            message = "Error occured, Graph Data couldn't load data properly!";
+        }
+
+        @Override
+        protected Integer doInBackground(Object... objects) {
+            try {
+                // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+                dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min"))));
+                dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h"))));
+                dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h"))));
+                dbManager.handleData(REQUEST_TYPE.YEARLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1day"))));
+                dbManager.handleData(REQUEST_TYPE.MAX,     new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1week"))));
+            } catch (Exception e) {
+                errorOccured();
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            c.setLiveChart(c.getDataPoints(c.getData(c.tabLayout.getSelectedTabPosition(),c.symbol,dbManager)));
         }
     }
 }

@@ -33,12 +33,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         SQLiteDatabase dbR = getReadableDatabase();
         SQLiteDatabase dbW = getWritableDatabase();
 
-        //delete tables
+        //delete interval tables
         dbW.execSQL(StockDataContract.DailyEntry.deleteTable());
         dbW.execSQL(StockDataContract.WeeklyEntry.deleteTable());
         dbW.execSQL(StockDataContract.MonthlyEntry.deleteTable());
         dbW.execSQL(StockDataContract.YearlyEntry.deleteTable());
-
+        dbW.execSQL(StockDataContract.MaxEntry.deleteTable());
+        //delete stock + watchlist tables
         dbW.execSQL(StockDataContract.Stocks.deleteTable());
         dbW.execSQL(StockDataContract.Watchlist.deleteTable());
 
@@ -50,20 +51,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * Executes all the CREATE-statements found in the StockDataContract Class
      * **/
     public void initializeDB() {
-        SQLiteDatabase dbR = getReadableDatabase();
         SQLiteDatabase dbW = getWritableDatabase();
 
-
-        //crate tables
+        //crate interval tables
         dbW.execSQL(StockDataContract.DailyEntry.createTable());
         dbW.execSQL(StockDataContract.WeeklyEntry.createTable());
         dbW.execSQL(StockDataContract.MonthlyEntry.createTable());
         dbW.execSQL(StockDataContract.YearlyEntry.createTable());
-
+        dbW.execSQL(StockDataContract.MaxEntry.createTable());
+        //create stock + watchlist table
         dbW.execSQL(StockDataContract.Stocks.createTable());
         dbW.execSQL(StockDataContract.Watchlist.createTable());
 
-        dbR.close();
         dbW.close();
     }
 
@@ -130,14 +129,26 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param request_type type of request to be handled
      * @param object JSONObject containing the data to be handled
      * **/
-    public void handleData(@NotNull REQUEST_TYPE request_type,@NotNull JSONObject object) {
+    public int handleData(@NotNull REQUEST_TYPE request_type,@NotNull JSONObject object) {
         if(object == null) {
             Log.e(TAG,"couldnt parse JSON data, object was null!");
-            return;
+            return -1;
+        } else {
+            try{
+                if(object.has("code")){
+                    int code = object.getInt("code");
+                    if(code == 400);
+                        return 400;
+                }
+            }catch(JSONException e){
+
+            }
         }
+        Log.d(TAG, "attempting to handle JSON: " + object);
 
         String targetTable = "";
         switch (request_type){
+            case MAX:
             case DAILY:
             case WEEKLY:
             case MONTHLY:
@@ -155,6 +166,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         break;
                     case YEARLY:
                         targetTable = StockDataContract.YearlyEntry.TABLE_NAME;
+                        break;
+                    case MAX:
+                        targetTable = StockDataContract.MaxEntry.TABLE_NAME;
                         break;
                 }
                 // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
@@ -188,8 +202,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 break;
         }
-
-
+        truncateData();
+        return 0;
     }
 
     /**
@@ -376,31 +390,32 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public float[] getTenDayData(@NotNull String stockName) {
 
         Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,10);
-        return gernerateData(10);
+        return reduceOrStretchToSize( averageToFloatArr(cursor) ,10);
     }
 
     public float[] getDayData(@NotNull String stockName) {
         Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,96);
-        return reduceOrStretchToSize( averageToFloatArr(cursor) ,90);
+        return averageToFloatArr(cursor);
     }
 
     public float[] getWeekData(@NotNull String stockName) {
         Cursor cursor = getLastNElements(StockDataContract.WeeklyEntry.TABLE_NAME,stockName,84);
-        return reduceOrStretchToSize( averageToFloatArr(cursor) ,90);
+        return  averageToFloatArr(cursor);
     }
 
     public float[] getMonthData(@NotNull String stockName) {
         Cursor cursor = getLastNElements(StockDataContract.MonthlyEntry.TABLE_NAME,stockName,186);
-        return reduceOrStretchToSize( averageToFloatArr(cursor) ,90);
+        return  averageToFloatArr(cursor);
     }
 
     public float[] getYearData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,356);
-        return reduceOrStretchToSize( averageToFloatArr(cursor) ,90);
+        Cursor cursor = getLastNElements(StockDataContract.YearlyEntry.TABLE_NAME,stockName,356);
+        return  averageToFloatArr(cursor);
     }
 
     public float[] getMaxData(@NotNull String stockName) {
-        return gernerateData(90);
+        Cursor cursor = getLastNElements(StockDataContract.MaxEntry.TABLE_NAME,stockName,200);
+        return averageToFloatArr(cursor);
     }
 
     /**

@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
             dbManager = mainActivity.getDatabaseManager();
             mainActivity.subscribeToMain(R.id.navigation_stock, this);
         }
-        c = new ChartProcess(getContext());
+        c = new ChartProcess(mainActivity);
     }
 
     @SuppressLint("SetTextI18n")

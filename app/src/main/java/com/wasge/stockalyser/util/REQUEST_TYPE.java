@@ -6,4 +6,5 @@ public enum REQUEST_TYPE {
     WEEKLY,
     MONTHLY,
     YEARLY,
+    MAX
 }
