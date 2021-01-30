@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         for (float f : da) {
             Log.d("Data", String.valueOf(f));
         }
+
     }
 
     @Override
@@ -110,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
 
         return true;
     }
