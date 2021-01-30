@@ -5,16 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.util.Log;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class DatabaseManager extends SQLiteOpenHelper {
@@ -285,6 +281,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.close();
     }
 
+    // last is newest value
+
     //TODO remove generate
     private static float[] gernerateData(int many) {
         float[] da = new float[many];
@@ -503,6 +501,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         return out;
     }
+}
+
+
+enum REQUEST_TYPE {
+    CURRENT_STATUS,
+    DAILY,
+    WEEKLY,
+    MONTHLY,
+    YEARLY,
 }
 
 
