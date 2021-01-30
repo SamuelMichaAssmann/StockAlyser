@@ -61,6 +61,7 @@ public class ApiManager {
     }
 
     public String getUrlInformation(final String rowUrl) {
+        Log.d("Url", rowUrl);
         final StringBuilder s = new StringBuilder();
 
         URL url = null;
@@ -168,7 +169,6 @@ public class ApiManager {
     }
 }
 
-
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -206,6 +206,5 @@ public class Main {
         connection.disconnect();
     }
 }
-
 
  */
