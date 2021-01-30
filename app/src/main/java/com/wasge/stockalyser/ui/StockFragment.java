@@ -20,7 +20,6 @@ import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
-import com.wasge.stockalyser.util.REQUEST_TYPE;
 import com.yabu.livechart.model.DataPoint;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;

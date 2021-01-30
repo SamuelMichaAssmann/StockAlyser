@@ -110,6 +110,7 @@ public class StockDataContract {
 
     public static class IntervalEntry{
 
+        // stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
 
         public static final String FOREIGN_ID = "stock";
         public static final String COLUMN_NAME_DATETIME = "datetime";
@@ -268,6 +269,9 @@ public class StockDataContract {
 
 // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
 //                  "low":"130.77000","close":"130.81160","volume":"4603463"},             (...)
+
+//"symbol","name","exchange","currency","datetime","open","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
+//"low","high","low_change","high_change","low_change_percent","high_change_percent","range"
 
 /*
 -------- Api-json -------

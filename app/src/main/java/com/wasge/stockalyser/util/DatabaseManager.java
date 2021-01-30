@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,8 +135,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param object JSONObject containing the data to be handled
      * **/
     public void handleData(@NotNull REQUEST_TYPE request_type,@NotNull JSONObject object) {
-        // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
-        //                  "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
+
         String targetTable = "";
         switch (request_type){
             case DAILY:
@@ -157,18 +157,99 @@ public class DatabaseManager extends SQLiteOpenHelper {
                         targetTable = StockDataContract.YearlyEntry.TABLE_NAME;
                         break;
                 }
-                //TODO: extract data from JSON ARRAY and insert into table
-                Log.d(TAG,"handling data: request type: " + request_type + " JSON:" + object);
+                // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
+                //                  "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
+                try {
+                    JSONObject meta = object.getJSONObject("meta");
+                    String symbol = meta.getString("symbol");
+                    JSONArray values = object.getJSONArray("values");
+                    int elements = values.length();
+                    for(int i = 0; i < elements; i++){
+                        String[] data = JSONObjectToIntervalArray(values.getJSONObject(i), symbol);
+                        insertToTable(targetTable,data);
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
 
+                Log.d(TAG,"handling data: request type: " + request_type + " JSON:" + object);
 
 
                 break;
             case CURRENT_STATUS:
-                //TODO: extract data from JSON Object and save to table
+
+                try {
+                    String[] data = JSONObjectToStockArray(object);
+                    insertToTable(StockDataContract.Stocks.TABLE_NAME,data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
         }
 
 
+    }
+
+    /**
+     * @param object json privided by Api within "values" array
+     * @param symbol stock id
+     * @return String Array containing all values for interval table in order
+     * **/
+    private String[] JSONObjectToIntervalArray(JSONObject object, String symbol) throws JSONException{
+        // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
+        //                  "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
+
+        // stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
+        String[] data = new String[7];
+        data[0] = symbol;
+        data[1] = object.getString("datetime");
+        data[2] = object.getString("open");
+        data[3] = object.getString("high");
+        data[4] = object.getString("low");
+        data[5] = object.getString("close");
+        data[6] = object.getString("volume");
+        return data;
+    }
+
+    /**
+     * @param object json object provided by api request
+     * @return String array containing all values for stock table in order
+     * **/
+    private String[] JSONObjectToStockArray(JSONObject object) throws JSONException{
+        //JSON:
+        //"symbol","name","exchange","currency","datetime","open","high","low","close","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
+        //"low","high","low_change","high_change","low_change_percent","high_change_percent","range"
+
+        //
+        //symbol = 0, name = 1, exchange = 2, currency = 3, date = 4, open = 5,
+        // high = 6, low = 7, close = 8, volume = 9, avgvolume = 10, preclose = 11,
+        // range = 12, perchange = 13, yearlow = 14, yearhigh = 15, yearlowchange = 16,
+        // yearhighchange = 17, yearlowchangeper = 18, yearhighchangeper = 19
+        JSONObject weekObj = object.getJSONObject("fifty_two_week");
+        String[] data = new String[20];
+        data[0] = object.getString("symbol");
+        data[1] = object.getString("name");
+        data[2] = object.getString("exchange");
+        data[3] = object.getString("currency");
+        data[4] = object.getString("datetime");
+        data[5] = object.getString("open");
+        data[6] = object.getString("high");
+        data[7] = object.getString("low");
+        data[8] = object.getString("close");
+        data[9] = object.getString("colume");
+        data[10] = object.getString("average_volume");
+        data[11] = object.getString("previous_close");
+        data[12] = weekObj.getString("range");
+        data[13] = object.getString("percent_change");
+        data[14] = weekObj.getString("low");
+        data[15] = weekObj.getString("high");
+        data[16] = weekObj.getString("low_change");
+        data[17] = weekObj.getString("high_change");
+        data[18] = weekObj.getString("low_change_percent");
+        data[19] = weekObj.getString("high_change_percent");
+        return data;
     }
 
 
@@ -203,8 +284,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL(sql);
         db.close();
     }
-
-    // last is newest value
 
     //TODO remove generate
     private static float[] gernerateData(int many) {
