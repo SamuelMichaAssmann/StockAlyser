@@ -16,6 +16,7 @@ import com.wasge.stockalyser.MainActivity;
 import com.wasge.stockalyser.R;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
+import com.wasge.stockalyser.util.REQUEST_TYPE;
 import com.yabu.livechart.model.Dataset;
 import com.yabu.livechart.view.LiveChart;
 
@@ -273,7 +274,7 @@ public class StockFragment extends Fragment {
         @Override
         protected Integer doInBackground(Object... objects) {
             //TODO: request data from api (and insert to database)
-            //dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS,  *insert JSON Data here*  );
+            dbManager.handleData(REQUEST_TYPE.CURRENT_STATUS, null  /*insert JSON Data here*/  );
             return 0;
         }
     }

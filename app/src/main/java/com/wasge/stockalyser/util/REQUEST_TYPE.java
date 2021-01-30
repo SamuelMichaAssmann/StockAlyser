@@ -1,6 +1,6 @@
 package com.wasge.stockalyser.util;
 
-enum REQUEST_TYPE {
+public enum REQUEST_TYPE {
     CURRENT_STATUS,
     DAILY,
     WEEKLY,

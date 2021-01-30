@@ -131,6 +131,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param object JSONObject containing the data to be handled
      * **/
     public void handleData(@NotNull REQUEST_TYPE request_type,@NotNull JSONObject object) {
+        if(object == null) {
+            Log.e(TAG,"couldnt parse JSON data, object was null!");
+            return;
+        }
 
         String targetTable = "";
         switch (request_type){
