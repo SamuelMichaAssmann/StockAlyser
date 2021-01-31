@@ -31,18 +31,22 @@ import org.json.JSONStringer;
 
 public class StockFragment extends Fragment {
 
+
+    private String TAG = "StockFragment";
     private MainActivity mainActivity;
     private DatabaseManager dbManager;
     private ChartProcess c;
-    ApiManager mng;
+    private ApiManager mng;
 
-    LiveChart liveChart;
-    View root;
-    String interval = "15min";
+    private LiveChart liveChart;
+    private View root;
+    private String interval = "15min";
 
-    //Stock Data:
-    // columns: symbol, name, exchange, currency, average;
-    private String symbol, name, exchange, currency, average, date, TAG ="StockFragment";
+    /**
+     * Stock Data:
+     * columns: symbol, name, exchange, currency, average;
+     **/
+    private String symbol, name, exchange, currency, average, date;
 
     //for testing
     boolean watched = false;
@@ -83,6 +87,10 @@ public class StockFragment extends Fragment {
 
     }
 
+    /**
+     * Creates a view for the Stockfragment
+     * an inizialise it with ChartProcess
+     **/
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG,"onCreateView() entered");
@@ -296,10 +304,14 @@ public class StockFragment extends Fragment {
             message = "Error occured, Graph Data couldn't load data properly!";
         }
 
+        /**
+         * get interval data
+         * 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+         */
         @Override
         protected Integer doInBackground(Object... objects) {
             try {
-                // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+
                 dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min"))));
                 dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h"))));
                 dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h"))));

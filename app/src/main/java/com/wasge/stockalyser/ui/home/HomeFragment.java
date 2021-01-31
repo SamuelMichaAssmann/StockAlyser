@@ -35,6 +35,10 @@ public class HomeFragment extends Fragment {
         c = new ChartProcess(mainActivity);
     }
 
+    /**
+     * Creates a view and initializes all necessary variables.
+     * Calls processData and fills all data fields.
+     * **/
     @SuppressLint("SetTextI18n")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);

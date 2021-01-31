@@ -59,9 +59,8 @@ public class ProcessData {
             if(arr.length > maxLen)
                 maxLen = arr.length;
         }
-
-
         float[] output = new float[maxLen];
+
         for (float[] f : data) {
             if(f.length < maxLen) f = strectchFloatArrayToLength(f,maxLen);
             float[] temp = setDatatoPercent(f);

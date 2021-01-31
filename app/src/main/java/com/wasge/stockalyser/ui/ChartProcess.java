@@ -2,13 +2,9 @@ package com.wasge.stockalyser.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.wasge.stockalyser.util.ApiManager;
 import com.wasge.stockalyser.util.DatabaseManager;
@@ -23,14 +19,14 @@ import java.util.ArrayList;
 
 public class ChartProcess {
 
+    private String TAG = "ChartProcess";
     private String inter = "15min";
-    ApiManager mng;
-    Context context;
+    private ApiManager mng;
+    private Context context;
     private ArrayList<DataPoint> data = null;
-    LiveChart liveChart;
-    String symbol;
-    String TAG = "ChartProcess";
-    TabLayout tabLayout;
+    private LiveChart liveChart;
+    public String symbol;
+    public TabLayout tabLayout;
     private float NaN;
 
     public ChartProcess(Context context) {
@@ -48,6 +44,9 @@ public class ChartProcess {
         setIndicator(dataPoints, liveChart, currentPrice, percentPrice);
     }
 
+    /**
+     * Sets the Tablisener for changing date
+     **/
     public void setTab(TabLayout tabLayout, final LiveChart liveChart, final DatabaseManager dbm, final TextView interval, final String symbol, final TextView currentPrice, final TextView percentPrice){
         this.liveChart = liveChart;
         this.symbol = symbol;
@@ -87,10 +86,14 @@ public class ChartProcess {
         max.setText(setCurrent(data_max));
         min.setText(setCurrent(data_min));
         average.setText(setCurrent(data_avg));
-
-
     }
 
+    /**
+     * Gets data of the database
+     * @param style is the kind of data you like to recive (like day, week, month, etc.)
+     * @param symbol what stock
+     * @param dbm need the DatabaseManager for watchlistdata
+     **/
     public float[] getData(int style, String symbol, DatabaseManager dbm) {
         if (symbol == null)
             return getAllData(dbm, style);
@@ -106,6 +109,11 @@ public class ChartProcess {
             return dbm.getDayData(symbol);
     }
 
+    /**
+     * Data manipulation in ProcessData
+     * @param dbm need the DatabaseManager for watchlistdata
+     * @param style is the kind of data you like to recive (like day, week, month, etc.)
+     **/
     private float[] getAllData(DatabaseManager dbm, int style){
         String[] stocks = dbm.getWatchlistStockIDs();
         ProcessData processData = new ProcessData();
@@ -115,13 +123,14 @@ public class ChartProcess {
             for (float e : getData(style, stock, dbm)) {
                 Log.d(TAG, String.valueOf(e));
             }
-
-
         }
         float[] output = processData.compactData(data);
         return output;
     }
 
+    /**
+     * @param data get row data an change it to datapoints of livechart
+     **/
     public ArrayList<DataPoint> getDataPoints(float[] data) {
         if (data == null)
             return null;
@@ -144,6 +153,9 @@ public class ChartProcess {
                 .drawDataset();
     }
 
+    /**
+     * Can set a second graph like a trendline
+     **/
     private void setTrend(float[] trenddata) {
         if (trenddata == null)
             return;
@@ -159,6 +171,9 @@ public class ChartProcess {
                 .drawDataset();
     }
 
+    /**
+     * Changes values while interaction with livechart
+     **/
     private void setIndicator(ArrayList<DataPoint> dataPoints, LiveChart liveChart, final TextView currentPrice, final TextView percentPrice) {
         if (dataPoints == null || dataPoints.size() < 1){
             Log.e(TAG,"datapoints don't exist");
@@ -189,20 +204,22 @@ public class ChartProcess {
         });
     }
 
+    /**
+     * calculates the percentvalue and prettyprint
+     **/
     private String setPercent(float start, float end) {
-        final DecimalFormat df = new DecimalFormat("#.##");
         String percentString;
         float percent;
         if (start != 0) {
-            Log.wtf(TAG, end + " - " + start);
+            Log.d(TAG, end + " - " + start);
             percent = ((end - start) / start) * 100;
         }
         else
             percent = end * 100;
         if (percent >= 0)
-            percentString = "+" + df.format(percent);
+            percentString = "+" + setCurrent(percent);
         else
-            percentString = df.format(percent);
+            percentString = setCurrent(percent);
         return percentString;
     }
 
@@ -211,6 +228,10 @@ public class ChartProcess {
         return df.format(end);
     }
 
+    /**
+     * Change a int into a interval for a url
+     * @param intervalInt get a int of the tablayout
+     **/
     public void setInterval(int intervalInt){
         switch (intervalInt){
             case 1:

@@ -17,11 +17,13 @@ import java.util.ArrayList;
 
 public class ApiManager {
 
-    // Heute 15min ==>
-    // Woche 2h
-    // Monat 4h - jeden 2  löschen
-    // Jahr 1d - jeden 3  löschen
-    // Max 1 week last 90
+    /**
+     * Heute | 15min
+     * Woche | 2h
+     * Monat | 4h
+     * Jahr  | 1day
+     * Max   | 1week
+     */
 
     private final String apikey;
     private final String entrypoint = "https://api.twelvedata.com/";
@@ -32,10 +34,12 @@ public class ApiManager {
 
     }
 
-    // 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
-    //  time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
-    //  stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
-    //  trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
+    /**
+     * @return 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+     *         time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
+     *         stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
+     *         trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
+     */
     public String buildUrl(String kind, String symbol, String interval) {
         return entrypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&apikey=" + apikey;
     }
