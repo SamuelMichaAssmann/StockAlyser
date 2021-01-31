@@ -17,7 +17,11 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 
 ---
 
-TODO text der sagt wer was wie
+>The collaboration on the project first started with the architecture, which was decided and discussed in pair programming on only Samuels device.
+>In the course of the project, different work packages were divided, such as database, api management, frontend and fragment communication.
+>However, these are merged into each other and can therefore not be clearly assigned.
+>
+>For more detailed information please visit [github](https://github.com/SamuelMichaAssmann/StockAlyser/graphs/commit-activity).
 
 ## Api-Key:
 
