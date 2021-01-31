@@ -28,7 +28,7 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 
 ## Api-Key:
 
-> The apikey is stored as default in the app but if you want to store your own key this is possible in the app.
+> A default API-key is provided in the App, however should issues arise it is recommended that you generate your own key at [twelvedata](https://twelvedata.com/)and insert >your own key in the settings menu.
 
 ## Version: (in projekt gradle)
 
@@ -39,4 +39,6 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 > compileSdkVersion - 30
 >
 > buildToolsVersion - 30.0.2
+>
+> LiveChart - 1.3.4
 
