@@ -22,6 +22,8 @@ public class ProcessData {
             return null;
         if (data.get(0) == null)
             return null;
+        
+
         float[] output = new float[data.get(0).length];
         for (float[] f : data) {
             float[] temp = setDatatoPercent(f);

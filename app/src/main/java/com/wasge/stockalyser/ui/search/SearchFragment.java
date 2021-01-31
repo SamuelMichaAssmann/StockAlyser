@@ -47,7 +47,6 @@ public class SearchFragment extends Fragment  {
         mainActivity = null;
         if (getActivity() instanceof MainActivity)
             mainActivity = (MainActivity) getActivity();
-
     }
 
     @Override
@@ -62,6 +61,9 @@ public class SearchFragment extends Fragment  {
         mainActivity.setSearchActive(false);
     }
 
+    /**
+     * Creates a listview and a extend button for showing search results
+     * **/
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -69,7 +71,6 @@ public class SearchFragment extends Fragment  {
         if (mainActivity != null) {
             mainActivity.subscribeToMain(R.id.navigation_search, this);
         }
-
         if(mainActivity != null) {
             ImageButton imageButton = root.findViewById(R.id.button_more);
             imageButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +83,6 @@ public class SearchFragment extends Fragment  {
                     new SearchQueryTask(mainActivity).execute(query,kind, more);
                 }
             });
-
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -95,7 +95,6 @@ public class SearchFragment extends Fragment  {
             mainActivity.displayToast("Error occured, couldn't load data properly!");
             Log.d(TAG, "Error");
         }
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,8 +112,6 @@ public class SearchFragment extends Fragment  {
         return root;
     }
 
-
-
     public void searchFor(String query){
         more = 20;
         Log.d(TAG, "searching for: " + query );
@@ -126,24 +123,17 @@ public class SearchFragment extends Fragment  {
         name.clear();
         currency.clear();
         exchange.clear();
-        //String debug = "\ngot:\n";
         for (String[] s : table) {
             symbole.add(s[0]);
-            //debug+="   " + s[0] + "\n";
             name.add(s[1]);
             currency.add(s[2]);
             exchange.add(s[3]);
         }
-        //Log.d(TAG, debug);
         adapter.notifyDataSetChanged();
         Log.d(TAG, "Notify changes Adapter");
-
     }
 
-
     private class SearchQueryTask extends ToastyAsyncTask<Object,Integer,Integer> {
-
-
         private ArrayList<String[]> output = new ArrayList<>();
 
         public SearchQueryTask(Context context) {
@@ -182,14 +172,16 @@ public class SearchFragment extends Fragment  {
                         output = mng.parseJSONData(mng.search((String) objects[0]),(Integer)objects[1], 40);
             } catch (Exception e){
                 errorOccured();
-                Log.e("searchFragment","BackgroundTask failed: " + e.getMessage());
+                Log.e(TAG,"BackgroundTask failed: " + e.getMessage());
             }
             return output.size();
         }
     }
 }
 
-// Adapterclass for Listview
+/**
+ * Creates a adapter for a custom layout of the listview
+ * **/
 class SearchAdapter extends ArrayAdapter<String> {
 
     Context context;
@@ -217,7 +209,6 @@ class SearchAdapter extends ArrayAdapter<String> {
         TextView search_symbol = root.findViewById(R.id.search_symbol);
         TextView search_currency = root.findViewById(R.id.search_currency);
         TextView search_exchange = root.findViewById(R.id.search_exchange);
-
         try {
             search_name.setText(name.get(position));
             search_symbol.setText(symbol.get(position));
