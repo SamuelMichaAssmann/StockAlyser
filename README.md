@@ -1,5 +1,4 @@
 # StockAlyser
-===============
 
 Github:
 
@@ -22,7 +21,10 @@ Api-Key:
 Version: (in projekt gradle)
 
 > Kotlin - 1.4.20
+
 > gradle - 4.1.1
+
 > compileSdkVersion - 30
+
 > buildToolsVersion - 30.0.2
 
