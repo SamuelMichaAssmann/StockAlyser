@@ -1,10 +1,7 @@
 package com.wasge.stockalyser.util;
 
 import android.util.Log;
-
 import java.util.ArrayList;
-
-import static java.lang.Float.NaN;
 
 public class ProcessData {
 
@@ -49,6 +46,9 @@ public class ProcessData {
         return targetArray;
     }
 
+    /**
+     * calculates data for HomeFragment avg of all watchlist elements
+     */
     public float[] compactData(ArrayList<float[]> data){
         if (data == null)
             return null;

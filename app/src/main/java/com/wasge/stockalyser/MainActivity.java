@@ -66,13 +66,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        ProcessData data = new ProcessData();
-        float[] da = data.setDatatoPercent(new float[]{1.1f, 1.9f, 7.5f, 6.997f});
-        for (float f : da) {
-            Log.d("Data", String.valueOf(f));
-        }
-
     }
 
     @Override
@@ -113,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         return true;
     }
 
@@ -135,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.search_icon) {
             navController.navigate(R.id.navigation_search);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -186,5 +177,4 @@ public class MainActivity extends AppCompatActivity {
     public void displayToast(String message){
         Toast.makeText(this,""+message, Toast.LENGTH_SHORT).show();
     }
-
 }
