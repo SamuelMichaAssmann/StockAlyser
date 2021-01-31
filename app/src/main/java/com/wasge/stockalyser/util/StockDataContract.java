@@ -26,7 +26,7 @@ public class StockDataContract {
      */
     public static class DailyEntry extends IntervalEntry{
         public static String TABLE_NAME = "daily";
-        public static String EXPIRATION_TIME = "-2 days";
+        public static String EXPIRATION_TIME = "-4 days";
 
         private DailyEntry() {}
 
