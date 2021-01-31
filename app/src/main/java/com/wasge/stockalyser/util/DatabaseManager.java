@@ -336,6 +336,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param cursor Cursor to a Table entirely made up of floats.
      * **/
     private float[] averageToFloatArr(@NotNull Cursor cursor){
+        if (cursor.isClosed())
+            return new float[]{};
         int elements = cursor.getCount();
         float[] output = new float[elements];
         String[] columns = cursor.getColumnNames();

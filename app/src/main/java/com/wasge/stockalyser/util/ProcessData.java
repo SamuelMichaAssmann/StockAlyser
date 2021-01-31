@@ -13,6 +13,8 @@ public class ProcessData {
     public float[] setDatatoPercent(float[] data){
         if (data == null)
             return null;
+        if (data.length < 1)
+            return null;
         float pivot = data[0];
         float temp;
         for (int i = 0; i < data.length; i++) {

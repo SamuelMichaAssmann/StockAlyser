@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         databaseManager = new DatabaseManager(this);
         databaseManager.initializeDB();
-        databaseManager.insertTestData();
+        //databaseManager.insertTestData();
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -181,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean isSearchActive() {
         return searchActive;
     }
+
     public void displayToast(String message){
         Toast.makeText(this,""+message, Toast.LENGTH_SHORT).show();
     }
+
 }

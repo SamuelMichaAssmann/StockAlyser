@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment  {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Log.d(TAG, symbole.get(i));
+                    mainActivity.getSearchView().setIconified(true);
                     mainActivity.setSymbol_for_stock_fragment(symbole.get(i));
                     navController.navigate(R.id.navigation_stock);
                 }
@@ -95,6 +96,7 @@ public class SearchFragment extends Fragment  {
             mainActivity.displayToast("Error occured, couldn't load data properly!");
             Log.d(TAG, "Error");
         }
+        mainActivity.getSearchView().setIconified(false);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

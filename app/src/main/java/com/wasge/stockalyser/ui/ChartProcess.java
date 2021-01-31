@@ -72,6 +72,8 @@ public class ChartProcess {
     }
 
     public void setValues(TextView max, TextView min, TextView average){
+        if (data == null || data.size() < 1 || data.get(0) == null)
+            return;
         float data_min = data.get(0).getY();
         float data_max = data.get(0).getY();
         float data_avg = 0;

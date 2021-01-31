@@ -25,6 +25,7 @@ public class ApiManager {
      * Max   | 1week
      */
 
+    private String TAG = "ApiManager";
     private final String apikey;
     private final String entrypoint = "https://api.twelvedata.com/";
 
@@ -73,7 +74,7 @@ public class ApiManager {
         try {
             url = new URL(rowUrl);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
         }
         if (url != null) {
             try (
@@ -81,11 +82,8 @@ public class ApiManager {
                 for (String line; (line = reader.readLine()) != null; ) {
                     s.append(line);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
-
         return s.toString();
     }
 
@@ -109,9 +107,7 @@ public class ApiManager {
                 String exchange = values.getJSONObject(i).get("exchange").toString();
                 search.add(new String[]{symbol, name, currency, exchange});
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException ignored) {}
         return search;
     }
 

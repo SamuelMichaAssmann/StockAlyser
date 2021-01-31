@@ -30,7 +30,7 @@
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="darktheme"
-            app:title="Darkmode" />
+            app:title="Darkmode (experimentel)" />
 
     </PreferenceCategory>
 </PreferenceScreen>
