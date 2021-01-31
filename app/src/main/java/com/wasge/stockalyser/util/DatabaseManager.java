@@ -135,7 +135,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param request_type type of request to be handled
      * @param object       JSONObject containing the data to be handled
      **/
-    public int handleData(@NotNull REQUEST_TYPE request_type, @NotNull JSONObject object) {
+    public synchronized int handleData(@NotNull REQUEST_TYPE request_type, @NotNull JSONObject object) {
         if (object == null) {
             Log.e(TAG, "couldnt parse JSON data, object was null!");
             return -1;
@@ -412,62 +412,74 @@ public class DatabaseManager extends SQLiteOpenHelper {
      **/
     public synchronized float[] getTenDayData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME, stockName, 10);
+            output = stretchToSize(averageToFloatArr(cursor), 10);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return stretchToSize(averageToFloatArr(cursor), 10);
+        return output;
     }
 
     public synchronized float[] getDayData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getElementsBeforTimestamp(StockDataContract.DailyEntry.TABLE_NAME, stockName, "'-3 day'");
+            output = averageToFloatArr(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return averageToFloatArr(cursor);
+        return output;
     }
 
     public synchronized float[] getWeekData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getElementsBeforTimestamp(StockDataContract.WeeklyEntry.TABLE_NAME, stockName, "'-8 day'");
+            output = averageToFloatArr(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return averageToFloatArr(cursor);
+        return output;
     }
 
     public synchronized float[] getMonthData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getElementsBeforTimestamp(StockDataContract.MonthlyEntry.TABLE_NAME, stockName, "'-1 month'");
+            output = averageToFloatArr(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return averageToFloatArr(cursor);
+        return output;
     }
 
     public synchronized float[] getYearData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getElementsBeforTimestamp(StockDataContract.YearlyEntry.TABLE_NAME, stockName, "'-1 year'");
+            output = averageToFloatArr(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return averageToFloatArr(cursor);
+        return output;
     }
 
     public synchronized float[] getMaxData(@NotNull String stockName) {
         Cursor cursor = null;
+        float[] output = null;
         try {
             cursor = getElementsBeforTimestamp(StockDataContract.MaxEntry.TABLE_NAME, stockName, "'-10 year'");
+            output = averageToFloatArr(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        return averageToFloatArr(cursor);
+        return output;
     }
 
     /**
