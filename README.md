@@ -10,10 +10,10 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 
 ---
 
-| Contributers    |
-|-----------------|
-| Philipp Polland |
-| Samuel Assmann  |
+| Contributers    | Mat.Nr. |
+|-----------------|---------|
+| Philipp Polland |         |
+| Samuel Assmann  | 3182906 |
 
 ---
 
