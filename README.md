@@ -28,7 +28,7 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 
 ## Api-Key:
 
-> A default API-key is provided in the App, however should issues arise it is recommended that you generate your own key at [twelvedata](https://twelvedata.com/)and insert >your own key in the settings menu.
+> A default API-key is provided in the App, however should issues arise it is recommended that you generate your own key at [twelvedata.com](https://twelvedata.com/) and insert >your own key in the settings menu.
 
 ## Version: (in projekt gradle)
 
