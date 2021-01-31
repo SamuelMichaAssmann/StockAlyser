@@ -319,11 +319,11 @@ public class StockFragment extends Fragment {
         @Override
         protected Integer doInBackground(Object... objects) {
             try {
-                int daily = dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min"))));
-                int weekly = dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h"))));
-                int monthly = dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h"))));
-                int yearly = dbManager.handleData(REQUEST_TYPE.YEARLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1day"))));
-                int max = dbManager.handleData(REQUEST_TYPE.MAX,     new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1week"))));
+                int daily = dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min","96"))));
+                int weekly = dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h","84"))));
+                int monthly = dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h","186"))));
+                int yearly = dbManager.handleData(REQUEST_TYPE.YEARLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1day","356"))));
+                int max = dbManager.handleData(REQUEST_TYPE.MAX,     new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1week","200"))));
                 return max(daily,weekly,monthly,yearly,max);
             } catch (Exception e) {
                 errorOccured();

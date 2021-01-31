@@ -52,6 +52,21 @@ public class ApiManager {
 
     /**
      * works with:
+     *      time_series?symbol=AAPL&interval=1min&apikey=your_api_key --- Time Series
+     *      stock?symbol=AAPL&interval=1min&apikey=your_api_key --- Interval Data
+     *      trend?symbol=AAPL&interval=1min&apikey=your_api_key --- Trendgraph
+     * @param kind trend, stock, time_series
+     * @param symbol stockname
+     * @param interval 1min, 5min, 15min, 30min, 45min, 1h, 2h, 4h, 1day, 1week, 1month
+     * @param outputSize between 1 and 5000
+     * @return a full url
+     */
+    public String buildUrl(String kind, String symbol, String interval,String outputSize) {
+        return entrypoint + kind + "?symbol=" + symbol + "&interval=" + interval + "&outputsize=" + outputSize + "&apikey=" + apikey;
+    }
+
+    /**
+     * works with:
      *      quote?symbol=AAPL&apikey=your_api_key --- Stock Info
      *      price?symbol=AAPL&apikey=your_api_key --- Stock Price
      * @param kind quote, price

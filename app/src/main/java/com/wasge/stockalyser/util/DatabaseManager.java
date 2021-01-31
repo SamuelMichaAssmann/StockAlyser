@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -334,6 +337,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return out;
     }
 
+    private Cursor getElementsBeforTimestamp(@NotNull String table, @NotNull String stock, String timeOffset){
+        SQLiteDatabase dbR = getReadableDatabase();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String to_date = sdf.format(new Date());
+        Cursor out = dbR.query(
+                table,StockDataContract.IntervalEntry.getValueColums(),
+                StockDataContract.IntervalEntry.FOREIGN_ID + " LIKE ? AND " +
+                StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " >= DATETIME('now', "+timeOffset+") ",
+                new String[]{stock},
+                null,null,
+                StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " DESC"
+                );
+        return out;
+    }
+
     /**
      * Takes a Cursor to a Table of Floats and averages each row into a float array.
      * Afterwards the Cursor is closed.
@@ -392,27 +410,27 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public float[] getDayData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,96);
+        Cursor cursor = getElementsBeforTimestamp(StockDataContract.DailyEntry.TABLE_NAME,stockName,"'-3 day'");
         return averageToFloatArr(cursor);
     }
 
     public float[] getWeekData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.WeeklyEntry.TABLE_NAME,stockName,84);
+        Cursor cursor = getElementsBeforTimestamp(StockDataContract.WeeklyEntry.TABLE_NAME,stockName,"'-8 day'");
         return  averageToFloatArr(cursor);
     }
 
     public float[] getMonthData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.MonthlyEntry.TABLE_NAME,stockName,186);
+        Cursor cursor = getElementsBeforTimestamp(StockDataContract.MonthlyEntry.TABLE_NAME,stockName,"'-1 month'");
         return  averageToFloatArr(cursor);
     }
 
     public float[] getYearData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.YearlyEntry.TABLE_NAME,stockName,356);
+        Cursor cursor = getElementsBeforTimestamp(StockDataContract.YearlyEntry.TABLE_NAME,stockName,"'-1 year'");
         return  averageToFloatArr(cursor);
     }
 
     public float[] getMaxData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.MaxEntry.TABLE_NAME,stockName,200);
+        Cursor cursor = getElementsBeforTimestamp(StockDataContract.MaxEntry.TABLE_NAME,stockName,"'-10 year'");
         return averageToFloatArr(cursor);
     }
 
