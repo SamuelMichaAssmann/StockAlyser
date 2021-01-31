@@ -9,258 +9,264 @@
     android:paddingBottom="?attr/actionBarSize"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:stretchColumns="0,1">
+
+                    <TableRow>
+
+                        <TableRow android:gravity="start">
+
+                            <TextView
+                                android:id="@+id/home_watch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:gravity="end"
+                                android:text="Watchlist of"
+                                android:textSize="15sp" />
+
+                        </TableRow>
+
+                        <TableRow android:gravity="end">
+
+                            <TextView
+                                android:id="@+id/home_intervall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:gravity="end"
+                                android:text="HEUTE"
+                                android:textSize="15sp" />
+
+                        </TableRow>
+                    </TableRow>
+
+
+                    <TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start">
+
+                            <TextView
+                                android:id="@+id/home_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:text="User"
+                                android:textSize="30sp" />
+
+                        </TableRow>
+
+
+                        <TableRow android:gravity="end">
+
+                            <TextView
+                                android:id="@+id/home_percent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:gravity="end"
+                                android:text="20,43"
+                                android:textSize="30sp" />
+
+                            <TextView
+                                android:id="@+id/home_percent_sign"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:gravity="bottom"
+                                android:text="%"
+                                android:textSize="20sp" />
+
+
+                        </TableRow>
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+
+            <com.yabu.livechart.view.LiveChart
+                android:id="@+id/pre_chart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:gravity="center_horizontal"
+                app:baselineColor="?attr/colorDark"
+                app:baselineDashGap="8dp"
+                app:baselineStrokeWidth="2dp"
+                app:negativeColor="?attr/colorRed"
+                app:pathColor="?attr/colorCyan"
+                app:pathStrokeWidth="2dp"
+                app:positiveColor="?attr/colorGreen" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabSelectedTextColor="?attr/colorDark"
+                app:tabTextColor="?attr/tabTextColor">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_today" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_week" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_month" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_year" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_max" />
+            </com.google.android.material.tabs.TabLayout>
 
             <TableLayout
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
+                android:layout_height="208dp"
                 android:gravity="center"
                 android:stretchColumns="0,1">
 
-                <TableRow>
-
-                    <TableRow android:gravity="start">
-
-                        <TextView
-                            android:id="@+id/home_watch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:gravity="end"
-                            android:text="Watchlist of"
-                            android:textSize="15sp" />
-
-                    </TableRow>
-
-                    <TableRow android:gravity="end">
-
-                        <TextView
-                            android:id="@+id/home_intervall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:gravity="end"
-                            android:text="HEUTE"
-                            android:textSize="15sp" />
-
-                    </TableRow>
-                </TableRow>
-
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="@string/home_data"
+                    android:textSize="30sp" />
 
                 <TableRow>
 
-                    <TableRow
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/home_max"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="start">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="@string/homemax"
+                        android:textSize="20sp" />
+
+                    <TableRow>
 
                         <TextView
-                            android:id="@+id/home_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:id="@+id/home_max_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:text="User"
-                            android:textSize="30sp" />
-
-                    </TableRow>
-
-
-                    <TableRow android:gravity="end">
-
-                        <TextView
-                            android:id="@+id/home_percent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
                             android:gravity="end"
-                            android:text="20,43"
-                            android:textSize="30sp" />
-
-                        <TextView
-                            android:id="@+id/home_percent_sign"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="bottom"
-                            android:text="%"
+                            android:text="@string/empty_str"
                             android:textSize="20sp" />
-
-
                     </TableRow>
                 </TableRow>
 
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/home_min"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="@string/homemin"
+                        android:textSize="20sp" />
+
+                    <TableRow>
+
+                        <TextView
+                            android:id="@+id/home_min_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="@string/empty_str"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/home_avg"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="start"
+                        android:text="@string/homeavg"
+                        android:textSize="20sp" />
+
+                    <TableRow>
+
+                        <TextView
+                            android:id="@+id/home_avg_data"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="end"
+                            android:text="@string/empty_str"
+                            android:textSize="20sp" />
+                    </TableRow>
+                </TableRow>
             </TableLayout>
-
         </LinearLayout>
-
-        <com.yabu.livechart.view.LiveChart
-            android:id="@+id/pre_chart"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:gravity="center_horizontal"
-            app:baselineColor="?attr/colorDark"
-            app:baselineDashGap="8dp"
-            app:baselineStrokeWidth="2dp"
-            app:negativeColor="?attr/colorRed"
-            app:pathColor="?attr/colorCyan"
-            app:pathStrokeWidth="2dp"
-            app:positiveColor="?attr/colorGreen" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabSelectedTextColor="?attr/colorDark"
-            app:tabTextColor="?attr/tabTextColor">
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/today"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_today" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/week"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_week" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_month" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_year" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_max" />
-        </com.google.android.material.tabs.TabLayout>
-
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="208dp"
-            android:gravity="center"
-            android:stretchColumns="0,1">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:text="@string/home_data"
-                android:textSize="30sp" />
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/home_max"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="start"
-                    android:text="@string/homemax"
-                    android:textSize="20sp" />
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/home_max_data"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="end"
-                        android:text="@string/empty_str"
-                        android:textSize="20sp" />
-                </TableRow>
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/home_min"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="start"
-                    android:text="@string/homemin"
-                    android:textSize="20sp" />
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/home_min_data"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="end"
-                        android:text="@string/empty_str"
-                        android:textSize="20sp" />
-                </TableRow>
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/home_avg"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="start"
-                    android:text="@string/homeavg"
-                    android:textSize="20sp" />
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/home_avg_data"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="end"
-                        android:text="@string/empty_str"
-                        android:textSize="20sp" />
-                </TableRow>
-            </TableRow>
-        </TableLayout>
-    </LinearLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/home_info"
@@ -275,4 +281,5 @@
         android:layout_alignParentBottom="true"
         android:textSize="15sp"
         tools:ignore="SmallSp" />
+
 </RelativeLayout>

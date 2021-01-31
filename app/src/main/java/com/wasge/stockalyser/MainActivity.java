@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
     }
 
     @Override

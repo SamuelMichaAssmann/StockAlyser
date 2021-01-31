@@ -162,9 +162,11 @@ public class ChartProcess {
     private void setTrend(float[] trenddata) {
         if (trenddata == null)
             return;
-        int len = this.data.size() - trenddata.length;
+        if (data.size() < trenddata.length)
+            return;
+        int len = data.size() - trenddata.length;
         float[] trend = new float[this.data.size()];
-        for (int i = len; i < this.data.size(); i++) {
+        for (int i = data.size()-1; i > len; i--) {
             trend[i] = trenddata[i-len];
         }
 

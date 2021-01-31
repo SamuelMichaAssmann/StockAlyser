@@ -25,6 +25,9 @@
 
     </PreferenceCategory>
 
+
+    <!-- We have tried to set a darkmode but with setTheme(R.style.DarkTheme) it didn't worked.
+
     <PreferenceCategory app:title="@string/view_header">
 
         <SwitchPreferenceCompat
@@ -32,5 +35,5 @@
             app:key="darktheme"
             app:title="Darkmode (experimentel)" />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 </PreferenceScreen>
