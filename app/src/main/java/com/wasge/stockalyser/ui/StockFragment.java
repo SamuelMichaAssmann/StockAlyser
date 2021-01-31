@@ -266,6 +266,13 @@ public class StockFragment extends Fragment {
         @Override
         protected void onPostExecute(Integer code) {
             switch (code){
+                case 429:
+                    errorOccured();
+                    duration = Toast.LENGTH_LONG;
+                    message = "Too many requests with same API key, please upgrade your plan at https://twelvedata.com/prime.";
+                    super.onPostExecute(code);
+                    duration = Toast.LENGTH_SHORT;
+                    message = defaultMessage;
                 case 400:
                     errorOccured();
                     duration = Toast.LENGTH_LONG;
@@ -299,9 +306,10 @@ public class StockFragment extends Fragment {
 
     private class IntervalDataTask extends ToastyAsyncTask<Object,Integer,Integer>{
 
+        String defaultMessage = "Error occured, Graph Data couldn't load data properly!";
         public IntervalDataTask(Context context) {
             super(context);
-            message = "Error occured, Graph Data couldn't load data properly!";
+            message = defaultMessage;
         }
 
         /**
@@ -311,22 +319,54 @@ public class StockFragment extends Fragment {
         @Override
         protected Integer doInBackground(Object... objects) {
             try {
-
-                dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min"))));
-                dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h"))));
-                dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h"))));
-                dbManager.handleData(REQUEST_TYPE.YEARLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1day"))));
-                dbManager.handleData(REQUEST_TYPE.MAX,     new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1week"))));
+                int daily = dbManager.handleData(REQUEST_TYPE.DAILY,   new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"15min"))));
+                int weekly = dbManager.handleData(REQUEST_TYPE.WEEKLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"2h"))));
+                int monthly = dbManager.handleData(REQUEST_TYPE.MONTHLY, new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"4h"))));
+                int yearly = dbManager.handleData(REQUEST_TYPE.YEARLY,  new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1day"))));
+                int max = dbManager.handleData(REQUEST_TYPE.MAX,     new JSONObject(mng.getUrlInformation(mng.buildUrl("time_series", symbol,"1week"))));
+                return max(daily,weekly,monthly,yearly,max);
             } catch (Exception e) {
                 errorOccured();
                 e.printStackTrace();
+                return -1;
             }
-            return 0;
+        }
+
+        private int max(int... ints){
+            int out = 0;
+            for (int i = 0; i < ints.length;i++){
+                out = Math.max(out, ints[i]);
+            }
+            return out;
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
+        protected void onPostExecute(Integer code) {
+            super.onPostExecute(code);
+            switch (code){
+                case 429:
+                    errorOccured();
+                    duration = Toast.LENGTH_LONG;
+                    message = "Too many requests with same API key, please upgrade your plan at https://twelvedata.com/prime.";
+                    super.onPostExecute(code);
+                    duration = Toast.LENGTH_SHORT;
+                    message = defaultMessage;
+                case 400:
+                    errorOccured();
+                    duration = Toast.LENGTH_LONG;
+                    message = "Stock not accessible with current API Key, please upgrade your plan at https://twelvedata.com/prime.";
+                    super.onPostExecute(code);
+                    duration = Toast.LENGTH_SHORT;
+                    message = defaultMessage;
+                    break;
+                case 0:
+                    errorOccured();
+                    super.onPostExecute(code);
+                    break;
+                case -1:
+                    super.onPostExecute(code);
+                    break;
+            }
             c.setLiveChart(c.getDataPoints(c.getData(c.tabLayout.getSelectedTabPosition(),c.symbol,dbManager)));
         }
     }

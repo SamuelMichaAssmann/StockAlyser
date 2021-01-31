@@ -139,6 +139,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     int code = object.getInt("code");
                     if(code == 400)
                         return 400;
+                    else if(code == 429)
+                        return 429;
+
                 }
             }catch(JSONException ignored){}
         }
@@ -250,7 +253,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         data[6] = object.getString("high");
         data[7] = object.getString("low");
         data[8] = object.getString("close");
-        data[9] = object.getString("colume");
+        data[9] = object.getString("volume");
         data[10] = object.getString("average_volume");
         data[11] = object.getString("previous_close");
         data[12] = weekObj.getString("range");
@@ -509,6 +512,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 null,
                 null,null,
                 StockDataContract.Watchlist.ID + " DESC");
+        if(c.isClosed())
+            return null;
         String[] out = new String[c.getCount()];
         if(c.getCount() < 1) return out;
         c.moveToFirst();

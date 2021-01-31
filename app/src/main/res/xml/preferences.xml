@@ -28,7 +28,7 @@
     <PreferenceCategory app:title="@string/view_header">
 
         <SwitchPreferenceCompat
-            app:defaultValue="false"
+            app:defaultValue=""
             app:key="darktheme"
             app:title="Darkmode (experimentel)" />
 

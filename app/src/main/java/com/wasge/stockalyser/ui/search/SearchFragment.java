@@ -70,6 +70,8 @@ public class SearchFragment extends Fragment  {
         final NavController navController = Navigation.findNavController(view);
         if (mainActivity != null) {
             mainActivity.subscribeToMain(R.id.navigation_search, this);
+            if(mainActivity.getSearchView().isIconified())
+                mainActivity.getSearchView().setIconified(false);
         }
         if(mainActivity != null) {
             ImageButton imageButton = root.findViewById(R.id.button_more);
@@ -93,10 +95,9 @@ public class SearchFragment extends Fragment  {
                 }
             });
         } else {
-            mainActivity.displayToast("Error occured, couldn't load data properly!");
             Log.d(TAG, "Error");
         }
-        mainActivity.getSearchView().setIconified(false);
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

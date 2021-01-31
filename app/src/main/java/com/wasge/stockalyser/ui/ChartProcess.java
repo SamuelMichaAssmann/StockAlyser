@@ -55,6 +55,7 @@ public class ChartProcess {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 ArrayList<DataPoint> dataPoints = getDataPoints(getData(tab.getPosition(),symbol, dbm));
+                Log.d(TAG,"tab:" + tab.getPosition() + " symbol:" + symbol);
                 setLiveChart(dataPoints);
                 interval.setText(tab.getText());
                 setInterval(tab.getPosition());
