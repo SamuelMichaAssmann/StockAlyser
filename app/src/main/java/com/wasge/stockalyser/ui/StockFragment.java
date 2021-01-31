@@ -181,7 +181,7 @@ public class StockFragment extends Fragment {
             volumen.setText(data[9]);
             avgvolumen.setText(data[10]);
             preclose.setText(data[11]);
-            range.setText(data[12]);
+            range.setText(data[12].replace(" ","\n"));
             perchange.setText(data[13]);
             yearlow.setText(data[14]);
             yearhigh.setText(data[15]);
@@ -282,10 +282,10 @@ public class StockFragment extends Fragment {
                     message = defaultMessage;
                     break;
                 case 0:
-                    errorOccured();
                     super.onPostExecute(code);
                     break;
                 case -1:
+                    errorOccured();
                     super.onPostExecute(code);
                     break;
             }
@@ -360,10 +360,10 @@ public class StockFragment extends Fragment {
                     message = defaultMessage;
                     break;
                 case 0:
-                    errorOccured();
                     super.onPostExecute(code);
                     break;
                 case -1:
+                    errorOccured();
                     super.onPostExecute(code);
                     break;
             }

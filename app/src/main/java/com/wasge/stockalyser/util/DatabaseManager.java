@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     /**
      * Executes all the DELETE-statements found in the StockDataContract Class
-     * **/
+     **/
     public void deleteDB() {
         SQLiteDatabase dbR = getReadableDatabase();
         SQLiteDatabase dbW = getWritableDatabase();
@@ -52,7 +53,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     /**
      * Executes all the CREATE-statements found in the StockDataContract Class
-     * **/
+     **/
     public void initializeDB() {
         SQLiteDatabase dbW = getWritableDatabase();
 
@@ -71,10 +72,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     /**
      * Inserts sample data into the Database for debugging purposes
-     * **/
+     **/
     public void insertTestData() {
-        insertToTable(StockDataContract.Watchlist.TABLE_NAME,new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-        insertToTable(StockDataContract.Stocks.TABLE_NAME,new String[]{
+        insertToTable(StockDataContract.Watchlist.TABLE_NAME, new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
+        insertToTable(StockDataContract.Stocks.TABLE_NAME, new String[]{
                 "AAPL", "Apple Inc",
                 "NASDAQ", "USD", "2020-11-17",
 
@@ -90,7 +91,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     /**
      * Required Method by inheritance
-     * **/
+     **/
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         //initializeDB();
@@ -106,21 +107,22 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * Inserts the given Data into the specified table. Note, that the Table must have an available
      * columnMap in the StockDataContract class.
+     *
      * @param table String of the tables name.
-     * @param data String[] containing all the data to be inserted.
-     * **/
+     * @param data  String[] containing all the data to be inserted.
+     **/
     public void insertToTable(@NotNull String table, @NotNull String[] data) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] columnMap = StockDataContract.getAppropriateColumnMap(table);
 
         ContentValues values = new ContentValues();
-        for(int i = 0; i < columnMap.length && i < data.length; i++){
-            values.put(columnMap[i],data[i]);
+        for (int i = 0; i < columnMap.length && i < data.length; i++) {
+            values.put(columnMap[i], data[i]);
         }
 
-        int id = (int) db.insertWithOnConflict(table, null, values,SQLiteDatabase.CONFLICT_IGNORE);
+        int id = (int) db.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         if (id == -1) {
-            db.update(table, values, columnMap[0]+"=?", new String[] {data[0]});
+            db.update(table, values, columnMap[0] + "=?", new String[]{data[0]});
         }
         db.close();
 
@@ -129,36 +131,38 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     /**
      * Handles data returned by the Api and stores it accordingly
+     *
      * @param request_type type of request to be handled
-     * @param object JSONObject containing the data to be handled
-     * **/
-    public int handleData(@NotNull REQUEST_TYPE request_type,@NotNull JSONObject object) {
-        if(object == null) {
-            Log.e(TAG,"couldnt parse JSON data, object was null!");
+     * @param object       JSONObject containing the data to be handled
+     **/
+    public int handleData(@NotNull REQUEST_TYPE request_type, @NotNull JSONObject object) {
+        if (object == null) {
+            Log.e(TAG, "couldnt parse JSON data, object was null!");
             return -1;
         } else {
-            try{
-                if(object.has("code")){
+            try {
+                if (object.has("code")) {
                     int code = object.getInt("code");
-                    if(code == 400)
+                    if (code == 400)
                         return 400;
-                    else if(code == 429)
+                    else if (code == 429)
                         return 429;
 
                 }
-            }catch(JSONException ignored){}
+            } catch (JSONException ignored) {
+            }
         }
         Log.d(TAG, "attempting to handle JSON: " + object);
 
         String targetTable = "";
-        switch (request_type){
+        switch (request_type) {
             case MAX:
             case DAILY:
             case WEEKLY:
             case MONTHLY:
             case YEARLY:
 
-                switch (request_type){
+                switch (request_type) {
                     case DAILY:
                         targetTable = StockDataContract.DailyEntry.TABLE_NAME;
                         break;
@@ -182,15 +186,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     String symbol = meta.getString("symbol");
                     JSONArray values = object.getJSONArray("values");
                     int elements = values.length();
-                    for(int i = 0; i < elements; i++){
+                    for (int i = 0; i < elements; i++) {
                         String[] data = JSONObjectToIntervalArray(values.getJSONObject(i), symbol);
-                        insertToTable(targetTable,data);
+                        insertToTable(targetTable, data);
                     }
-                }catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                Log.d(TAG,"handling data: request type: " + request_type + " JSON:" + object);
+                Log.d(TAG, "handling data: request type: " + request_type + " JSON:" + object);
 
 
                 break;
@@ -198,7 +202,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
                 try {
                     String[] data = JSONObjectToStockArray(object);
-                    insertToTable(StockDataContract.Stocks.TABLE_NAME,data);
+                    insertToTable(StockDataContract.Stocks.TABLE_NAME, data);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -214,8 +218,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @param object json privided by Api within "values" array
      * @param symbol stock id
      * @return String Array containing all values for interval table in order
-     * **/
-    private String[] JSONObjectToIntervalArray(JSONObject object, String symbol) throws JSONException{
+     **/
+    private String[] JSONObjectToIntervalArray(JSONObject object, String symbol) throws JSONException {
         /*
         (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
                        "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
@@ -236,8 +240,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * @param object json object provided by api request
      * @return String array containing all values for stock table in order
-     * **/
-    private String[] JSONObjectToStockArray(JSONObject object) throws JSONException{
+     **/
+    private String[] JSONObjectToStockArray(JSONObject object) throws JSONException {
         /*
         JSON:
         "symbol","name","exchange","currency","datetime","open","high","low","close","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
@@ -276,7 +280,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * Deletes Data from each table specified in StockDataContract, according to each tables maximum
      * data-lifespan.
-     * **/
+     **/
     private void truncateData() {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -322,51 +326,51 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * Helper funcion returning a Query response from the Database containing the last N Elements
      * of a selected stock from a selected table
+     *
      * @param table String of Table to be selected
      * @param stock String of Stock symbol
-     * @param n int specifying N
-     * **/
+     * @param n     int specifying N
+     **/
     private Cursor getLastNElements(@NotNull String table, @NotNull String stock, int n) {
         SQLiteDatabase dbR = getReadableDatabase();
-        Cursor out = dbR.query(table,StockDataContract.IntervalEntry.getValueColums(),
-                StockDataContract.IntervalEntry.FOREIGN_ID + " LIKE ?" ,
+        Cursor out = dbR.query(table, StockDataContract.IntervalEntry.getValueColums(),
+                StockDataContract.IntervalEntry.FOREIGN_ID + " LIKE ?",
                 new String[]{stock},
-                null,null,
+                null, null,
                 StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " DESC",
                 n + "");
         return out;
     }
 
-    private Cursor getElementsBeforTimestamp(@NotNull String table, @NotNull String stock, String timeOffset){
+    private Cursor getElementsBeforTimestamp(@NotNull String table, @NotNull String stock, String timeOffset) {
         SQLiteDatabase dbR = getReadableDatabase();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String to_date = sdf.format(new Date());
         Cursor out = dbR.query(
-                table,StockDataContract.IntervalEntry.getValueColums(),
+                table, StockDataContract.IntervalEntry.getValueColums(),
                 StockDataContract.IntervalEntry.FOREIGN_ID + " LIKE ? AND " +
-                StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " >= DATETIME('now', "+timeOffset+") ",
+                        StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " >= DATETIME('now', " + timeOffset + ") ",
                 new String[]{stock},
-                null,null,
+                null, null,
                 StockDataContract.IntervalEntry.COLUMN_NAME_DATETIME + " DESC"
-                );
+        );
         return out;
     }
 
     /**
      * Takes a Cursor to a Table of Floats and averages each row into a float array.
      * Afterwards the Cursor is closed.
+     *
      * @param cursor Cursor to a Table entirely made up of floats.
-     * **/
-    private float[] averageToFloatArr(@NotNull Cursor cursor){
-        if (cursor.isClosed())
+     **/
+    private float[] averageToFloatArr(@NotNull Cursor cursor) {
+        if (cursor == null || cursor.isClosed())
             return new float[]{};
         int elements = cursor.getCount();
         float[] output = new float[elements];
         String[] columns = cursor.getColumnNames();
         cursor.moveToLast();
-        for(int i = 0; i < elements; i++){
+        for (int i = 0; i < elements; i++) {
             output[i] = 0;
-            for(int j = 0; j < columns.length; j++){
+            for (int j = 0; j < columns.length; j++) {
                 output[i] += cursor.getFloat(j);
             }
             output[i] /= columns.length;
@@ -381,152 +385,213 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * Stretches a float array approximately to a desired size (+ 10).
      * stretching is done by adding the first value as padding to the front
      **/
-    private float[] stretchToSize(@NotNull float[] original, int desiredSize){
+    @NotNull
+    private float[] stretchToSize(@NotNull float[] original, int desiredSize) {
         int originalSize = original.length;
-        if(originalSize == 0) return gernerateData(90);
+        if (originalSize == 0) return gernerateData(90);
         int difference = desiredSize - originalSize;
-        if(Math.abs(difference) < 10)  return original;
-        if(difference > 0){
+        if (Math.abs(difference) < 10) return original;
+        if (difference > 0) {
             float[] newArr = new float[desiredSize];
             //needs to fill the preceding empty spaces with the
-            for(int i = 0; i < difference; i++){
+            for (int i = 0; i < difference; i++) {
                 newArr[i] = original[0];
             }
-            for(int i = 0; i < originalSize; i++){
+            for (int i = 0; i < originalSize; i++) {
                 newArr[difference + i] = original[i];
             }
             return newArr;
-        }else
+        } else
             return original;
     }
 
     /**
      * Get last 10 Datapoints stored in the Daily Table of a given stock
+     *
      * @param stockName String of stock symbol
-     * **/
-    public float[] getTenDayData(@NotNull String stockName) {
-        Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,10);
-        return stretchToSize( averageToFloatArr(cursor) ,10);
+     **/
+    public synchronized float[] getTenDayData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME, stockName, 10);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return stretchToSize(averageToFloatArr(cursor), 10);
     }
 
-    public float[] getDayData(@NotNull String stockName) {
-        Cursor cursor = getElementsBeforTimestamp(StockDataContract.DailyEntry.TABLE_NAME,stockName,"'-3 day'");
+    public synchronized float[] getDayData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getElementsBeforTimestamp(StockDataContract.DailyEntry.TABLE_NAME, stockName, "'-3 day'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
         return averageToFloatArr(cursor);
     }
 
-    public float[] getWeekData(@NotNull String stockName) {
-        Cursor cursor = getElementsBeforTimestamp(StockDataContract.WeeklyEntry.TABLE_NAME,stockName,"'-8 day'");
-        return  averageToFloatArr(cursor);
+    public synchronized float[] getWeekData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getElementsBeforTimestamp(StockDataContract.WeeklyEntry.TABLE_NAME, stockName, "'-8 day'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return averageToFloatArr(cursor);
     }
 
-    public float[] getMonthData(@NotNull String stockName) {
-        Cursor cursor = getElementsBeforTimestamp(StockDataContract.MonthlyEntry.TABLE_NAME,stockName,"'-1 month'");
-        return  averageToFloatArr(cursor);
+    public synchronized float[] getMonthData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getElementsBeforTimestamp(StockDataContract.MonthlyEntry.TABLE_NAME, stockName, "'-1 month'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return averageToFloatArr(cursor);
     }
 
-    public float[] getYearData(@NotNull String stockName) {
-        Cursor cursor = getElementsBeforTimestamp(StockDataContract.YearlyEntry.TABLE_NAME,stockName,"'-1 year'");
-        return  averageToFloatArr(cursor);
+    public synchronized float[] getYearData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getElementsBeforTimestamp(StockDataContract.YearlyEntry.TABLE_NAME, stockName, "'-1 year'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return averageToFloatArr(cursor);
     }
 
-    public float[] getMaxData(@NotNull String stockName) {
-        Cursor cursor = getElementsBeforTimestamp(StockDataContract.MaxEntry.TABLE_NAME,stockName,"'-10 year'");
+    public synchronized float[] getMaxData(@NotNull String stockName) {
+        Cursor cursor = null;
+        try {
+            cursor = getElementsBeforTimestamp(StockDataContract.MaxEntry.TABLE_NAME, stockName, "'-10 year'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
         return averageToFloatArr(cursor);
     }
 
     /**
      * returns null if none found in database
-     * **/
+     **/
     public String[] getDisplayData(@NotNull String stockName) {
-
-        String[] columns = StockDataContract.Stocks.getColumnMap();
-        SQLiteDatabase dbR = getReadableDatabase();
-        Cursor c = dbR.query(StockDataContract.Stocks.TABLE_NAME,null,
-                StockDataContract.Stocks.ID + " LIKE ?" ,
-                new String[]{stockName},
-                null,null,
-                StockDataContract.Stocks.COLUMN_NAME_DATETIME + " DESC",
-                1 + "");
-        if(c.getCount() < 1){
-            return null;
+        try {
+            String[] columns = StockDataContract.Stocks.getColumnMap();
+            SQLiteDatabase dbR = getReadableDatabase();
+            Cursor c = dbR.query(StockDataContract.Stocks.TABLE_NAME, null,
+                    StockDataContract.Stocks.ID + " LIKE ?",
+                    new String[]{stockName},
+                    null, null,
+                    StockDataContract.Stocks.COLUMN_NAME_DATETIME + " DESC",
+                    1 + "");
+            if (c.getCount() < 1) {
+                return null;
+            }
+            c.moveToFirst();
+            String[] output = new String[columns.length];
+            for (int i = 0; i < columns.length; i++) {
+                output[i] = c.getString(c.getColumnIndex(columns[i]));
+            }
+            c.close();
+            dbR.close();
+            return output;
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
-        c.moveToFirst();
-        String[] output = new String[columns.length];
-        for(int i = 0; i < columns.length; i++){
-            output[i] = c.getString(c.getColumnIndex(columns[i]));
-        }
-        c.close();
-        dbR.close();
-        return output;
+        return null;
     }
 
     /**
      * [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
      */
     public ArrayList<String[]> getWatchlistStock() {
-        ArrayList<String[]> watchlist = new ArrayList<>();
+        try {
+            ArrayList<String[]> watchlist = new ArrayList<>();
 
-        SQLiteDatabase dbR = getReadableDatabase();
-        Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME,null,
-                null,
-                null,
-                null,null,
-                StockDataContract.Watchlist.ID + " DESC");
-        if(c.getCount() < 1) return watchlist;
-        c.moveToFirst();
-        String[] columns = c.getColumnNames();
-        while(!c.isAfterLast()){
-            String[] stock = new String[columns.length];
-            for(int i = 0; i< columns.length;i++){
-                stock[i] = c.getString(i);
+            SQLiteDatabase dbR = getReadableDatabase();
+            Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME, null,
+                    null,
+                    null,
+                    null, null,
+                    StockDataContract.Watchlist.ID + " DESC");
+            if (c.getCount() < 1) return watchlist;
+            c.moveToFirst();
+            String[] columns = c.getColumnNames();
+            while (!c.isAfterLast()) {
+                String[] stock = new String[columns.length];
+                for (int i = 0; i < columns.length; i++) {
+                    stock[i] = c.getString(i);
+                }
+                watchlist.add(stock);
+                c.moveToNext();
             }
-            watchlist.add(stock);
-            c.moveToNext();
+            c.close();
+            return watchlist;
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
-        c.close();
-        return watchlist;
+        return new ArrayList<>();
     }
 
     /**
      * @param symbol i.e. "AAPL"
      **/
     public boolean removeFromWatchlist(String symbol) {
-        SQLiteDatabase db = getWritableDatabase();
-        return db.delete(StockDataContract.Watchlist.TABLE_NAME,
-                StockDataContract.Watchlist.ID + " = \"" + symbol + "\"",
-                null) > 0;
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            return db.delete(StockDataContract.Watchlist.TABLE_NAME,
+                    StockDataContract.Watchlist.ID + " = \"" + symbol + "\"",
+                    null) > 0;
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return false;
     }
 
     /**
      * @param stock i.e. ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"]
      **/
     public boolean addToWatchlist(String[] stock) {
-        insertToTable(StockDataContract.Watchlist.TABLE_NAME,stock);
+        try {
+            insertToTable(StockDataContract.Watchlist.TABLE_NAME, stock);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return false;
+        }
         return true;
     }
 
-    public boolean hasStockInfo(String symbol){
-        return getDisplayData(symbol) != null;
+    public boolean hasStockInfo(String symbol) {
+        try {
+            return getDisplayData(symbol) != null;
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage());
+            return false;
+        }
     }
 
     public String[] getWatchlistStockIDs() {
-        SQLiteDatabase dbR = getReadableDatabase();
-        Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME,null,
-                null,
-                null,
-                null,null,
-                StockDataContract.Watchlist.ID + " DESC");
-        if(c.isClosed())
+        try {
+            SQLiteDatabase dbR = getReadableDatabase();
+            Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME, null,
+                    null,
+                    null,
+                    null, null,
+                    StockDataContract.Watchlist.ID + " DESC");
+            if (c.isClosed())
+                return null;
+            String[] out = new String[c.getCount()];
+            if (c.getCount() < 1) return out;
+            c.moveToFirst();
+            for (int i = 0; i < out.length; i++) {
+                out[i] = c.getString(c.getColumnIndex(StockDataContract.Watchlist.ID));
+                c.moveToNext();
+            }
+            c.close();
+            return out;
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage());
             return null;
-        String[] out = new String[c.getCount()];
-        if(c.getCount() < 1) return out;
-        c.moveToFirst();
-        for(int i = 0; i < out.length; i++){
-            out[i] = c.getString(c.getColumnIndex(StockDataContract.Watchlist.ID));
-            c.moveToNext();
         }
-        c.close();
-        return out;
     }
 }
 
