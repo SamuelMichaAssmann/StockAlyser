@@ -175,9 +175,10 @@ public class ChartProcess {
      * Changes values while interaction with livechart
      **/
     private void setIndicator(ArrayList<DataPoint> dataPoints, LiveChart liveChart, final TextView currentPrice, final TextView percentPrice) {
-        if (dataPoints == null)
+        if (dataPoints == null || dataPoints.size() < 1){
+            Log.e(TAG,"datapoints don't exist");
             return;
-
+        }
         final float start = dataPoints.get(0).getY();
         final float end = dataPoints.get(dataPoints.size() - 1).getY();
         percentPrice.setText(setPercent(start, end));
@@ -251,7 +252,7 @@ public class ChartProcess {
         }
     }
 
-    private class TrendlineTask extends ToastyAsyncTask<Object,Integer,Integer> {
+    private class TrendlineTask extends ToastyAsyncTask<String,Integer,Integer> {
         float[] output;
         boolean errorOccured = false;
 
@@ -270,16 +271,16 @@ public class ChartProcess {
         }
 
         /**
-         * @param objects Url, kind if kind == 0 -> Url will be ignored
+         * @param strings Url, kind if kind == 0 -> Url will be ignored
          **/
         @Override
-        protected Integer doInBackground(Object... objects){
+        protected Integer doInBackground(String... strings){
             try {
                 SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
                 String style = PreferenceKey.getString("trend", null);
-                if (objects != null && objects.length == 2 && objects[0] instanceof String && objects[1] instanceof String) {
+                if (strings != null && strings.length == 2) {
                     Log.d(TAG, "BackgroundTask startet!");
-                    output = mng.parseJSONData(mng.buildUrl(style, (String) objects[0], (String) objects[1]), style);
+                    output = mng.parseJSONData(mng.buildUrl(style, strings[0], strings[1]), style);
                 }
             } catch (Exception e) {
                 errorOccured = true;
