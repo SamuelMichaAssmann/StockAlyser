@@ -21,6 +21,8 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 >The collaboration on the project first started with the architecture, which was decided and discussed in pair programming on only Samuels device.
 >In the course of the project, different work packages were divided, such as database, api management, frontend and fragment communication.
 >However, these are merged into each other and can therefore not be clearly assigned.
+>Tendecy was, that frontend and charting was developed by Samuel, while database management and async tasking was developed by Philipp.
+>However the lines are very blurry, since debugging and individual tasks in each field were done by both parties.
 >
 >For more detailed information please visit [github](https://github.com/SamuelMichaAssmann/StockAlyser/graphs/commit-activity).
 
