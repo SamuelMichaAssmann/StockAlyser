@@ -8,14 +8,14 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 >Also, different trend graphs can be added and selected to get more detailed information. 
 >On the start page, the data from the watchlist is automatically summarized and visualized.
 
----
+## Contributers
 
 | Contributers    | Mat-Nr. |
 |-----------------|---------|
-| Philipp Polland |         |
+| Philipp Polland | 1674335 |
 | Samuel Assmann  | 3182906 |
 
----
+## Collaboration
 
 >The collaboration on the project first started with the architecture, which was decided and discussed in pair programming on only Samuels device.
 >In the course of the project, different work packages were divided, such as database, api management, frontend and fragment communication.
