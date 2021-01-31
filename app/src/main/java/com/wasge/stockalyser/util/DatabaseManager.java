@@ -213,10 +213,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @return String Array containing all values for interval table in order
      * **/
     private String[] JSONObjectToIntervalArray(JSONObject object, String symbol) throws JSONException{
-        // (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
-        //                  "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
+        /*
+        (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
+                       "low":"130.77000","close":"130.81160","volume":"4603463"},  (...) ]
 
-        // stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
+        stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
+         */
         String[] data = new String[7];
         data[0] = symbol;
         data[1] = object.getString("datetime");
@@ -233,15 +235,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @return String array containing all values for stock table in order
      * **/
     private String[] JSONObjectToStockArray(JSONObject object) throws JSONException{
-        //JSON:
-        //"symbol","name","exchange","currency","datetime","open","high","low","close","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
-        //"low","high","low_change","high_change","low_change_percent","high_change_percent","range"
+        /*
+        JSON:
+        "symbol","name","exchange","currency","datetime","open","high","low","close","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
+        "low","high","low_change","high_change","low_change_percent","high_change_percent","range"
 
-        //
-        //symbol = 0, name = 1, exchange = 2, currency = 3, date = 4, open = 5,
-        // high = 6, low = 7, close = 8, volume = 9, avgvolume = 10, preclose = 11,
-        // range = 12, perchange = 13, yearlow = 14, yearhigh = 15, yearlowchange = 16,
-        // yearhighchange = 17, yearlowchangeper = 18, yearhighchangeper = 19
+        symbol = 0, name = 1, exchange = 2, currency = 3, date = 4, open = 5,
+        high = 6, low = 7, close = 8, volume = 9, avgvolume = 10, preclose = 11,
+        range = 12, perchange = 13, yearlow = 14, yearhigh = 15, yearlowchange = 16,
+        yearhighchange = 17, yearlowchangeper = 18, yearhighchangeper = 19
+         */
         JSONObject weekObj = object.getJSONObject("fifty_two_week");
         String[] data = new String[20];
         data[0] = object.getString("symbol");
@@ -267,7 +270,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return data;
     }
 
-
     /**
      * Deletes Data from each table specified in StockDataContract, according to each tables maximum
      * data-lifespan.
@@ -275,7 +277,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private void truncateData() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        //delete Data, older than the specified longest date
         String deletion_template = "DELETE FROM %s WHERE %s <= date('now','%s')";
         String sql = String.format(deletion_template,
                 StockDataContract.DailyEntry.TABLE_NAME,
@@ -300,9 +301,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    // last is newest value
-
-    //TODO remove generate
+    /**
+     * gernerate test data
+     */
     private static float[] gernerateData(int many) {
         float[] da = new float[many];
         float temp = 5;
@@ -359,10 +360,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     /**
-     * Either reduces or stretches a float array approximately to a desired size (+- 10).
+     * Stretches a float array approximately to a desired size (+ 10).
      * stretching is done by adding the first value as padding to the front
-     * **/
-    private float[] reduceOrStretchToSize(@NotNull float[] original, int desiredSize){
+     **/
+    private float[] stretchToSize(@NotNull float[] original, int desiredSize){
         int originalSize = original.length;
         if(originalSize == 0) return gernerateData(90);
         int difference = desiredSize - originalSize;
@@ -377,23 +378,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 newArr[difference + i] = original[i];
             }
             return newArr;
-        } else if(difference < 0){
-            //TODO: omit data from array in a fairly distributed manner
+        }else
             return original;
-        }
-
-        return  null;
     }
 
-    // SELECT * FROM Tabelle1 ORDER BY key DESC LIMIT 10
     /**
      * Get last 10 Datapoints stored in the Daily Table of a given stock
      * @param stockName String of stock symbol
      * **/
     public float[] getTenDayData(@NotNull String stockName) {
-
         Cursor cursor = getLastNElements(StockDataContract.DailyEntry.TABLE_NAME,stockName,10);
-        return reduceOrStretchToSize( averageToFloatArr(cursor) ,10);
+        return stretchToSize( averageToFloatArr(cursor) ,10);
     }
 
     public float[] getDayData(@NotNull String stockName) {
@@ -444,11 +439,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         c.close();
         dbR.close();
-
         return output;
     }
 
-    //---> [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
+    /**
+     * [   ["AAPL", "Apple Inc", "NASDAQ", "USD", "avg()", "date"] , [...] , ...  ]
+     */
     public ArrayList<String[]> getWatchlistStock() {
         ArrayList<String[]> watchlist = new ArrayList<>();
 
@@ -470,14 +466,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
             c.moveToNext();
         }
         c.close();
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-//
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-//        watchlist.add(new String[]{"AAPL", "Apple Inc", "NASDAQ", "USD", "123.546", "20-12-2021"});
-
         return watchlist;
     }
 
@@ -504,8 +492,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public String[] getWatchlistStockIDs() {
-
-
         SQLiteDatabase dbR = getReadableDatabase();
         Cursor c = dbR.query(StockDataContract.Watchlist.TABLE_NAME,null,
                 null,
@@ -522,40 +508,38 @@ public class DatabaseManager extends SQLiteOpenHelper {
             c.moveToNext();
         }
         c.close();
-
         return out;
     }
 }
 
-
-
-
 /*
--------- Api-json -------
+Watchlist data: (* for stock database and # for watchlist database)
+
+Json:
 {
-"symbol":"AAPL", ========= ID
-"name":"Apple Inc", ==========
-"exchange":"NASDAQ", ==========
-"currency":"USD", ==========
-"datetime":"2020-11-17", ==========
-"open":"119.54900",   -> \
-"high":"120.30000",   ->  |
-"low":"118.96000",    ->  | -> avg()
-"close":"119.36000",  -> /
-"volume":"13012825",
-"previous_close":"120.30000",
-"change":"-0.94000",
-"percent_change":"-0.78138",
-"average_volume":"106265760",   =========
+"symbol":"AAPL",            |   * #
+"name":"Apple Inc",         |   * #
+"exchange":"NASDAQ",        |   * #
+"currency":"USD",           |   * #
+"datetime":"2020-11-17",    |   * #
+"open":"119.54900",         |   *
+"high":"120.30000",         |   *  => avg() #
+"low":"118.96000",          |   *
+"close":"119.36000",        |   *
+"volume":"13012825",        |   *
+"previous_close":"120.300", |   *
+"change":"-0.94000",        |   *
+"percent_change":"-0.78138",|   *
+"average_volume":"10626576",|   *
 "fifty_two_week":
-    {                                          <--- getDisplayData() only
-    "low":"53.15250",
-    "high":"137.39000",
-    "low_change":"66.20750",
-    "high_change":"-18.03000",
-    "low_change_percent":"124.56140",
-    "high_change_percent":"-13.12323",
-    "range":"53.152500 - 137.389999"
+    {
+    "low":"53.15250",                   |   *
+    "high":"137.39000",                 |   *
+    "low_change":"66.20750",            |   *
+    "high_change":"-18.03000",          |   *
+    "low_change_percent":"124.56140",   |   *
+    "high_change_percent":"-13.12323",  |   *
+    "range":"53.152500 - 137.389999"    |   *
     }
 }
  */

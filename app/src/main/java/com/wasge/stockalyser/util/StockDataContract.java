@@ -21,7 +21,9 @@ public class StockDataContract {
         return output;
     }
 
-    //INTERVAL DATA
+    /**
+     * INTERVAL DATA
+     */
     public static class DailyEntry extends IntervalEntry{
         public static String TABLE_NAME = "daily";
         public static String EXPIRATION_TIME = "-2 days";
@@ -135,10 +137,10 @@ public class StockDataContract {
         }
     }
 
+    /**
+     * stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
+     */
     public static class IntervalEntry{
-
-        // stock = 0; datetime = 1; open = 2; high = 3; low = 4; close = 5; volume 6
-
         public static final String FOREIGN_ID = "stock";
         public static final String COLUMN_NAME_DATETIME = "datetime";
         public static final String COLUMN_NAME_OPEN = "open";
@@ -170,7 +172,9 @@ public class StockDataContract {
 
     }
 
-    //SINGULAR DATA
+    /**
+     * SINGULAR DATA
+     */
     public static class Stocks{
         public static final String TABLE_NAME = "stocks";
         //METADATA
@@ -289,41 +293,4 @@ public class StockDataContract {
             };
         }
     }
-
 }
-
-// (...) "values":[{"datetime":"2021-01-20 10:15:00","open":"130.90010","high":"131.20000",
-//                  "low":"130.77000","close":"130.81160","volume":"4603463"},             (...)
-
-//"symbol","name","exchange","currency","datetime","open","volume","previous_close","change","percent_change","average_volume","fifty_two_week"
-//"low","high","low_change","high_change","low_change_percent","high_change_percent","range"
-
-/*
--------- Api-json -------
-{
-"symbol":"AAPL", ========= ID
-"name":"Apple Inc", ==========
-"exchange":"NASDAQ", ==========
-"currency":"USD", ==========
-"datetime":"2020-11-17", ==========
-"open":"119.54900",   -> \
-"high":"120.30000",   ->  |
-"low":"118.96000",    ->  | -> avg()
-"close":"119.36000",  -> /
-"volume":"13012825",
-"previous_close":"120.30000",
-"change":"-0.94000",
-"percent_change":"-0.78138",
-"average_volume":"106265760",   =========
-"fifty_two_week":
-    {                                          <--- getDisplayData() only
-    "low":"53.15250",
-    "high":"137.39000",
-    "low_change":"66.20750",
-    "high_change":"-18.03000",
-    "low_change_percent":"124.56140",
-    "high_change_percent":"-13.12323",
-    "range":"53.152500 - 137.389999"
-    }
-}
- */
