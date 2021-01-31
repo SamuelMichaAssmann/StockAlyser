@@ -10,13 +10,14 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 
 ---
 
-| Contributers    | Mat.Nr. |
+| Contributers    | Mat-Nr. |
 |-----------------|---------|
 | Philipp Polland |         |
 | Samuel Assmann  | 3182906 |
 
 ---
 
+TODO text der sagt wer was wie
 
 ## Api-Key:
 
