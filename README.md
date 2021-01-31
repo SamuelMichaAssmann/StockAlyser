@@ -14,11 +14,11 @@ https://github.com/SamuelMichaAssmann/StockAlyser
 | Samuel Assmann  |
 
 
-Api-Key:
+## Api-Key:
 
 > The apikey is stored as default in the app but if you want to store your own key this is possible in the app.
 
-Version: (in projekt gradle)
+## Version: (in projekt gradle)
 
 > Kotlin - 1.4.20
 
