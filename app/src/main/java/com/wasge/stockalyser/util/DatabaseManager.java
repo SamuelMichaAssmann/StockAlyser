@@ -115,7 +115,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
             values.put(columnMap[i],data[i]);
         }
 
-        int id = (int) db.insert(table, null, values);
+        int id = (int) db.insertWithOnConflict(table, null, values,SQLiteDatabase.CONFLICT_IGNORE);
         if (id == -1) {
             db.update(table, values, columnMap[0]+"=?", new String[] {data[0]});
         }
@@ -137,12 +137,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
             try{
                 if(object.has("code")){
                     int code = object.getInt("code");
-                    if(code == 400);
+                    if(code == 400)
                         return 400;
                 }
-            }catch(JSONException e){
-
-            }
+            }catch(JSONException ignored){}
         }
         Log.d(TAG, "attempting to handle JSON: " + object);
 

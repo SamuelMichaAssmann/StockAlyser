@@ -29,6 +29,7 @@ public class ChartProcess {
     private ArrayList<DataPoint> data = null;
     LiveChart liveChart;
     String symbol;
+    String TAG = "ChartProcess";
     TabLayout tabLayout;
     private float NaN;
 
@@ -112,7 +113,7 @@ public class ChartProcess {
         for (String stock : stocks) {
             data.add(getData(style, stock, dbm));
             for (float e : getData(style, stock, dbm)) {
-                Log.d("Test", String.valueOf(e));
+                Log.d(TAG, String.valueOf(e));
             }
 
 
@@ -159,9 +160,10 @@ public class ChartProcess {
     }
 
     private void setIndicator(ArrayList<DataPoint> dataPoints, LiveChart liveChart, final TextView currentPrice, final TextView percentPrice) {
-        if (dataPoints == null)
+        if (dataPoints == null || dataPoints.size() < 1){
+            Log.e(TAG,"datapoints don't exist");
             return;
-
+        }
         final float start = dataPoints.get(0).getY();
         final float end = dataPoints.get(dataPoints.size() - 1).getY();
         percentPrice.setText(setPercent(start, end));
@@ -172,7 +174,7 @@ public class ChartProcess {
 
             @Override
             public void onTouchCallback(@NotNull DataPoint dataPoint) {
-                Log.d("LiveChart", "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
+                Log.d(TAG, "x: " + dataPoint.getX() + "  y: " + dataPoint.getY());
                 if (currentPrice != null)
                     currentPrice.setText(setCurrent(dataPoint.getY()));
                 percentPrice.setText(setPercent(start, dataPoint.getY()));
@@ -192,7 +194,7 @@ public class ChartProcess {
         String percentString;
         float percent;
         if (start != 0) {
-            Log.wtf("Data", end + " - " + start);
+            Log.wtf(TAG, end + " - " + start);
             percent = ((end - start) / start) * 100;
         }
         else
@@ -229,7 +231,7 @@ public class ChartProcess {
         }
     }
 
-    private class TrendlineTask extends ToastyAsyncTask<Object,Integer,Integer> {
+    private class TrendlineTask extends ToastyAsyncTask<String,Integer,Integer> {
         float[] output;
         boolean errorOccured = false;
 
@@ -244,24 +246,24 @@ public class ChartProcess {
             if (output != null)
                 setTrend(output);
             else
-                Log.d("Data", "data empty");
+                Log.d(TAG, "data empty");
         }
 
         /**
-         * @param objects Url, kind if kind == 0 -> Url will be ignored
+         * @param strings Url, kind if kind == 0 -> Url will be ignored
          **/
         @Override
-        protected Integer doInBackground(Object... objects){
+        protected Integer doInBackground(String... strings){
             try {
                 SharedPreferences PreferenceKey = PreferenceManager.getDefaultSharedPreferences(context);
                 String style = PreferenceKey.getString("trend", null);
-                if (objects != null && objects.length == 2 && objects[0] instanceof String && objects[1] instanceof String) {
-                    Log.d("Chartprocess", "BackgroundTask startet!");
-                    output = mng.parseJSONData(mng.buildUrl(style, (String) objects[0], (String) objects[1]), style);
+                if (strings != null && strings.length == 2) {
+                    Log.d(TAG, "BackgroundTask startet!");
+                    output = mng.parseJSONData(mng.buildUrl(style, strings[0], strings[1]), style);
                 }
             } catch (Exception e) {
                 errorOccured = true;
-                Log.e("Chartprocess", "BackgroundTask failed: " + e.getMessage());
+                Log.e(TAG, "BackgroundTask failed: " + e.getMessage());
             }
             return 1;
         }
